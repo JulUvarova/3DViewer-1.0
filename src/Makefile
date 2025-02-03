@@ -1,3 +1,5 @@
+#sudo apt install qt6-base-dev
+
 .PHONY: all
 all: 
 	rm -rf build
