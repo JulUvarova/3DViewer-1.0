@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MainWindow</class>
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>700</width>
+                <height>500</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>3DViewer 2.0</string>
+        </property>
+        <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+            </sizepolicy>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+            <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <widget class="QOpenGLWidget" name="openGLWidget">
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>500</width>
+                        <height>500</height>
+                    </rect>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+            </widget>
+            <widget class="QGroupBox" name="groupBox">
+                <property name="geometry">
+                    <rect>
+                        <x>501</x>
+                        <y>0</y>
+                        <width>200</width>
+                        <height>500</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string />
+                </property>
+            </widget>
+        </widget>
+        <widget class="QMenuBar" name="menubar">
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>700</width>
+                    <height>23</height>
+                </rect>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <widget class="QMenu" name="menuOpenFile">
+                <property name="title">
+                    <string>Open</string>
+                </property>
+            </widget>
+            <widget class="QMenu" name="menuSaveFile">
+                <property name="title">
+                    <string>Save</string>
+                </property>
+                <!-- !НЕ ВИДИТ -->
+                <addaction name="jpeg" /> 
+                <addaction name="bmp" />
+                <addaction name="gif" />
+            </widget>
+            <widget class="QMenu" name="menuSmth">
+                <property name="title">
+                    <string>SMTH</string>
+                </property>
+            </widget>
+            <addaction name="menuOpenFile" />
+            <addaction name="menuSaveFile" />
+            <addaction name="menuSmth" />
+        </widget>
+        <action name="jpeg">
+            <property name="text">
+                <string>..as .jpeg</string>
+            </property>
+        </action>
+        <action name="bmp">
+            <property name="text">
+                <string>..as bmp</string>
+            </property>
+        </action>
+        <action name="gif">
+            <property name="text">
+                <string>..as gif</string>
+            </property>
+        </action>
+    </widget>
+    <!-- <customwidgets>
+        <customwidget>
+            <class>MyOpenGLWidget</class>
+            <extends>QOpenGLWidget</extends>
+            <header>../../../view/myopenglwidget.h</header>
+        </customwidget>
+    </customwidgets> -->
+    <resources />
+    <connections />
+</ui>
