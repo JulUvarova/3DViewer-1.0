@@ -173,10 +173,14 @@ void OBJData::parse(const std::string& filename) {
   close(fd);
 
   // Batch reserves
-  vertices.reserve(1'000'000);
-  normals.reserve(500'000);
-  texcoords.reserve(500'000);
-  objects.reserve(100);
+  // vertices.reserve(1'000'000);
+  // normals.reserve(500'000);
+  // texcoords.reserve(500'000);
+  // objects.reserve(100);
+  vertices.reserve(size / 100);  // 1% heuristic
+  normals.reserve(size / 200);
+  texcoords.reserve(size / 200);
+  objects.reserve(10);
 
   // Process buffer
   const char* current = buffer;
@@ -328,7 +332,7 @@ int OBJData::ParseIndex(const std::string_view& part, size_t current_count) {
     idx -= 1;
   }
   if (idx < 0 || idx >= static_cast<int>(current_count)) {
-    std::cerr << "Index out of bounds: " << part << std::endl;
+    // std::cerr << "Index out of bounds: " << part << std::endl;
     return -1;
   }
   return idx;

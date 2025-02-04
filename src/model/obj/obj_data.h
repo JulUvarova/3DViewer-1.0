@@ -14,6 +14,8 @@
 
 namespace s21 {
 
+
+
 struct Vec3 {
   float x, y, z;
   Vec3() = default;
@@ -58,7 +60,7 @@ class OBJData {
  private:
   Object* current_object_ = nullptr;
   Mesh* current_mesh_ = nullptr;
-  
+  std::vector<std::string> errors_;
   std::string Trim(const std::string& str);
 
   void ProcessLine(std::string_view line);
