@@ -129,7 +129,7 @@ void OBJData::HandleFace(const std::vector<std::string>& tokens,
   Face face;
   for (size_t i = 1; i < tokens.size(); ++i) {
     std::vector<std::string> vertex_indexes = Split(tokens[i], '/');
-    VertexIndices vi = {-1, -1, -1};
+    VertexIndices vi;
 
     if (!vertex_indexes[0].empty()) {
       vi.v = ParseIndex(vertex_indexes[0], vertices.size());

@@ -18,9 +18,9 @@ struct Vec2 {
 };
 
 struct VertexIndices {
-  int v;   // index of vertices, -1 if none
-  int vt;  // index of texcoords, -1 if none
-  int vn;  // index of normals, -1 if none
+  int v{-1};   // index of vertices, -1 if none
+  int vt{-1};  // index of texcoords, -1 if none
+  int vn{-1};  // index of normals, -1 if none
 };
 
 struct Face {
