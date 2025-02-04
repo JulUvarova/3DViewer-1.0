@@ -47,7 +47,7 @@ class OBJData {
   void parse(const std::string& filename);
 
  private:
-  std::string Trim(const std::string& str);
+  [[nodiscard]] std::string Trim(const std::string& str);
 
   void ParseVertex(const std::vector<std::string>& tokens);
 
@@ -63,8 +63,9 @@ class OBJData {
   void HandleFace(const std::vector<std::string>& tokens,
                   Object*& current_object, Mesh*& current_mesh);
 
-  int ParseIndex(const std::string& part, size_t current_count);
+  [[nodiscard]] int ParseIndex(const std::string& part, size_t current_count);
 
-  std::vector<std::string> Split(const std::string& s, char delimiter);
+  [[nodiscard]] std::vector<std::string> Split(const std::string& s,
+                                               char delimiter);
 };
 }  // namespace s21
