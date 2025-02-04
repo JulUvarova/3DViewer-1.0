@@ -2,6 +2,20 @@
 
 namespace s21 {
 
+// Reusable helper function to parse a float from a string.
+// Tries std::from_chars first, falling back to std::stof if needed.
+inline float ParseFloat(const std::string& s) {
+  float value = 0.0f;
+  const char* begin = s.data();
+  const char* end = begin + s.size();
+  auto result = std::from_chars(begin, end, value);
+  if (result.ec != std::errc()) {
+    // Fallback conversion using std::stof if from_chars fails.
+    value = std::stof(s);
+  }
+  return value;
+}
+
 void OBJData::parse(const std::string& filename) {
   std::ifstream file(filename);
   if (!file.is_open()) {
@@ -60,32 +74,26 @@ void OBJData::ParseVertex(const std::vector<std::string>& tokens) {
   if (tokens.size() < 4) {
     return;
   }
-  Vec3 v;
-  v.x = std::stof(tokens[1]);
-  v.y = std::stof(tokens[2]);
-  v.z = std::stof(tokens[3]);
-  vertices.push_back(v);
+  // Assuming the vertex coordinates are in the format "v x y z".
+  vertices.emplace_back(ParseFloat(tokens[1]), ParseFloat(tokens[2]),
+                        ParseFloat(tokens[3]));
 }
 
 void OBJData::ParseNormal(const std::vector<std::string>& tokens) {
   if (tokens.size() < 4) {
     return;
   }
-  Vec3 n;
-  n.x = std::stof(tokens[1]);
-  n.y = std::stof(tokens[2]);
-  n.z = std::stof(tokens[3]);
-  normals.push_back(n);
+  // Assuming the vertex coordinates are in the format "vn x y z".
+  normals.emplace_back(ParseFloat(tokens[1]), ParseFloat(tokens[2]),
+                       ParseFloat(tokens[3]));
 }
 
 void OBJData::ParseTexCoord(const std::vector<std::string>& tokens) {
   if (tokens.size() < 3) {
     return;
   }
-  Vec2 tc;
-  tc.x = std::stof(tokens[1]);
-  tc.y = std::stof(tokens[2]);
-  texcoords.push_back(tc);
+  // Assuming the texture coordinates are in the format "vt u v".
+  texcoords.emplace_back(ParseFloat(tokens[1]), ParseFloat(tokens[2]));
 }
 
 Object* OBJData::HandleObject(const std::vector<std::string>& tokens) {

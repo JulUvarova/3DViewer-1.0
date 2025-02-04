@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <charconv>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -11,10 +12,14 @@ namespace s21 {
 
 struct Vec3 {
   float x, y, z;
+  Vec3() = default;
+  Vec3(float x, float y, float z) : x(x), y(y), z(z) {};
 };
 
 struct Vec2 {
   float x, y;
+  Vec2() = default;
+  Vec2(float x, float y) : x(x), y(y) {};
 };
 
 struct VertexIndices {
