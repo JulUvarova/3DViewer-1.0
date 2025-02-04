@@ -1,5 +1,9 @@
 #pragma once
 
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
 #include <algorithm>
 #include <charconv>
 #include <fstream>
@@ -9,6 +13,8 @@
 #include <vector>
 
 namespace s21 {
+
+
 
 struct Vec3 {
   float x, y, z;
@@ -52,24 +58,29 @@ class OBJData {
   void parse(const std::string& filename);
 
  private:
+  Object* current_object_ = nullptr;
+  Mesh* current_mesh_ = nullptr;
+  std::vector<std::string> errors_;
   std::string Trim(const std::string& str);
 
-  void ParseVertex(const std::vector<std::string>& tokens);
+  void ProcessLine(std::string_view line);
 
-  void ParseNormal(const std::vector<std::string>& tokens);
+  void ParseVertex(const std::vector<std::string_view>& tokens);
 
-  void ParseTexCoord(const std::vector<std::string>& tokens);
+  void ParseNormal(const std::vector<std::string_view>& tokens);
 
-  Object* HandleObject(const std::vector<std::string>& tokens);
+  void ParseTexCoord(const std::vector<std::string_view>& tokens);
 
-  Mesh* HandleUseMtl(const std::vector<std::string>& tokens,
+  Object* HandleObject(const std::vector<std::string_view>& tokens);
+
+  Mesh* HandleUseMtl(const std::vector<std::string_view>& tokens,
                      Object* current_object);
 
-  void HandleFace(const std::vector<std::string>& tokens,
+  void HandleFace(const std::vector<std::string_view>& tokens,
                   Object*& current_object, Mesh*& current_mesh);
 
-  int ParseIndex(const std::string& part, size_t current_count);
+  int ParseIndex(const std::string_view& part, size_t current_count);
 
-  std::vector<std::string> Split(const std::string& s, char delimiter);
+  std::vector<std::string> Split(const std::string_view& s, char delimiter);
 };
 }  // namespace s21
