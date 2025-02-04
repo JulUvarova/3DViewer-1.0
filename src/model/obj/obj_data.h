@@ -1,5 +1,9 @@
 #pragma once
 
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
 #include <algorithm>
 #include <charconv>
 #include <fstream>
@@ -52,7 +56,12 @@ class OBJData {
   void parse(const std::string& filename);
 
  private:
+  Object* current_object_ = nullptr;
+  Mesh* current_mesh_ = nullptr;
+  
   std::string Trim(const std::string& str);
+
+  void ProcessLine(std::string_view line);
 
   void ParseVertex(const std::vector<std::string_view>& tokens);
 
