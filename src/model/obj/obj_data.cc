@@ -9,6 +9,8 @@ void OBJData::parse(const std::string& filename) {
     return;
   }
 
+  vertices.reserve(65536);
+
   Object* current_object = nullptr;
   Mesh* current_mesh = nullptr;
 
@@ -21,9 +23,10 @@ void OBJData::parse(const std::string& filename) {
 
     std::istringstream iss(line);
     std::vector<std::string> tokens;
+    tokens.reserve(8);
     std::string token;
     while (iss >> token) {
-      tokens.push_back(token);
+      tokens.push_back(std::move(token));
     }
 
     if (tokens.empty()) {
@@ -49,7 +52,6 @@ void OBJData::parse(const std::string& filename) {
 
   file.close();
 }
-
 std::string OBJData::Trim(const std::string& str) {
   size_t start = str.find_first_not_of(" \t");
   size_t end = str.find_last_not_of(" \t");
@@ -58,18 +60,15 @@ std::string OBJData::Trim(const std::string& str) {
 
 void OBJData::ParseVertex(const std::vector<std::string>& tokens) {
   if (tokens.size() < 4) {
-    return;
+    throw std::runtime_error("Invalid vertex format");
   }
-  Vec3 v;
-  v.x = std::stof(tokens[1]);
-  v.y = std::stof(tokens[2]);
-  v.z = std::stof(tokens[3]);
-  vertices.push_back(v);
+  vertices.emplace_back(
+      Vec3{std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3])});
 }
 
 void OBJData::ParseNormal(const std::vector<std::string>& tokens) {
   if (tokens.size() < 4) {
-    return;
+    throw std::runtime_error("Invalid normal format");
   }
   Vec3 n;
   n.x = std::stof(tokens[1]);
@@ -80,7 +79,7 @@ void OBJData::ParseNormal(const std::vector<std::string>& tokens) {
 
 void OBJData::ParseTexCoord(const std::vector<std::string>& tokens) {
   if (tokens.size() < 3) {
-    return;
+    throw std::runtime_error("Invalid texture coord format");
   }
   Vec2 tc;
   tc.x = std::stof(tokens[1]);
@@ -100,6 +99,12 @@ Object* OBJData::HandleObject(const std::vector<std::string>& tokens) {
 
 Mesh* OBJData::HandleUseMtl(const std::vector<std::string>& tokens,
                             Object* current_object) {
+  if (!current_object) {
+    objects.emplace_back();
+    current_object = &objects.back();
+    current_object->name = "default";
+  }
+
   if (tokens.size() < 2 || !current_object) {
     return nullptr;
   }
@@ -147,17 +152,9 @@ void OBJData::HandleFace(const std::vector<std::string>& tokens,
 }
 
 int OBJData::ParseIndex(const std::string& part, size_t current_count) {
+  if (current_count == 0) return -1;
   int idx = std::stoi(part);
-  if (idx < 0) {
-    idx += current_count;
-  } else {
-    idx -= 1;
-  }
-  if (idx < 0 || idx >= static_cast<int>(current_count)) {
-    std::cerr << "Index out of bounds: " << part << std::endl;
-    return -1;
-  }
-  return idx;
+  return idx < 0 ? idx + current_count : idx - 1;
 }
 
 std::vector<std::string> OBJData::Split(const std::string& str,
