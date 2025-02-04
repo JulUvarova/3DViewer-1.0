@@ -1,26 +1,36 @@
 #pragma once
 
 #include <algorithm>
+#include <charconv>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace s21 {
 
 struct Vec3 {
-  float x, y, z;
+  float x{}, y{}, z{};
+
+  Vec3() = default;  // Конструктор по умолчанию
+  Vec3(float x, float y, float z)
+      : x(x), y(y), z(z) {}  // Конструктор с параметрами
 };
 
 struct Vec2 {
-  float x, y;
+  float x{}, y{};
+
+  Vec2() = default;
+  Vec2(float x, float y) : x(x), y(y) {}
 };
 
 struct VertexIndices {
-  int v;   // index of vertices, -1 if none
-  int vt;  // index of texcoords, -1 if none
-  int vn;  // index of normals, -1 if none
+  int v = -1;
+  int vt = -1;
+  int vn = -1;
 };
 
 struct Face {
@@ -47,25 +57,19 @@ class OBJData {
   void parse(const std::string& filename);
 
  private:
-  [[nodiscard]] std::string Trim(const std::string& str);
+  [[nodiscard]] std::string_view Trim(std::string_view str);
+  void ParseVertex(const std::vector<std::string_view>& tokens);
+  void ParseNormal(const std::vector<std::string_view>& tokens);
+  void ParseTexCoord(const std::vector<std::string_view>& tokens);
+  std::optional<Object> HandleObject(
+      const std::vector<std::string_view>& tokens);
+  std::optional<Mesh> HandleUseMtl(const std::vector<std::string_view>& tokens,
+                                   Object& current_object);
 
-  void ParseVertex(const std::vector<std::string>& tokens);
-
-  void ParseNormal(const std::vector<std::string>& tokens);
-
-  void ParseTexCoord(const std::vector<std::string>& tokens);
-
-  Object* HandleObject(const std::vector<std::string>& tokens);
-
-  Mesh* HandleUseMtl(const std::vector<std::string>& tokens,
-                     Object* current_object);
-
-  void HandleFace(const std::vector<std::string>& tokens,
-                  Object*& current_object, Mesh*& current_mesh);
-
-  [[nodiscard]] int ParseIndex(const std::string& part, size_t current_count);
-
-  [[nodiscard]] std::vector<std::string> Split(const std::string& s,
-                                               char delimiter);
+  void HandleFace(const std::vector<std::string_view>& tokens,
+                  Object& current_object, Mesh& current_mesh);
+  [[nodiscard]] int ParseIndex(std::string_view part, size_t current_count);
+  [[nodiscard]] std::vector<std::string_view> Split(std::string_view s,
+                                                    char delimiter);
 };
 }  // namespace s21

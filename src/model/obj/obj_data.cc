@@ -6,34 +6,29 @@ void OBJData::parse(const std::string& filename) {
   std::ifstream file(filename);
   if (!file.is_open()) {
     std::cerr << "Failed to open file: " << filename << std::endl;
-    return;
+    throw std::runtime_error("Failed to open file: " + filename);
   }
 
-  vertices.reserve(65536);
+  constexpr size_t kVertexReserve = 65536;
+  vertices.reserve(kVertexReserve);
 
   Object* current_object = nullptr;
   Mesh* current_mesh = nullptr;
+  std::unordered_map<std::string, Mesh*> material_map;
 
   std::string line;
   while (std::getline(file, line)) {
-    line = Trim(line);
-    if (line.empty() || line[0] == '#') {
+    std::string_view trimmed = Trim(line);
+    if (trimmed.empty() || trimmed[0] == '#') {
       continue;
     }
 
-    std::istringstream iss(line);
-    std::vector<std::string> tokens;
-    tokens.reserve(8);
-    std::string token;
-    while (iss >> token) {
-      tokens.push_back(std::move(token));
-    }
-
+    auto tokens = Split(trimmed, ' ');
     if (tokens.empty()) {
       continue;
     }
 
-    const std::string& keyword = tokens[0];
+    const std::string_view keyword = tokens[0];
 
     if (keyword == "v") {
       ParseVertex(tokens);
@@ -42,130 +37,97 @@ void OBJData::parse(const std::string& filename) {
     } else if (keyword == "vt") {
       ParseTexCoord(tokens);
     } else if (keyword == "o") {
-      current_object = HandleObject(tokens);
+      current_object = &objects.emplace_back();
+      current_object->name = std::string(tokens[1]);
     } else if (keyword == "usemtl") {
-      current_mesh = HandleUseMtl(tokens, current_object);
+      if (!current_object) current_object = &objects.emplace_back();
+      auto& mesh = current_object->meshes.emplace_back();
+      mesh.material = std::string(tokens[1]);
+      material_map[mesh.material] = &mesh;
+      current_mesh = &mesh;
     } else if (keyword == "f") {
-      HandleFace(tokens, current_object, current_mesh);
+      if (!current_object) current_object = &objects.emplace_back();
+      if (!current_mesh) current_mesh = &current_object->meshes.emplace_back();
+      HandleFace(tokens, *current_object, *current_mesh);
     }
   }
-
-  file.close();
 }
-std::string OBJData::Trim(const std::string& str) {
+
+std::string_view OBJData::Trim(std::string_view str) {
   size_t start = str.find_first_not_of(" \t");
   size_t end = str.find_last_not_of(" \t");
-  return (start == std::string::npos) ? "" : str.substr(start, end - start + 1);
+  return (start == std::string_view::npos) ? ""
+                                           : str.substr(start, end - start + 1);
 }
 
-void OBJData::ParseVertex(const std::vector<std::string>& tokens) {
-  if (tokens.size() < 4) {
-    throw std::runtime_error("Invalid vertex format");
+void OBJData::ParseVertex(const std::vector<std::string_view>& tokens) {
+  if (tokens.size() < 4) throw std::runtime_error("Invalid vertex format");
+  vertices.emplace_back(std::stof(std::string(tokens[1])),
+                        std::stof(std::string(tokens[2])),
+                        std::stof(std::string(tokens[3])));
+}
+
+int OBJData::ParseIndex(std::string_view part, size_t current_count) {
+  if (current_count == 0) {
+    return -1;
   }
-  vertices.emplace_back(
-      Vec3{std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3])});
+  int idx = 0;
+  auto [ptr, ec] = std::from_chars(part.data(), part.data() + part.size(), idx);
+  if (ec != std::errc()) {
+    return -1;
+  }
+  return idx < 0 ? idx + current_count : idx - 1;
 }
 
-void OBJData::ParseNormal(const std::vector<std::string>& tokens) {
+std::vector<std::string_view> OBJData::Split(std::string_view str,
+                                             char delimiter) {
+  std::vector<std::string_view> parts;
+  size_t start = 0, end;
+  while ((end = str.find(delimiter, start)) != std::string_view::npos) {
+    parts.emplace_back(str.substr(start, end - start));
+    start = end + 1;
+  }
+  parts.emplace_back(str.substr(start));
+  return parts;
+}
+
+void OBJData::ParseNormal(const std::vector<std::string_view>& tokens) {
   if (tokens.size() < 4) {
     throw std::runtime_error("Invalid normal format");
   }
-  Vec3 n;
-  n.x = std::stof(tokens[1]);
-  n.y = std::stof(tokens[2]);
-  n.z = std::stof(tokens[3]);
-  normals.push_back(n);
+  normals.emplace_back(std::stof(std::string(tokens[1])),
+                       std::stof(std::string(tokens[2])),
+                       std::stof(std::string(tokens[3])));
 }
 
-void OBJData::ParseTexCoord(const std::vector<std::string>& tokens) {
+void OBJData::ParseTexCoord(const std::vector<std::string_view>& tokens) {
   if (tokens.size() < 3) {
-    throw std::runtime_error("Invalid texture coord format");
+    throw std::runtime_error("Invalid texture coordinate format");
   }
-  Vec2 tc;
-  tc.x = std::stof(tokens[1]);
-  tc.y = std::stof(tokens[2]);
-  texcoords.push_back(tc);
+  texcoords.emplace_back(std::stof(std::string(tokens[1])),
+                         std::stof(std::string(tokens[2])));
 }
 
-Object* OBJData::HandleObject(const std::vector<std::string>& tokens) {
-  if (tokens.size() < 2) {
-    return nullptr;
-  }
-  objects.emplace_back();
-  Object& obj = objects.back();
-  obj.name = tokens[1];
-  return &obj;
-}
-
-Mesh* OBJData::HandleUseMtl(const std::vector<std::string>& tokens,
-                            Object* current_object) {
-  if (!current_object) {
-    objects.emplace_back();
-    current_object = &objects.back();
-    current_object->name = "default";
-  }
-
-  if (tokens.size() < 2 || !current_object) {
-    return nullptr;
-  }
-  std::string material = tokens[1];
-  if (current_object->meshes.empty() ||
-      current_object->meshes.back().material != material) {
-    current_object->meshes.emplace_back();
-    current_object->meshes.back().material = material;
-  }
-  return &current_object->meshes.back();
-}
-
-void OBJData::HandleFace(const std::vector<std::string>& tokens,
-                         Object*& current_object, Mesh*& current_mesh) {
-  if (!current_object) {
-    objects.emplace_back();
-    current_object = &objects.back();
-  }
-  if (current_object->meshes.empty()) {
-    current_object->meshes.emplace_back();
-    current_mesh = &current_object->meshes.back();
-  }
-  if (!current_mesh) {
-    return;
+void OBJData::HandleFace(const std::vector<std::string_view>& tokens,
+                         Object& current_object, Mesh& current_mesh) {
+  if (tokens.size() < 4) {
+    throw std::runtime_error("Invalid face format");
   }
 
   Face face;
   for (size_t i = 1; i < tokens.size(); ++i) {
-    std::vector<std::string> vertex_indexes = Split(tokens[i], '/');
-    VertexIndices vi = {-1, -1, -1};
+    auto indices = Split(tokens[i], '/');
+    VertexIndices vi;
 
-    if (!vertex_indexes[0].empty()) {
-      vi.v = ParseIndex(vertex_indexes[0], vertices.size());
-    }
-    if (vertex_indexes.size() > 1 && !vertex_indexes[1].empty()) {
-      vi.vt = ParseIndex(vertex_indexes[1], texcoords.size());
-    }
-    if (vertex_indexes.size() > 2 && !vertex_indexes[2].empty()) {
-      vi.vn = ParseIndex(vertex_indexes[2], normals.size());
-    }
+    if (!indices[0].empty()) vi.v = ParseIndex(indices[0], vertices.size());
+    if (indices.size() > 1 && !indices[1].empty())
+      vi.vt = ParseIndex(indices[1], texcoords.size());
+    if (indices.size() > 2 && !indices[2].empty())
+      vi.vn = ParseIndex(indices[2], normals.size());
 
     face.vertices.push_back(vi);
   }
-  current_mesh->faces.push_back(face);
-}
-
-int OBJData::ParseIndex(const std::string& part, size_t current_count) {
-  if (current_count == 0) return -1;
-  int idx = std::stoi(part);
-  return idx < 0 ? idx + current_count : idx - 1;
-}
-
-std::vector<std::string> OBJData::Split(const std::string& str,
-                                        char delimiter) {
-  std::vector<std::string> parts;
-  std::stringstream ss(str);
-  std::string part;
-  while (std::getline(ss, part, delimiter)) {
-    parts.push_back(part);
-  }
-  return parts;
+  current_mesh.faces.push_back(face);
 }
 
 }  // namespace s21
