@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <charconv>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -11,16 +12,20 @@ namespace s21 {
 
 struct Vec3 {
   float x, y, z;
+  Vec3() = default;
+  Vec3(float x, float y, float z) : x(x), y(y), z(z) {};
 };
 
 struct Vec2 {
   float x, y;
+  Vec2() = default;
+  Vec2(float x, float y) : x(x), y(y) {};
 };
 
 struct VertexIndices {
-  int v;   // index of vertices, -1 if none
-  int vt;  // index of texcoords, -1 if none
-  int vn;  // index of normals, -1 if none
+  int v{-1};   // index of vertices, -1 if none
+  int vt{-1};  // index of texcoords, -1 if none
+  int vn{-1};  // index of normals, -1 if none
 };
 
 struct Face {
@@ -47,7 +52,7 @@ class OBJData {
   void parse(const std::string& filename);
 
  private:
-  [[nodiscard]] std::string Trim(const std::string& str);
+  std::string Trim(const std::string& str);
 
   void ParseVertex(const std::vector<std::string>& tokens);
 
@@ -63,9 +68,8 @@ class OBJData {
   void HandleFace(const std::vector<std::string>& tokens,
                   Object*& current_object, Mesh*& current_mesh);
 
-  [[nodiscard]] int ParseIndex(const std::string& part, size_t current_count);
+  int ParseIndex(const std::string& part, size_t current_count);
 
-  [[nodiscard]] std::vector<std::string> Split(const std::string& s,
-                                               char delimiter);
+  std::vector<std::string> Split(const std::string& s, char delimiter);
 };
 }  // namespace s21

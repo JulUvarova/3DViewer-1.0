@@ -2,14 +2,26 @@
 
 namespace s21 {
 
+// Reusable helper function to parse a float from a string.
+// Tries std::from_chars first, falling back to std::stof if needed.
+inline float ParseFloat(const std::string& s) {
+  float value = 0.0f;
+  const char* begin = s.data();
+  const char* end = begin + s.size();
+  auto result = std::from_chars(begin, end, value);
+  if (result.ec != std::errc()) {
+    // Fallback conversion using std::stof if from_chars fails.
+    value = std::stof(s);
+  }
+  return value;
+}
+
 void OBJData::parse(const std::string& filename) {
   std::ifstream file(filename);
   if (!file.is_open()) {
     std::cerr << "Failed to open file: " << filename << std::endl;
     return;
   }
-
-  vertices.reserve(65536);
 
   Object* current_object = nullptr;
   Mesh* current_mesh = nullptr;
@@ -23,10 +35,9 @@ void OBJData::parse(const std::string& filename) {
 
     std::istringstream iss(line);
     std::vector<std::string> tokens;
-    tokens.reserve(8);
     std::string token;
     while (iss >> token) {
-      tokens.push_back(std::move(token));
+      tokens.push_back(token);
     }
 
     if (tokens.empty()) {
@@ -52,6 +63,7 @@ void OBJData::parse(const std::string& filename) {
 
   file.close();
 }
+
 std::string OBJData::Trim(const std::string& str) {
   size_t start = str.find_first_not_of(" \t");
   size_t end = str.find_last_not_of(" \t");
@@ -60,31 +72,28 @@ std::string OBJData::Trim(const std::string& str) {
 
 void OBJData::ParseVertex(const std::vector<std::string>& tokens) {
   if (tokens.size() < 4) {
-    throw std::runtime_error("Invalid vertex format");
+    return;
   }
-  vertices.emplace_back(
-      Vec3{std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3])});
+  // Assuming the vertex coordinates are in the format "v x y z".
+  vertices.emplace_back(ParseFloat(tokens[1]), ParseFloat(tokens[2]),
+                        ParseFloat(tokens[3]));
 }
 
 void OBJData::ParseNormal(const std::vector<std::string>& tokens) {
   if (tokens.size() < 4) {
-    throw std::runtime_error("Invalid normal format");
+    return;
   }
-  Vec3 n;
-  n.x = std::stof(tokens[1]);
-  n.y = std::stof(tokens[2]);
-  n.z = std::stof(tokens[3]);
-  normals.push_back(n);
+  // Assuming the vertex coordinates are in the format "vn x y z".
+  normals.emplace_back(ParseFloat(tokens[1]), ParseFloat(tokens[2]),
+                       ParseFloat(tokens[3]));
 }
 
 void OBJData::ParseTexCoord(const std::vector<std::string>& tokens) {
   if (tokens.size() < 3) {
-    throw std::runtime_error("Invalid texture coord format");
+    return;
   }
-  Vec2 tc;
-  tc.x = std::stof(tokens[1]);
-  tc.y = std::stof(tokens[2]);
-  texcoords.push_back(tc);
+  // Assuming the texture coordinates are in the format "vt u v".
+  texcoords.emplace_back(ParseFloat(tokens[1]), ParseFloat(tokens[2]));
 }
 
 Object* OBJData::HandleObject(const std::vector<std::string>& tokens) {
@@ -99,12 +108,6 @@ Object* OBJData::HandleObject(const std::vector<std::string>& tokens) {
 
 Mesh* OBJData::HandleUseMtl(const std::vector<std::string>& tokens,
                             Object* current_object) {
-  if (!current_object) {
-    objects.emplace_back();
-    current_object = &objects.back();
-    current_object->name = "default";
-  }
-
   if (tokens.size() < 2 || !current_object) {
     return nullptr;
   }
@@ -134,7 +137,7 @@ void OBJData::HandleFace(const std::vector<std::string>& tokens,
   Face face;
   for (size_t i = 1; i < tokens.size(); ++i) {
     std::vector<std::string> vertex_indexes = Split(tokens[i], '/');
-    VertexIndices vi = {-1, -1, -1};
+    VertexIndices vi;
 
     if (!vertex_indexes[0].empty()) {
       vi.v = ParseIndex(vertex_indexes[0], vertices.size());
@@ -152,9 +155,17 @@ void OBJData::HandleFace(const std::vector<std::string>& tokens,
 }
 
 int OBJData::ParseIndex(const std::string& part, size_t current_count) {
-  if (current_count == 0) return -1;
   int idx = std::stoi(part);
-  return idx < 0 ? idx + current_count : idx - 1;
+  if (idx < 0) {
+    idx += current_count;
+  } else {
+    idx -= 1;
+  }
+  if (idx < 0 || idx >= static_cast<int>(current_count)) {
+    std::cerr << "Index out of bounds: " << part << std::endl;
+    return -1;
+  }
+  return idx;
 }
 
 std::vector<std::string> OBJData::Split(const std::string& str,
