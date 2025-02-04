@@ -266,18 +266,43 @@ void OBJData::HandleFace(const std::vector<std::string_view>& tokens,
   }
 
   Face face;
+  // for (size_t i = 1; i < tokens.size(); ++i) {
+  //   std::vector<std::string_view> vertex_indexes = SplitView(tokens[i], '/');
+  //   VertexIndices vi;
+
+  //   if (!vertex_indexes[0].empty()) {
+  //     vi.v = ParseIndex(vertex_indexes[0], vertices.size());
+  //   }
+  //   if (vertex_indexes.size() > 1 && !vertex_indexes[1].empty()) {
+  //     vi.vt = ParseIndex(vertex_indexes[1], texcoords.size());
+  //   }
+  //   if (vertex_indexes.size() > 2 && !vertex_indexes[2].empty()) {
+  //     vi.vn = ParseIndex(vertex_indexes[2], normals.size());
+  //   }
+
+  //   face.vertices.push_back(vi);
+  // }
   for (size_t i = 1; i < tokens.size(); ++i) {
-    std::vector<std::string_view> vertex_indexes = SplitView(tokens[i], '/');
+    std::string_view part = tokens[i];
     VertexIndices vi;
 
-    if (!vertex_indexes[0].empty()) {
-      vi.v = ParseIndex(vertex_indexes[0], vertices.size());
+    size_t delim1 = part.find('/');
+    size_t delim2 = part.find('/', delim1 + 1);
+
+    // Parse vertex index (v)
+    if (delim1 != 0) {  // Check for leading '/' (e.g., "//vn")
+      vi.v = ParseIndex(part.substr(0, delim1), vertices.size());
     }
-    if (vertex_indexes.size() > 1 && !vertex_indexes[1].empty()) {
-      vi.vt = ParseIndex(vertex_indexes[1], texcoords.size());
+
+    // Parse texture coordinate (vt)
+    if (delim1 != std::string_view::npos && delim2 > delim1 + 1) {
+      vi.vt = ParseIndex(part.substr(delim1 + 1, delim2 - delim1 - 1),
+                         texcoords.size());
     }
-    if (vertex_indexes.size() > 2 && !vertex_indexes[2].empty()) {
-      vi.vn = ParseIndex(vertex_indexes[2], normals.size());
+
+    // Parse normal (vn)
+    if (delim2 != std::string_view::npos) {
+      vi.vn = ParseIndex(part.substr(delim2 + 1), normals.size());
     }
 
     face.vertices.push_back(vi);
