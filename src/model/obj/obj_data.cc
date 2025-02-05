@@ -349,4 +349,22 @@ std::vector<std::string> OBJData::Split(const std::string_view& str,
   return parts;
 }
 
+std::string OBJData::toString() {
+  std::string info;
+  info.append("Vertices count: ")
+      .append(std::to_string(vertices.size()))
+      .append("\n");
+  info.append("Objects count: ")
+      .append(std::to_string(objects.size()))
+      .append("\n");
+  for (const auto& object : objects) {
+    info.append("Object: ").append(object.name).append("\n");
+    for (const auto& mesh : object.meshes) {
+      info.append("  Group material: ").append(mesh.material).append("\n");
+      info.append("  Faces count: ").append(std::to_string(mesh.faces.size())).append("\n");
+    }
+  }
+  return info;
+}
+
 }  // namespace s21

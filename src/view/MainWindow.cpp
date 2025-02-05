@@ -56,7 +56,7 @@ void MainWindow::createDockWidgets() {
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
 
   // Box with test sliders
-  //! В прототип с обработкой сигналов изменения 
+  //! В прототип с обработкой сигналов изменения
   int min = 0;
   int max = 100;
   float step = 0.01;
@@ -69,7 +69,6 @@ void MainWindow::createDockWidgets() {
   xSlider->setRange(min, max);
   xSlider->setTickInterval(step);
   xSlider->setValue(max / 2);
-  // xSlider->setTickPosition(QSlider::NoTicks);
   xSlider->setOrientation(Qt::Horizontal);
 
   ySlider = new QSlider(xSlider);
@@ -115,6 +114,9 @@ void MainWindow::createDockWidgets() {
   propsDock->setWidget(new QWidget);  // Add property editors here
   addDockWidget(Qt::RightDockWidgetArea, propsDock);
 
+  propsInfo = new QLabel();
+  propsDock->setWidget(propsInfo);
+
   // Bottom dock (Timeline)
   QDockWidget *timelineDock = new QDockWidget("Timeline", this);
   timelineDock->setWidget(new QWidget);  // Add timeline/console widgets
@@ -157,11 +159,17 @@ void MainWindow::openFile() {
                                                   tr("Images (*.obj)"));
   qDebug() << fileName;
 
-  //! отправить в парсер
+  QByteArray byteArray = fileName.toUtf8();
+  const char *cstr = byteArray.constData();
+  
+  // parser test
+  obj_data.parse(cstr);
+  propsInfo->setText(QString::fromStdString(obj_data.toString()));
+
 }
 
 void MainWindow::saveImage() {
-  // имя и место сохранения
+  // file name & save location
   QString selectedFilter;
   QString fileName = QFileDialog::getSaveFileName(
       this, tr("Choose folder"), "./", tr("*.jpeg;;*.bmp"), &selectedFilter);

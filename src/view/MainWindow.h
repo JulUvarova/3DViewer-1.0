@@ -1,4 +1,5 @@
 #pragma once
+#include <QByteArray>
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QGroupBox>
@@ -9,9 +10,11 @@
 #include <QSettings>
 #include <QSlider>
 #include <QStatusBar>
+#include <QString>
 #include <QToolBar>
 
 #include "Viewport3D.h"
+#include "../model/obj/obj_data.h"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -33,7 +36,10 @@ class MainWindow : public QMainWindow {
 
  private:
   QSlider *xSlider, *ySlider, *zSlider;
-  Facade facade;
+  QLabel *propsInfo;
+
+  // Check parser
+  s21::OBJData obj_data;
 
   void setupUI();
   void createDockWidgets();
