@@ -18,11 +18,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS OpenGLWidgets)
 set(PROJECT_SOURCES
         main.cpp
         
-        view/mainwindow.cpp
-        view/mainwindow.h
-        view/mainwindow.ui
-        view/myopenglwidget.h
-        view/myopenglwidget.cpp
+        view/MainWindow.cpp
+        view/MainWindow.h
+        view/Viewport3D.h
 
         controller/facade.h
 
