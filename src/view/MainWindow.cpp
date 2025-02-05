@@ -11,11 +11,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   connect(zSlider, &QSlider::sliderMoved, this, &MainWindow::zChange);
 }
 
-void MainWindow::xChange() { qDebug() << "X: " << xSlider->value(); }
+void MainWindow::xChange() { xValue->setText(QString::number(xSlider->value())); }
 
-void MainWindow::yChange() { qDebug() << "Y: " << ySlider->value(); }
+void MainWindow::yChange() { yValue->setText(QString::number(ySlider->value()));}
 
-void MainWindow::zChange() { qDebug() << "Z: " << zSlider->value(); }
+void MainWindow::zChange() { zValue->setText(QString::number(zSlider->value())); }
 
 void MainWindow::setupUI() {
   // Window properties
@@ -79,22 +79,29 @@ void MainWindow::createDockWidgets() {
   zSlider->setValue(max / 2);
   zSlider->setOrientation(Qt::Horizontal);
 
+  xValue = new QLabel(QString::number(xSlider->value()));
+  yValue = new QLabel(QString::number(ySlider->value()));
+  zValue = new QLabel(QString::number(zSlider->value()));
+
   QGroupBox *xInfo = new QGroupBox();
   QHBoxLayout *xLayout = new QHBoxLayout();
   xLayout->addWidget(xLabel);
   xLayout->addWidget(xSlider);
+  xLayout->addWidget(xValue);
   xInfo->setLayout(xLayout);
 
   QGroupBox *yInfo = new QGroupBox();
   QHBoxLayout *yLayout = new QHBoxLayout();
   yLayout->addWidget(yLabel);
   yLayout->addWidget(ySlider);
+  yLayout->addWidget(yValue);
   yInfo->setLayout(yLayout);
 
   QGroupBox *zInfo = new QGroupBox();
   QHBoxLayout *zLayout = new QHBoxLayout();
   zLayout->addWidget(zLabel);
   zLayout->addWidget(zSlider);
+  zLayout->addWidget(zValue);
   zInfo->setLayout(zLayout);
 
   QGroupBox *group = new QGroupBox();
@@ -114,6 +121,7 @@ void MainWindow::createDockWidgets() {
   propsDock->setWidget(new QWidget);  // Add property editors here
   addDockWidget(Qt::RightDockWidgetArea, propsDock);
 
+  // Scene info on Properties
   propsInfo = new QLabel();
   propsDock->setWidget(propsInfo);
 
@@ -141,12 +149,12 @@ void MainWindow::createMenuAndToolbars() {
   settingMenu->addAction("Restore Layout", this, &MainWindow::restoreLayout);
   setMenuBar(menuBar);
 
-  // Top toolbar
-  QToolBar *toolbar = new QToolBar("Main Toolbar", this);
-  toolbar->addAction("Edit Mode");
-  toolbar->addSeparator();
-  toolbar->addAction("Render");
-  toolbar->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
+  // // Top toolbar
+  // QToolBar *toolbar = new QToolBar("Main Toolbar", this);
+  // toolbar->addAction("Edit Mode");
+  // toolbar->addSeparator();
+  // toolbar->addAction("Render");
+  // toolbar->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 }
 
 void MainWindow::close() {
@@ -161,11 +169,10 @@ void MainWindow::openFile() {
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
-  
+
   // parser test
   obj_data.parse(cstr);
   propsInfo->setText(QString::fromStdString(obj_data.toString()));
-
 }
 
 void MainWindow::saveImage() {

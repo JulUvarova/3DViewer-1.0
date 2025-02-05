@@ -36,6 +36,7 @@ class MainWindow : public QMainWindow {
 
  private:
   QSlider *xSlider, *ySlider, *zSlider;
+  QLabel *xValue, *yValue, *zValue;
   QLabel *propsInfo;
 
   // Check parser
