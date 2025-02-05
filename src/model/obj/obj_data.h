@@ -56,6 +56,7 @@ class OBJData {
   std::vector<Object> objects;
 
   void parse(const std::string& filename);
+  std::string toString();
 
  private:
   Object* current_object_ = nullptr;
