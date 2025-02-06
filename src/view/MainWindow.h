@@ -15,6 +15,8 @@
 #include <QToolBar>
 
 #include "../model/obj/obj_data.h"
+#include "CollapseButton.h"
+#include "ElemBox.h"
 #include "SlidersBox.h"
 #include "Viewport3D.h"
 
@@ -28,12 +30,21 @@ class MainWindow : public QMainWindow {
   void slotMoveCoords(Coords coords);
   void slotScaleCoords(Coords coords);
   void slotRotateCoords(Coords coords);
+  void slotVerticesType(const QString &text);
+  void slotVerticesSize(const int value);
+  void slotVerticesColor(const QColor &color);
+  void slotEdgesType(const QString &text);
+  void slotEdgesSize(const int value);
+  void slotEdgesColor(const QColor &color);
 
  private:
+  //! useless
   QSlider *xSlider, *ySlider, *zSlider;
   QLabel *xValue, *yValue, *zValue;
   QLabel *propsInfo;
   SlidersBox *moveSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
+  ElemBox *verticesBox, *edgesBox;
+  //!
 
   // Check parser
   s21::OBJData obj_data;

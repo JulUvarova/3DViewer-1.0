@@ -6,21 +6,60 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
   //! чтение настроек QSettings("", "");
 
-  connect(moveSlidersBox, &SlidersBox::signalChangeCoords, this, &MainWindow::slotMoveCoords);
-  connect(scaleSlidersBox, &SlidersBox::signalChangeCoords, this, &MainWindow::slotScaleCoords);
-  connect(rotateSlidersBox, &SlidersBox::signalChangeCoords, this, &MainWindow::slotRotateCoords);
+  connect(moveSlidersBox, &SlidersBox::signalChangeCoords, this,
+          &MainWindow::slotMoveCoords);
+  connect(scaleSlidersBox, &SlidersBox::signalChangeCoords, this,
+          &MainWindow::slotScaleCoords);
+  connect(rotateSlidersBox, &SlidersBox::signalChangeCoords, this,
+          &MainWindow::slotRotateCoords);
+  connect(verticesBox, &ElemBox::signalChangeType, this,
+          &MainWindow::slotVerticesType);
+  connect(verticesBox, &ElemBox::signalChangeSize, this,
+          &MainWindow::slotVerticesSize);
+  connect(verticesBox, &ElemBox::signalChangeColor, this,
+          &MainWindow::slotVerticesColor);
+  connect(edgesBox, &ElemBox::signalChangeType, this,
+          &MainWindow::slotEdgesType);
+  connect(edgesBox, &ElemBox::signalChangeSize, this,
+          &MainWindow::slotEdgesSize);
+  connect(edgesBox, &ElemBox::signalChangeColor, this,
+          &MainWindow::slotEdgesColor);
+}
+
+void MainWindow::slotVerticesColor(const QColor &color) {
+  qDebug() << "VerticesColor: " << color.red() << color.green() << color.blue();
+}
+
+void MainWindow::slotVerticesType(const QString &text) {
+  qDebug() << "VerticesType: " << text;
+}
+
+void MainWindow::slotVerticesSize(const int value) {
+  qDebug() << "VerticesSize: " << value;
+}
+
+void MainWindow::slotEdgesColor(const QColor &color) {
+  qDebug() << "EdgesColor: " << color.red() << color.green() << color.blue();
+}
+
+void MainWindow::slotEdgesType(const QString &text) {
+  qDebug() << "EdgesType: " << text;
+}
+
+void MainWindow::slotEdgesSize(const int value) {
+  qDebug() << "EdgesSize: " << value;
 }
 
 void MainWindow::slotMoveCoords(Coords coords) {
-  qDebug() << "Move: " << coords.x<< " " << coords.y<< " " << coords.z;
+  qDebug() << "Move: " << coords.x << " " << coords.y << " " << coords.z;
 }
 
 void MainWindow::slotScaleCoords(Coords coords) {
-  qDebug() << "Scale: " << coords.x<< " " << coords.y<< " " << coords.z;
+  qDebug() << "Scale: " << coords.x << " " << coords.y << " " << coords.z;
 }
 
 void MainWindow::slotRotateCoords(Coords coords) {
-  qDebug() << "Rotate: " << coords.x<< " " << coords.y<< " " << coords.z;
+  qDebug() << "Rotate: " << coords.x << " " << coords.y << " " << coords.z;
 }
 
 void MainWindow::setupUI() {
@@ -58,18 +97,36 @@ void MainWindow::setupUI() {
 void MainWindow::createDockWidgets() {
   // Left dock (Tools)
   QDockWidget *toolsDock = new QDockWidget("Tools", this);
-  // toolsDock->setWidget(new QWidget);  // Add your tool buttons here
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
-  // Fill left dock
+
+  // Create sliders (Move, Rotate, Scale)
   moveSlidersBox = new SlidersBox("Move", this);
   rotateSlidersBox = new SlidersBox("Rotate", this);
   scaleSlidersBox = new SlidersBox("Scale", this);
 
+  // Create verticesBox
+  QStringList verticesLst;
+  verticesLst << "circle" << "square" << "none";
+  verticesBox = new ElemBox("Vertices", verticesLst, this);
+
+  // Create EdgeBox
+  QStringList edgesLst;
+  edgesLst << "solid" << "dashed" << "none";
+  edgesBox = new ElemBox("Edges", edgesLst, this);
+
+  // Fill left dock
   QWidget *box = new QWidget();
   box->setLayout(new QVBoxLayout);
   box->layout()->addWidget(moveSlidersBox);
   box->layout()->addWidget(rotateSlidersBox);
   box->layout()->addWidget(scaleSlidersBox);
+  box->layout()->addWidget(verticesBox);
+  box->layout()->addWidget(edgesBox);
+
+  //! Раскрывающееся меню (CollapseButton)
+  // CollapseButton *collapseButton = new CollapseButton();
+  // collapseButton->setContent(scaleSlidersBox);
+  // box->layout()->addWidget(scaleSlidersBox);
 
   toolsDock->setWidget(box);
 
