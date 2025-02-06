@@ -14,10 +14,10 @@ struct Coords {
 class SlidersBox : public QWidget {
   Q_OBJECT
 
-  constexpr float min = -100.0;
-  constexpr float max = 100.0;
-  constexpr float midle = (min + max) / 2.0;
-  constexpr float step = 1;
+  const float min = -100.0;
+  const float max = 100.0;
+  const float midle = (min + max) / 2.0;
+  const float step = 1;
   QLabel *xLabel, *yLabel, *zLabel;
   QSlider *xSlider, *ySlider, *zSlider;
   QLabel *xValue, *yValue, *zValue;
