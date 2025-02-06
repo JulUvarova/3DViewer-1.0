@@ -1,21 +1,73 @@
 #include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+  renderSetting = new RenderSetting();
   setupUI();
   restoreLayout();  // Load previous layout
 
   //! чтение настроек QSettings("", "");
 
-  connect(xSlider, &QSlider::sliderMoved, this, &MainWindow::xChange);
-  connect(ySlider, &QSlider::sliderMoved, this, &MainWindow::yChange);
-  connect(zSlider, &QSlider::sliderMoved, this, &MainWindow::zChange);
+  connect(moveSlidersBox, &SlidersBox::signalChangeCoords, this,
+          &MainWindow::slotMoveCoords);
+  connect(scaleSlidersBox, &SlidersBox::signalChangeCoords, this,
+          &MainWindow::slotScaleCoords);
+  connect(rotateSlidersBox, &SlidersBox::signalChangeCoords, this,
+          &MainWindow::slotRotateCoords);
+  connect(verticesBox, &ElemBox::signalChangeType, this,
+          &MainWindow::slotVerticesType);
+  connect(verticesBox, &ElemBox::signalChangeSize, this,
+          &MainWindow::slotVerticesSize);
+  connect(verticesBox, &ElemBox::signalChangeColor, this,
+          &MainWindow::slotVerticesColor);
+  connect(edgesBox, &ElemBox::signalChangeType, this,
+          &MainWindow::slotEdgesType);
+  connect(edgesBox, &ElemBox::signalChangeSize, this,
+          &MainWindow::slotEdgesSize);
+  connect(edgesBox, &ElemBox::signalChangeColor, this,
+          &MainWindow::slotEdgesColor);
 }
 
-void MainWindow::xChange() { xValue->setText(QString::number(xSlider->value())); }
+void MainWindow::slotVerticesColor(const QColor &color) {
+  qDebug() << "VerticesColor: " << color.red() << color.green() << color.blue();
+  renderSetting->setVerticesColor(color);
+}
 
-void MainWindow::yChange() { yValue->setText(QString::number(ySlider->value()));}
+void MainWindow::slotVerticesType(const QString &text) {
+  qDebug() << "VerticesType: " << text;
+  renderSetting->setVerticesType(text);
+}
 
-void MainWindow::zChange() { zValue->setText(QString::number(zSlider->value())); }
+void MainWindow::slotVerticesSize(const int value) {
+  qDebug() << "VerticesSize: " << value;
+  renderSetting->setVerticesSize(value);
+}
+
+void MainWindow::slotEdgesColor(const QColor &color) {
+  qDebug() << "EdgesColor: " << color.red() << color.green() << color.blue();
+  renderSetting->setEdgesColor(color);
+}
+
+void MainWindow::slotEdgesType(const QString &text) {
+  qDebug() << "EdgesType: " << text;
+  renderSetting->setEdgesType(text);
+}
+
+void MainWindow::slotEdgesSize(const int value) {
+  qDebug() << "EdgesSize: " << value;
+  renderSetting->setEdgesSize(value);
+}
+
+void MainWindow::slotMoveCoords(Coords coords) {
+  qDebug() << "Move: " << coords.x << " " << coords.y << " " << coords.z;
+}
+
+void MainWindow::slotScaleCoords(Coords coords) {
+  qDebug() << "Scale: " << coords.x << " " << coords.y << " " << coords.z;
+}
+
+void MainWindow::slotRotateCoords(Coords coords) {
+  qDebug() << "Rotate: " << coords.x << " " << coords.y << " " << coords.z;
+}
 
 void MainWindow::setupUI() {
   // Window properties
@@ -52,69 +104,44 @@ void MainWindow::setupUI() {
 void MainWindow::createDockWidgets() {
   // Left dock (Tools)
   QDockWidget *toolsDock = new QDockWidget("Tools", this);
-  toolsDock->setWidget(new QWidget);  // Add your tool buttons here
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
 
-  // Box with test sliders
-  //! В прототип с обработкой сигналов изменения
-  int min = 0;
-  int max = 100;
-  float step = 0.01;
+  // Create sliders (Move, Rotate, Scale)
+  moveSlidersBox = new SlidersBox("Move", this);
+  rotateSlidersBox = new SlidersBox("Rotate", this);
+  scaleSlidersBox = new SlidersBox("Scale", this);
 
-  QLabel *xLabel = new QLabel(" X ");
-  QLabel *yLabel = new QLabel(" Y ");
-  QLabel *zLabel = new QLabel(" Z ");
+  // Create verticesBox
+  QStringList verticesLst;
+  verticesLst << "circle" << "square" << "none";
+  Setting verticesSetting{renderSetting->getVerticesType(),
+                          renderSetting->getVerticesColor(),
+                          renderSetting->getVerticesSize()};
+  verticesBox = new ElemBox("Vertices", verticesLst, verticesSetting, this);
 
-  xSlider = new QSlider;
-  xSlider->setRange(min, max);
-  xSlider->setTickInterval(step);
-  xSlider->setValue(max / 2);
-  xSlider->setOrientation(Qt::Horizontal);
+  // Create EdgeBox
+  QStringList edgesLst;
+  edgesLst << "solid" << "dashed" << "none";
+  Setting edgesSetting{renderSetting->getEdgesType(),
+                       renderSetting->getEdgesColor(),
+                       renderSetting->getEdgesSize()};
+  edgesBox = new ElemBox("Edges", edgesLst, edgesSetting, this);
 
-  ySlider = new QSlider(xSlider);
-  ySlider->setValue(max / 2);
-  ySlider->setOrientation(Qt::Horizontal);
+  // Fill left dock
+  QWidget *box = new QWidget();
+  box->setLayout(new QVBoxLayout);
+  box->layout()->addWidget(moveSlidersBox);
+  box->layout()->addWidget(rotateSlidersBox);
+  box->layout()->addWidget(scaleSlidersBox);
+  box->layout()->addWidget(verticesBox);
+  box->layout()->addWidget(edgesBox);
 
-  zSlider = new QSlider(xSlider);
-  zSlider->setValue(max / 2);
-  zSlider->setOrientation(Qt::Horizontal);
+  //! Раскрывающееся меню (CollapseButton)
+  // CollapseButton *collapseButton = new CollapseButton();
+  // collapseButton->setContent(scaleSlidersBox);
+  // box->layout()->addWidget(scaleSlidersBox);
 
-  xValue = new QLabel(QString::number(xSlider->value()));
-  yValue = new QLabel(QString::number(ySlider->value()));
-  zValue = new QLabel(QString::number(zSlider->value()));
-
-  QGroupBox *xInfo = new QGroupBox();
-  QHBoxLayout *xLayout = new QHBoxLayout();
-  xLayout->addWidget(xLabel);
-  xLayout->addWidget(xSlider);
-  xLayout->addWidget(xValue);
-  xInfo->setLayout(xLayout);
-
-  QGroupBox *yInfo = new QGroupBox();
-  QHBoxLayout *yLayout = new QHBoxLayout();
-  yLayout->addWidget(yLabel);
-  yLayout->addWidget(ySlider);
-  yLayout->addWidget(yValue);
-  yInfo->setLayout(yLayout);
-
-  QGroupBox *zInfo = new QGroupBox();
-  QHBoxLayout *zLayout = new QHBoxLayout();
-  zLayout->addWidget(zLabel);
-  zLayout->addWidget(zSlider);
-  zLayout->addWidget(zValue);
-  zInfo->setLayout(zLayout);
-
-  QGroupBox *group = new QGroupBox();
-  QVBoxLayout *layout = new QVBoxLayout();
-
-  layout->addWidget(xInfo);
-  layout->addWidget(yInfo);
-  layout->addWidget(zInfo);
-  group->setLayout(layout);
-
-  group->setTitle("Location");
-
-  toolsDock->setWidget(group);
+  toolsDock->setWidget(box);
 
   // Right dock (Properties)
   QDockWidget *propsDock = new QDockWidget("Properties", this);
@@ -141,7 +168,7 @@ void MainWindow::createMenuAndToolbars() {
   fileMenu->addAction("New", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
   fileMenu->addSeparator();
-  fileMenu->addAction("Exit", this, &MainWindow::close);
+  fileMenu->addAction("Exit", this, &MainWindow::appExit);
   // QIcon(tr("path/name.smth")) - иконки
 
   QMenu *settingMenu = menuBar->addMenu("Setting");
@@ -157,9 +184,10 @@ void MainWindow::createMenuAndToolbars() {
   // toolbar->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 }
 
-void MainWindow::close() {
-  //! сохраняем настройки отображения QSettings
-  // close();
+void MainWindow::appExit() {
+  // сохраняем настройки отображения QSettings
+  renderSetting->saveRenderSetting();
+  close();
 }
 
 void MainWindow::openFile() {
@@ -171,7 +199,7 @@ void MainWindow::openFile() {
   const char *cstr = byteArray.constData();
 
   // parser test
-  obj_data.parse(cstr);
+  obj_data.Parse(cstr);
   propsInfo->setText(QString::fromStdString(obj_data.toString()));
 }
 
@@ -208,4 +236,9 @@ void MainWindow::saveLayout() {
 void MainWindow::restoreLayout() {
   QSettings settings;
   restoreState(settings.value("windowState").toByteArray());
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  renderSetting->saveRenderSetting();
+  QMainWindow::closeEvent(event);
 }

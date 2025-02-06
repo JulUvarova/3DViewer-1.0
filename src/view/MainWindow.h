@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QByteArray>
 #include <QDockWidget>
 #include <QFileDialog>
@@ -13,8 +14,12 @@
 #include <QString>
 #include <QToolBar>
 
-#include "Viewport3D.h"
 #include "../model/obj/obj_data.h"
+#include "CollapseButton.h"
+#include "ElemBox.h"
+#include "RenderSetting.h"
+#include "SlidersBox.h"
+#include "Viewport3D.h"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -22,27 +27,39 @@ class MainWindow : public QMainWindow {
  public:
   MainWindow(QWidget *parent = nullptr);
 
- private slots:
-  void saveLayout();
-  void restoreLayout();
-  void openFile();
-  void saveImage();
-  void close();
-
-  // отладка
-  void xChange();
-  void yChange();
-  void zChange();
+ public slots:
+  void slotMoveCoords(Coords coords);
+  void slotScaleCoords(Coords coords);
+  void slotRotateCoords(Coords coords);
+  void slotVerticesType(const QString &text);
+  void slotVerticesSize(const int value);
+  void slotVerticesColor(const QColor &color);
+  void slotEdgesType(const QString &text);
+  void slotEdgesSize(const int value);
+  void slotEdgesColor(const QColor &color);
 
  private:
+  //! useless
   QSlider *xSlider, *ySlider, *zSlider;
   QLabel *xValue, *yValue, *zValue;
   QLabel *propsInfo;
+  SlidersBox *moveSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
+  ElemBox *verticesBox, *edgesBox;
+  //!
 
   // Check parser
   s21::OBJData obj_data;
 
+  // user choice for vertices & edges
+  RenderSetting *renderSetting;
+
   void setupUI();
   void createDockWidgets();
   void createMenuAndToolbars();
+  void saveLayout();
+  void restoreLayout();
+  void openFile();
+  void saveImage();
+  void appExit();
+  void closeEvent(QCloseEvent *event) override;
 };
