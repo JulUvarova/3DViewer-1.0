@@ -12,6 +12,12 @@
 #include <QString>
 #include <QWidget>
 
+struct Setting {
+  QString type;
+  QColor color;
+  int size;
+};
+
 class ElemBox : public QWidget {
   Q_OBJECT
 
@@ -49,12 +55,14 @@ class ElemBox : public QWidget {
   void signalChangeColor(const QColor &color);
 
  public:
-  ElemBox(const char *name, QStringList &lst, QWidget *parent = nullptr)
+  ElemBox(const char *name, QStringList &lst, Setting &setting,
+          QWidget *parent = nullptr)
       : QWidget(parent) {
     // type
     typeLabel = new QLabel("Type:");
     type = new QComboBox(this);
     type->addItems(lst);
+    type->setCurrentText(setting.type);
     type->setEditable(true);
     QHBoxLayout *typeLayout = new QHBoxLayout();
     typeLayout->addWidget(typeLabel);
@@ -64,7 +72,7 @@ class ElemBox : public QWidget {
     sizeLabel = new QLabel("Size:");
     size = new QSpinBox(this);
     size->setRange(0, 100);
-    size->setValue(10);
+    size->setValue(setting.size);
     QHBoxLayout *sizeLayout = new QHBoxLayout();
     sizeLayout->addWidget(sizeLabel);
     sizeLayout->addWidget(size);
@@ -72,7 +80,7 @@ class ElemBox : public QWidget {
     // color
     colorLabel = new QLabel("Color:");
     colorButton = new QPushButton(" ");
-    color = QColor(Qt::white);
+    color = QColor(setting.color);
     setColorButton();
 
     // boxing

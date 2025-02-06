@@ -17,6 +17,7 @@
 #include "../model/obj/obj_data.h"
 #include "CollapseButton.h"
 #include "ElemBox.h"
+#include "RenderSetting.h"
 #include "SlidersBox.h"
 #include "Viewport3D.h"
 
@@ -49,6 +50,9 @@ class MainWindow : public QMainWindow {
   // Check parser
   s21::OBJData obj_data;
 
+  // user choice for vertices & edges
+  RenderSetting *renderSetting;
+
   void setupUI();
   void createDockWidgets();
   void createMenuAndToolbars();
@@ -56,5 +60,6 @@ class MainWindow : public QMainWindow {
   void restoreLayout();
   void openFile();
   void saveImage();
-  void close();
+  void appExit();
+  void closeEvent(QCloseEvent *event) override;
 };

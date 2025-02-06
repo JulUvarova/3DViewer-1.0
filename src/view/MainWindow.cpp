@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+  renderSetting = new RenderSetting();
   setupUI();
   restoreLayout();  // Load previous layout
 
@@ -28,26 +29,32 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::slotVerticesColor(const QColor &color) {
   qDebug() << "VerticesColor: " << color.red() << color.green() << color.blue();
+  renderSetting->setVerticesColor(color);
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
   qDebug() << "VerticesType: " << text;
+  renderSetting->setVerticesType(text);
 }
 
 void MainWindow::slotVerticesSize(const int value) {
   qDebug() << "VerticesSize: " << value;
+  renderSetting->setVerticesSize(value);
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
   qDebug() << "EdgesColor: " << color.red() << color.green() << color.blue();
+  renderSetting->setEdgesColor(color);
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
   qDebug() << "EdgesType: " << text;
+  renderSetting->setEdgesType(text);
 }
 
 void MainWindow::slotEdgesSize(const int value) {
   qDebug() << "EdgesSize: " << value;
+  renderSetting->setEdgesSize(value);
 }
 
 void MainWindow::slotMoveCoords(Coords coords) {
@@ -107,12 +114,18 @@ void MainWindow::createDockWidgets() {
   // Create verticesBox
   QStringList verticesLst;
   verticesLst << "circle" << "square" << "none";
-  verticesBox = new ElemBox("Vertices", verticesLst, this);
+  Setting verticesSetting{renderSetting->getVerticesType(),
+                          renderSetting->getVerticesColor(),
+                          renderSetting->getVerticesSize()};
+  verticesBox = new ElemBox("Vertices", verticesLst, verticesSetting, this);
 
   // Create EdgeBox
   QStringList edgesLst;
   edgesLst << "solid" << "dashed" << "none";
-  edgesBox = new ElemBox("Edges", edgesLst, this);
+  Setting edgesSetting{renderSetting->getEdgesType(),
+                       renderSetting->getEdgesColor(),
+                       renderSetting->getEdgesSize()};
+  edgesBox = new ElemBox("Edges", edgesLst, edgesSetting, this);
 
   // Fill left dock
   QWidget *box = new QWidget();
@@ -155,7 +168,7 @@ void MainWindow::createMenuAndToolbars() {
   fileMenu->addAction("New", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
   fileMenu->addSeparator();
-  fileMenu->addAction("Exit", this, &MainWindow::close);
+  fileMenu->addAction("Exit", this, &MainWindow::appExit);
   // QIcon(tr("path/name.smth")) - иконки
 
   QMenu *settingMenu = menuBar->addMenu("Setting");
@@ -171,9 +184,10 @@ void MainWindow::createMenuAndToolbars() {
   // toolbar->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 }
 
-void MainWindow::close() {
-  //! сохраняем настройки отображения QSettings
-  // close();
+void MainWindow::appExit() {
+  // сохраняем настройки отображения QSettings
+  renderSetting->saveRenderSetting();
+  close();
 }
 
 void MainWindow::openFile() {
@@ -222,4 +236,9 @@ void MainWindow::saveLayout() {
 void MainWindow::restoreLayout() {
   QSettings settings;
   restoreState(settings.value("windowState").toByteArray());
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  renderSetting->saveRenderSetting();
+  QMainWindow::closeEvent(event);
 }
