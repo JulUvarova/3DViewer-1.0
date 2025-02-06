@@ -1,60 +1,111 @@
 #pragma once
 
-#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
+#include <QOpenGLFunctions>
+#include <QSlider>
+#include <QString>
+#include <QWidget>
 
-class SlidersBox : public QGroupBox {
-  int min = 0;
-  int max = 100;
-  float step = 0.01;
-  QLabel xLabel = new QLabel(" X ");
-  QLabel yLabel = new QLabel(" Y ");
-  QLabel xLabel = new QLabel(" X ");
+struct Coords {
+  double x, y, z;
+};
+
+class SlidersBox : public QWidget {
+  Q_OBJECT
+
+  float min = -100.0;
+  float max = 100.0;
+  float midle = (min + max) / 2.0;
+  float step = 1;
+  QLabel *xLabel, *yLabel, *zLabel;
+  QSlider *xSlider, *ySlider, *zSlider;
+  QLabel *xValue, *yValue, *zValue;
+  QHBoxLayout *xLayout, *yLayout, *zLayout;
+  QVBoxLayout *layout;
+
+  // отладка
+  // void xChange();
+  // void yChange();
+  // void zChange();
+  inline void xChange() {
+    xValue->setText(QString::number(xSlider->value() / 100.0, 'f', 2));
+    emit signalChangeCoords(sendCoords());
+  }
+  inline void yChange() {
+    yValue->setText(QString::number(ySlider->value() / 100.0, 'f', 2));
+    emit signalChangeCoords(sendCoords());
+  }
+  inline void zChange() {
+    zValue->setText(QString::number(zSlider->value() / 100.0, 'f', 2));
+    emit signalChangeCoords(sendCoords());
+  }
+
+ signals:
+  void signalChangeCoords(Coords coords);
 
  public:
-  SlidersBox(const char *name) : SlidersBox() {
-    xSlider = new QSlider;
+  SlidersBox(const char *name, QWidget *parent = nullptr) : QWidget(parent) {
+    xLabel = new QLabel(" X ");
+    yLabel = new QLabel(" Y ");
+    zLabel = new QLabel(" Z ");
+    xSlider = new QSlider(this);
     xSlider->setRange(min, max);
     xSlider->setTickInterval(step);
-    xSlider->setValue(max / 2);
-    // xSlider->setTickPosition(QSlider::NoTicks);
+    xSlider->setValue(midle);
     xSlider->setOrientation(Qt::Horizontal);
 
-    ySlider = new QSlider(xSlider);
-    ySlider->setValue(max / 2);
+    ySlider = new QSlider(this);
+    ySlider->setRange(min, max);
+    ySlider->setTickInterval(step);
+    ySlider->setValue(midle);
     ySlider->setOrientation(Qt::Horizontal);
 
-    zSlider = new QSlider(xSlider);
-    zSlider->setValue(max / 2);
+    zSlider = new QSlider(this);
+    zSlider->setRange(min, max);
+    zSlider->setTickInterval(step);
+    zSlider->setValue(midle);
     zSlider->setOrientation(Qt::Horizontal);
 
-    QGroupBox *xInfo = new QGroupBox();
-    QHBoxLayout *xLayout = new QHBoxLayout();
+    xValue = new QLabel(QString::number(xSlider->value()));
+    yValue = new QLabel(QString::number(ySlider->value()));
+    zValue = new QLabel(QString::number(zSlider->value()));
+
+    xLayout = new QHBoxLayout();
     xLayout->addWidget(xLabel);
     xLayout->addWidget(xSlider);
-    xInfo->setLayout(xLayout);
+    xLayout->addWidget(xValue);
 
-    QGroupBox *yInfo = new QGroupBox();
-    QHBoxLayout *yLayout = new QHBoxLayout();
+    yLayout = new QHBoxLayout();
     yLayout->addWidget(yLabel);
     yLayout->addWidget(ySlider);
-    yInfo->setLayout(yLayout);
+    yLayout->addWidget(yValue);
 
-    QGroupBox *zInfo = new QGroupBox();
-    QHBoxLayout *zLayout = new QHBoxLayout();
+    zLayout = new QHBoxLayout();
     zLayout->addWidget(zLabel);
     zLayout->addWidget(zSlider);
-    zInfo->setLayout(zLayout);
+    zLayout->addWidget(zValue);
 
-    QGroupBox *group = new QGroupBox();
-    QVBoxLayout *layout = new QVBoxLayout();
+    layout = new QVBoxLayout();
+    layout->addLayout(xLayout);
+    layout->addLayout(yLayout);
+    layout->addLayout(zLayout);
 
-    layout->addWidget(xInfo);
-    layout->addWidget(yInfo);
-    layout->addWidget(zInfo);
-    group->setLayout(layout);
+    QGroupBox *groupBox = new QGroupBox(name);
+    groupBox->setLayout(layout);
 
-    group->setTitle(name);
+    QVBoxLayout *mainLayout = new QVBoxLayout();
+    mainLayout->addWidget(groupBox);
+    setLayout(mainLayout);
+
+    connect(xSlider, &QSlider::sliderMoved, this, &SlidersBox::xChange);
+    connect(ySlider, &QSlider::sliderMoved, this, &SlidersBox::yChange);
+    connect(zSlider, &QSlider::sliderMoved, this, &SlidersBox::zChange);
   };
-}
+
+ private:
+  Coords sendCoords() {
+    return Coords{xSlider->value() / 100.0, ySlider->value() / 100.0,
+                  zSlider->value() / 100.0};
+  }
+};

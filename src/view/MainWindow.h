@@ -1,4 +1,5 @@
 #pragma once
+
 #include <QByteArray>
 #include <QDockWidget>
 #include <QFileDialog>
@@ -13,8 +14,9 @@
 #include <QString>
 #include <QToolBar>
 
-#include "Viewport3D.h"
 #include "../model/obj/obj_data.h"
+#include "SlidersBox.h"
+#include "Viewport3D.h"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -22,22 +24,16 @@ class MainWindow : public QMainWindow {
  public:
   MainWindow(QWidget *parent = nullptr);
 
- private slots:
-  void saveLayout();
-  void restoreLayout();
-  void openFile();
-  void saveImage();
-  void close();
-
-  // отладка
-  void xChange();
-  void yChange();
-  void zChange();
+ public slots:
+  void slotMoveCoords(Coords coords);
+  void slotScaleCoords(Coords coords);
+  void slotRotateCoords(Coords coords);
 
  private:
   QSlider *xSlider, *ySlider, *zSlider;
   QLabel *xValue, *yValue, *zValue;
   QLabel *propsInfo;
+  SlidersBox *moveSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
 
   // Check parser
   s21::OBJData obj_data;
@@ -45,4 +41,9 @@ class MainWindow : public QMainWindow {
   void setupUI();
   void createDockWidgets();
   void createMenuAndToolbars();
+  void saveLayout();
+  void restoreLayout();
+  void openFile();
+  void saveImage();
+  void close();
 };

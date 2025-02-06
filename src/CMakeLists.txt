@@ -21,6 +21,8 @@ set(PROJECT_SOURCES
         view/MainWindow.cpp
         view/MainWindow.h
         view/Viewport3D.h
+        view/SlidersBox.h
+        
         model/obj/obj_data.h
         model/obj/obj_data.cc
 
