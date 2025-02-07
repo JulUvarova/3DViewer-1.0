@@ -14,20 +14,16 @@ struct Coords {
 class SlidersBox : public QWidget {
   Q_OBJECT
 
-  float min = -100.0;
-  float max = 100.0;
-  float midle = (min + max) / 2.0;
-  float step = 1;
+  const float min = -100.0;
+  const float max = 100.0;
+  const float midle = (min + max) / 2.0;
+  const float step = 1;
   QLabel *xLabel, *yLabel, *zLabel;
   QSlider *xSlider, *ySlider, *zSlider;
   QLabel *xValue, *yValue, *zValue;
   QHBoxLayout *xLayout, *yLayout, *zLayout;
   QVBoxLayout *layout;
 
-  // отладка
-  // void xChange();
-  // void yChange();
-  // void zChange();
   inline void xChange() {
     xValue->setText(QString::number(xSlider->value() / 100.0, 'f', 2));
     emit signalChangeCoords(sendCoords());
