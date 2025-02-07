@@ -14,11 +14,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   Viewport3D(RenderSetting * setting, QWidget *parent = nullptr) : QOpenGLWidget(parent) {
     renderSetting = setting;
 
-    projectionButton = new ProjectionButton(parent);
-
-    // get new projection
-    connect(projectionButton, &ProjectionButton::signalChangeProjection, this,
-            &Viewport3D::changeProjection);
+    projectionButton = new ProjectionButton(this);
 
     // get new projection
     connect(projectionButton, &ProjectionButton::signalChangeProjection, this,
@@ -42,10 +38,8 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   void paintGL() override {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // Add 3D rendering logic here
 
-    // qDebug() << "paintGL";
     // Очищаем экран
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

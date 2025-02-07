@@ -18,7 +18,7 @@ class ProjectionButton : public QPushButton {
             &ProjectionButton::setProjection);
   }
 
-  void setLocation(int w) { setGeometry(w - size, 30, size, size); }
+  void setLocation(int w) { setGeometry(w - size - 10, 10, size, size); }
 
  signals:
   void signalChangeProjection(const bool isParallel);
