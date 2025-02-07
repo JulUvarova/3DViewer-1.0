@@ -2,11 +2,28 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
 
+#include "ProjectionButton.h"
+
 class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   Q_OBJECT
 
+ signals:
+  void signalChangeSize(const int w, const int h);
+
  public:
-  Viewport3D(QWidget *parent = nullptr) : QOpenGLWidget(parent) {}
+  Viewport3D(RenderSetting * setting, QWidget *parent = nullptr) : QOpenGLWidget(parent) {
+    renderSetting = setting;
+
+    projectionButton = new ProjectionButton(parent);
+
+    // get new projection
+    connect(projectionButton, &ProjectionButton::signalChangeProjection, this,
+            &Viewport3D::changeProjection);
+
+    // get new projection
+    connect(projectionButton, &ProjectionButton::signalChangeProjection, this,
+            &Viewport3D::changeProjection);
+  }
 
  protected:
   void initializeGL() override {
@@ -14,7 +31,15 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);  // Dark gray background
   }
 
-  void resizeGL(int w, int h) override { glViewport(0, 0, w, h); }
+  void resizeGL(int w, int h) override {
+    glViewport(0, 0, w, h);
+
+    // resize button
+    projectionButton->setLocation(width());
+
+    // send to MainWindow changed size 
+    emit signalChangeSize(width(), height());
+  }
 
   void paintGL() override {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -48,7 +73,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
                           -0.5f, 0.5f,  0.5f,  0.5f,  0.5f,  -0.5f, 0.5f, 0.5f};
 
     // Устанавливаем толщину ребер
-    glLineWidth(3.0);
+    glLineWidth(renderSetting->getEdgesSize());
 
     // Определяем индексы куба
     GLuint indices[] = {0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 5, 4,
@@ -68,5 +93,12 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     //! ЗАКРЫТЬ
     glDisableClientState(GL_VERTEX_ARRAY);
   }
-}
-;
+
+ private:
+  ProjectionButton *projectionButton;
+  RenderSetting *renderSetting;
+
+  void changeProjection(bool isParallel) {
+    qDebug() << "changeProjection on " << (isParallel ? "parallel" : "central");
+  }
+};
