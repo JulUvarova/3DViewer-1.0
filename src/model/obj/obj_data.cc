@@ -3,47 +3,51 @@
 namespace s21 {
 
 void OBJData::Normalize() {
-  float max_x = 0, max_y = 0, max_z = 0;
-  float min_x = 0, min_y = 0, min_z = 0;
-  for (const auto& vertex : vertices) {
-    max_x = std::max(max_x, vertex.x);
-    min_x = std::min(min_x, vertex.x);
-    max_y = std::max(max_y, vertex.y);
-    min_y = std::min(min_y, vertex.y);
-    max_z = std::max(max_z, vertex.z);
-    min_z = std::min(min_z, vertex.z);
+  using namespace ranges;
+
+  // Ensure there is at least one vertex to avoid undefined behavior.
+  if (vertices.empty()) {
+    return;
   }
+
+  // Find min and max for x coordinate.
+  auto [min_x_it, max_x_it] = minmax_element(
+      vertices, [](const Vec3& a, const Vec3& b) { return a.x < b.x; });
+  float min_x = min_x_it->x;
+  float max_x = max_x_it->x;
+
+  // Find min and max for y coordinate.
+  auto [min_y_it, max_y_it] = minmax_element(
+      vertices, [](const Vec3& a, const Vec3& b) { return a.y < b.y; });
+  float min_y = min_y_it->y;
+  float max_y = max_y_it->y;
+
+  // Find min and max for z coordinate.
+  auto [min_z_it, max_z_it] = minmax_element(
+      vertices, [](const Vec3& a, const Vec3& b) { return a.z < b.z; });
+  float min_z = min_z_it->z;
+  float max_z = max_z_it->z;
+
+  // Compute midpoints.
   float mid_x = (max_x + min_x) / 2.0f;
   float mid_y = (max_y + min_y) / 2.0f;
   float mid_z = (max_z + min_z) / 2.0f;
 
-  max_x -= mid_x;
-  max_y -= mid_y;
-  max_z -= mid_z;
-  min_x -= mid_x;
-  min_y -= mid_y;
-  min_z -= mid_z;
+  // Compute the maximum distance from the midpoint along any axis.
+  float dx = std::max(std::abs(max_x - mid_x), std::abs(min_x - mid_x));
+  float dy = std::max(std::abs(max_y - mid_y), std::abs(min_y - mid_y));
+  float dz = std::max(std::abs(max_z - mid_z), std::abs(min_z - mid_z));
 
-  // Scale the model to fit within a unit cube centered at the origin
+  // Scale factor to normalize within a unit cube (multiplied by 2.0 for full
+  // range).
+  float scale_factor = std::max({dx, dy, dz}) * 2.0f;
 
-  float scale_factor = std::max({
-                           std::abs(max_x),
-                           std::abs(min_x),
-                           std::abs(max_y),
-                           std::abs(min_y),
-                           std::abs(max_z),
-                           std::abs(min_z),
-                       }) *
-                       2.0f;
-
-  for (auto& vertex : vertices) {
-    vertex.x -= mid_x;
-    vertex.y -= mid_y;
-    vertex.z -= mid_z;
-    vertex.x /= scale_factor;
-    vertex.y /= scale_factor;
-    vertex.z /= scale_factor;
-  }
+  // Adjust and scale each vertex using ranges::for_each.
+  for_each(vertices, [=](Vec3& vertex) {
+    vertex.x = (vertex.x - mid_x) / scale_factor;
+    vertex.y = (vertex.y - mid_y) / scale_factor;
+    vertex.z = (vertex.z - mid_z) / scale_factor;
+  });
 }
 
 void OBJData::Parse(const std::string& filename) {
@@ -236,19 +240,16 @@ inline std::string_view OBJData::TrimView(std::string_view sv) {
 
 inline std::vector<std::string_view> OBJData::SplitView(std::string_view str,
                                                         char delimiter) {
-  std::vector<std::string_view> parts;
+  using namespace ranges;
 
-  parts.reserve(3);
-  size_t pos = 0;
-  while (pos < str.size()) {
-    size_t next = str.find(delimiter, pos);
-    if (next == std::string_view::npos) next = str.size();
-    parts.push_back(str.substr(pos, next - pos));
-    pos = next + 1;
-  }
-  return parts;
+  auto parts_view =
+      views::split(str, delimiter) |
+      views::transform([](auto&& subrange) -> std::string_view {
+        return std::string_view(&*subrange.begin(), ranges::distance(subrange));
+      });
+
+  return parts_view | to<std::vector<std::string_view>>();
 }
-
 inline std::vector<std::string_view> OBJData::Tokenize(std::string_view line) {
   std::vector<std::string_view> tokens;
   tokens.reserve(6);

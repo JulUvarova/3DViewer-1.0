@@ -14,6 +14,7 @@ struct Coords {
 class SlidersBox : public QWidget {
   Q_OBJECT
 
+  // TODO slider->value() as float?
   const float min = -100.0;
   const float max = 100.0;
   const float midle = (min + max) / 2.0;
@@ -45,27 +46,28 @@ class SlidersBox : public QWidget {
     xLabel = new QLabel(" X ");
     yLabel = new QLabel(" Y ");
     zLabel = new QLabel(" Z ");
-    xSlider = new QSlider(this);
+
+    xSlider = new QSlider(Qt::Horizontal, this);
     xSlider->setRange(min, max);
     xSlider->setTickInterval(step);
     xSlider->setValue(midle);
-    xSlider->setOrientation(Qt::Horizontal);
+    //! doesn't work?
+    // xSlider->setStyleSheet("QSlider::add-page:horizontal { background: green;
+    // }");
 
-    ySlider = new QSlider(this);
+    ySlider = new QSlider(Qt::Horizontal, this);
     ySlider->setRange(min, max);
     ySlider->setTickInterval(step);
     ySlider->setValue(midle);
-    ySlider->setOrientation(Qt::Horizontal);
 
-    zSlider = new QSlider(this);
+    zSlider = new QSlider(Qt::Horizontal, this);
     zSlider->setRange(min, max);
     zSlider->setTickInterval(step);
     zSlider->setValue(midle);
-    zSlider->setOrientation(Qt::Horizontal);
 
-    xValue = new QLabel(QString::number(xSlider->value()));
-    yValue = new QLabel(QString::number(ySlider->value()));
-    zValue = new QLabel(QString::number(zSlider->value()));
+    xValue = new QLabel(QString::number(xSlider->value() / 100.0, 'f', 2));
+    yValue = new QLabel(QString::number(ySlider->value() / 100.0, 'f', 2));
+    zValue = new QLabel(QString::number(zSlider->value() / 100.0, 'f', 2));
 
     xLayout = new QHBoxLayout();
     xLayout->addWidget(xLabel);

@@ -23,6 +23,7 @@ set(PROJECT_SOURCES
         view/Viewport3D.h
         view/SlidersBox.h
         view/ElemBox.h
+        view/ProjectionButton.h
         
         model/obj/obj_data.h
         model/obj/obj_data.cc
@@ -31,6 +32,8 @@ set(PROJECT_SOURCES
 
         # model/ 
 )
+
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(3DViewer
@@ -54,6 +57,8 @@ else()
         )
     endif()
 endif()
+
+target_include_directories(3DViewer PRIVATE "${CMAKE_SOURCE_DIR}/include/")
 
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::OpenGL)
