@@ -5,8 +5,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   setupUI();
   restoreLayout();  // Load previous layout
 
-  //! чтение настроек QSettings("", "");
-
   connect(moveSlidersBox, &SlidersBox::signalChangeCoords, this,
           &MainWindow::slotMoveCoords);
   connect(scaleSlidersBox, &SlidersBox::signalChangeCoords, this,
@@ -25,48 +23,62 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
           &MainWindow::slotEdgesSize);
   connect(edgesBox, &ElemBox::signalChangeColor, this,
           &MainWindow::slotEdgesColor);
+  connect(centralWidget, &Viewport3D::signalChangeSize, this,
+          &MainWindow::slotViewportSize);
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
   qDebug() << "VerticesColor: " << color.red() << color.green() << color.blue();
   renderSetting->setVerticesColor(color);
+  centralWidget->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
   qDebug() << "VerticesType: " << text;
   renderSetting->setVerticesType(text);
+  centralWidget->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
   qDebug() << "VerticesSize: " << value;
   renderSetting->setVerticesSize(value);
+  centralWidget->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
   qDebug() << "EdgesColor: " << color.red() << color.green() << color.blue();
   renderSetting->setEdgesColor(color);
+  centralWidget->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
   qDebug() << "EdgesType: " << text;
   renderSetting->setEdgesType(text);
+  centralWidget->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
   qDebug() << "EdgesSize: " << value;
   renderSetting->setEdgesSize(value);
+  centralWidget->update();
 }
 
 void MainWindow::slotMoveCoords(Coords coords) {
   qDebug() << "Move: " << coords.x << " " << coords.y << " " << coords.z;
+  centralWidget->update();
 }
 
 void MainWindow::slotScaleCoords(Coords coords) {
   qDebug() << "Scale: " << coords.x << " " << coords.y << " " << coords.z;
+  centralWidget->update();
 }
 
 void MainWindow::slotRotateCoords(Coords coords) {
   qDebug() << "Rotate: " << coords.x << " " << coords.y << " " << coords.z;
+}
+
+void  MainWindow::slotViewportSize(const int w, const int h) {
+  qDebug() << "Viewport size: " << w << "x" << h;
 }
 
 void MainWindow::setupUI() {
@@ -75,7 +87,8 @@ void MainWindow::setupUI() {
   resize(1280, 720);
 
   // Central 3D viewport
-  setCentralWidget(new Viewport3D(this));
+  centralWidget = new Viewport3D(renderSetting, this);
+  setCentralWidget(centralWidget);
 
   // UI components
   createDockWidgets();

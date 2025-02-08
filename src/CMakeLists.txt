@@ -23,6 +23,7 @@ set(PROJECT_SOURCES
         view/Viewport3D.h
         view/SlidersBox.h
         view/ElemBox.h
+        view/ProjectionButton.h
         
         model/obj/obj_data.h
         model/obj/obj_data.cc

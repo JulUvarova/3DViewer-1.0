@@ -13,6 +13,7 @@
 #include <QStatusBar>
 #include <QString>
 #include <QToolBar>
+#include <QWidget>
 
 #include "../model/obj/obj_data.h"
 #include "CollapseButton.h"
@@ -37,6 +38,7 @@ class MainWindow : public QMainWindow {
   void slotEdgesType(const QString &text);
   void slotEdgesSize(const int value);
   void slotEdgesColor(const QColor &color);
+  void slotViewportSize(const int w, const int h);
 
  private:
   //! useless
@@ -52,6 +54,7 @@ class MainWindow : public QMainWindow {
 
   // user choice for vertices & edges
   RenderSetting *renderSetting;
+  Viewport3D *centralWidget;
 
   void setupUI();
   void createDockWidgets();
