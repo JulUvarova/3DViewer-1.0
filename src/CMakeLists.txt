@@ -18,16 +18,22 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS OpenGLWidgets)
 set(PROJECT_SOURCES
         main.cpp
         
-        view/mainwindow.cpp
-        view/mainwindow.h
-        view/mainwindow.ui
-        view/myopenglwidget.h
-        view/myopenglwidget.cpp
+        view/MainWindow.cpp
+        view/MainWindow.h
+        view/Viewport3D.h
+        view/SlidersBox.h
+        view/ElemBox.h
+        view/ProjectionButton.h
+        
+        model/obj/obj_data.h
+        model/obj/obj_data.cc
 
         controller/facade.h
 
         # model/ 
 )
+
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(3DViewer
@@ -51,6 +57,8 @@ else()
         )
     endif()
 endif()
+
+target_include_directories(3DViewer PRIVATE "${CMAKE_SOURCE_DIR}/include/")
 
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::OpenGL)

@@ -1,6 +1,6 @@
 .PHONY: all
 all: 
-	g++ -O2 obj_data.cc obj_parser_test.cc -o obj_parser_test
+	g++ -O2 obj_data.cc obj_parser_test.cc -o obj_parser_test -I../../include
 	./obj_parser_test
 
 profile: 

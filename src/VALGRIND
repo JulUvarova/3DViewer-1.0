@@ -1,0 +1,84 @@
+==120601== Syscall param writev(vector[0]) points to uninitialised byte(s)
+==120601==    at 0x673189B: __writev (writev.c:26)
+==120601==    by 0x673189B: writev (writev.c:24)
+==120601==    by 0x7490ACA: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7490C4E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7490DA6: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7490F94: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7491E6D: xcb_wait_for_reply (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x9DC2C53: QXcbConnection::initializeScreensFromMonitor(xcb_screen_iterator_t*, int, QXcbScreen**, bool) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DC38E7: QXcbConnection::initializeScreens(bool) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DB46F3: QXcbConnection::QXcbConnection(QXcbNativeInterface*, bool, unsigned int, char const*) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DE0339: QXcbIntegration::QXcbIntegration(QList<QString> const&, int&, char**) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x484F588: ??? (in /usr/lib/x86_64-linux-gnu/qt6/plugins/platforms/libqxcb.so)
+==120601==    by 0x58E0141: QGuiApplicationPrivate::createPlatformIntegration() (in /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2)
+==120601==  Address 0x972aab9 is 4,537 bytes inside a block of size 21,176 alloc'd
+==120601==    at 0x4E0C6E5: calloc (vg_replace_malloc.c:1595)
+==120601==    by 0x7493396: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x74940D9: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x68593C9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==120601==    by 0x684A0FD: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==120601==    by 0x9DBD654: QXcbBasicConnection::QXcbBasicConnection(char const*) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DB44AA: QXcbConnection::QXcbConnection(QXcbNativeInterface*, bool, unsigned int, char const*) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DE0339: QXcbIntegration::QXcbIntegration(QList<QString> const&, int&, char**) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x484F588: ??? (in /usr/lib/x86_64-linux-gnu/qt6/plugins/platforms/libqxcb.so)
+==120601==    by 0x58E0141: QGuiApplicationPrivate::createPlatformIntegration() (in /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2)
+==120601==    by 0x58E185F: QGuiApplicationPrivate::createEventDispatcher() (in /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2)
+==120601==    by 0x5FBA8B5: QCoreApplicationPrivate::init() (in /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.4.2)
+==120601==  Uninitialised value was created by a stack allocation
+==120601==    at 0x9DAA260: ??? (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601== 
+==120601== Conditional jump or move depends on uninitialised value(s)
+==120601==    at 0xD691C9F: ???
+==120601==    by 0xB8C45FF: ???
+==120601== 
+==120601== Conditional jump or move depends on uninitialised value(s)
+==120601==    at 0xD691C9F: ???
+==120601==    by 0xC530A3F: ???
+==120601== 
+==120601== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==120601== 
+==120601== 1 errors in context 1 of 3:
+==120601== Conditional jump or move depends on uninitialised value(s)
+==120601==    at 0xD691C9F: ???
+==120601==    by 0xC530A3F: ???
+==120601== 
+==120601== 
+==120601== 1 errors in context 2 of 3:
+==120601== Conditional jump or move depends on uninitialised value(s)
+==120601==    at 0xD691C9F: ???
+==120601==    by 0xB8C45FF: ???
+==120601== 
+==120601== 
+==120601== 1 errors in context 3 of 3:
+==120601== Syscall param writev(vector[0]) points to uninitialised byte(s)
+==120601==    at 0x673189B: __writev (writev.c:26)
+==120601==    by 0x673189B: writev (writev.c:24)
+==120601==    by 0x7490ACA: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7490C4E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7490DA6: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7490F94: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x7491E6D: xcb_wait_for_reply (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x9DC2C53: QXcbConnection::initializeScreensFromMonitor(xcb_screen_iterator_t*, int, QXcbScreen**, bool) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DC38E7: QXcbConnection::initializeScreens(bool) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DB46F3: QXcbConnection::QXcbConnection(QXcbNativeInterface*, bool, unsigned int, char const*) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DE0339: QXcbIntegration::QXcbIntegration(QList<QString> const&, int&, char**) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x484F588: ??? (in /usr/lib/x86_64-linux-gnu/qt6/plugins/platforms/libqxcb.so)
+==120601==    by 0x58E0141: QGuiApplicationPrivate::createPlatformIntegration() (in /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2)
+==120601==  Address 0x972aab9 is 4,537 bytes inside a block of size 21,176 alloc'd
+==120601==    at 0x4E0C6E5: calloc (vg_replace_malloc.c:1595)
+==120601==    by 0x7493396: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x74940D9: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==120601==    by 0x68593C9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==120601==    by 0x684A0FD: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==120601==    by 0x9DBD654: QXcbBasicConnection::QXcbBasicConnection(char const*) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DB44AA: QXcbConnection::QXcbConnection(QXcbNativeInterface*, bool, unsigned int, char const*) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x9DE0339: QXcbIntegration::QXcbIntegration(QList<QString> const&, int&, char**) (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601==    by 0x484F588: ??? (in /usr/lib/x86_64-linux-gnu/qt6/plugins/platforms/libqxcb.so)
+==120601==    by 0x58E0141: QGuiApplicationPrivate::createPlatformIntegration() (in /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2)
+==120601==    by 0x58E185F: QGuiApplicationPrivate::createEventDispatcher() (in /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6.4.2)
+==120601==    by 0x5FBA8B5: QCoreApplicationPrivate::init() (in /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.4.2)
+==120601==  Uninitialised value was created by a stack allocation
+==120601==    at 0x9DAA260: ??? (in /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6.4.2)
+==120601== 
+==120601== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)

@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
-
+#include "range/v3/all.hpp"
 #include <algorithm>
 #include <charconv>
 #include <fstream>
@@ -14,16 +14,14 @@
 
 namespace s21 {
 
-
-
 struct Vec3 {
-  float x, y, z;
+  float x{}, y{}, z{};
   Vec3() = default;
   Vec3(float x, float y, float z) : x(x), y(y), z(z) {};
 };
 
 struct Vec2 {
-  float x, y;
+  float x{}, y{};
   Vec2() = default;
   Vec2(float x, float y) : x(x), y(y) {};
 };
@@ -54,14 +52,16 @@ class OBJData {
   std::vector<Vec2> texcoords;
   std::vector<Vec3> normals;
   std::vector<Object> objects;
+  float x_min = 0.0f, x_max = 0.0f, y_min = 0.0f, y_max = 0.0f, z_min = 0.0f, z_max = 0.0f;
 
-  void parse(const std::string& filename);
+  void Parse(const std::string& filename);
+  void Normalize();
+  std::string toString();
 
  private:
   Object* current_object_ = nullptr;
   Mesh* current_mesh_ = nullptr;
   std::vector<std::string> errors_;
-  std::string Trim(const std::string& str);
 
   void ProcessLine(std::string_view line);
 
@@ -81,6 +81,12 @@ class OBJData {
 
   int ParseIndex(const std::string_view& part, size_t current_count);
 
-  std::vector<std::string> Split(const std::string_view& s, char delimiter);
+  inline float ParseFloat(std::string_view sv);
+
+  inline std::string_view TrimView(std::string_view sv);
+
+  inline std::vector<std::string_view> SplitView(std::string_view str, char delimiter);
+
+  inline std::vector<std::string_view> Tokenize(std::string_view line);
 };
 }  // namespace s21
