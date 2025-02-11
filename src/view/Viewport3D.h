@@ -9,6 +9,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
  signals:
   void signalChangeSize(const int w, const int h);
+  void signalChangeProjection(const bool isParallel);
 
  public:
   Viewport3D(RenderSetting * setting, QWidget *parent = nullptr) : QOpenGLWidget(parent) {
@@ -93,6 +94,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   RenderSetting *renderSetting;
 
   void changeProjection(bool isParallel) {
-    qDebug() << "changeProjection on " << (isParallel ? "parallel" : "central");
+    emit signalChangeProjection(isParallel);
   }
 };

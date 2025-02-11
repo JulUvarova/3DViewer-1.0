@@ -1,83 +1,177 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
+    : QMainWindow(parent) {
+  controller = controller;
   renderSetting = new RenderSetting();
   setupUI();
   restoreLayout();  // Load previous layout
 
-  connect(moveSlidersBox, &SlidersBox::signalChangeCoords, this,
-          &MainWindow::slotMoveCoords);
-  connect(scaleSlidersBox, &SlidersBox::signalChangeCoords, this,
-          &MainWindow::slotScaleCoords);
-  connect(rotateSlidersBox, &SlidersBox::signalChangeCoords, this,
-          &MainWindow::slotRotateCoords);
+  // Location coordinates
+  connect(locationSlidersBox, &SlidersBox::signalChangeX, this,
+          &MainWindow::slotLocationCoordX);
+  connect(locationSlidersBox, &SlidersBox::signalChangeY, this,
+          &MainWindow::slotLocationCoordY);
+  connect(locationSlidersBox, &SlidersBox::signalChangeZ, this,
+          &MainWindow::slotLocationCoordZ);
+
+  // scale coordinates
+  connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
+          &MainWindow::slotScaleCoordX);
+  connect(scaleSlidersBox, &SlidersBox::signalChangeY, this,
+          &MainWindow::slotScaleCoordY);
+  connect(scaleSlidersBox, &SlidersBox::signalChangeZ, this,
+          &MainWindow::slotScaleCoordZ);
+
+  // rotate coordinates
+  connect(rotateSlidersBox, &SlidersBox::signalChangeX, this,
+          &MainWindow::slotRotateCoordX);
+  connect(rotateSlidersBox, &SlidersBox::signalChangeY, this,
+          &MainWindow::slotRotateCoordY);
+  connect(rotateSlidersBox, &SlidersBox::signalChangeZ, this,
+          &MainWindow::slotRotateCoordZ);
+
+  // vertex prop
   connect(verticesBox, &ElemBox::signalChangeType, this,
           &MainWindow::slotVerticesType);
   connect(verticesBox, &ElemBox::signalChangeSize, this,
           &MainWindow::slotVerticesSize);
   connect(verticesBox, &ElemBox::signalChangeColor, this,
           &MainWindow::slotVerticesColor);
+
+  // edges prop
   connect(edgesBox, &ElemBox::signalChangeType, this,
           &MainWindow::slotEdgesType);
   connect(edgesBox, &ElemBox::signalChangeSize, this,
           &MainWindow::slotEdgesSize);
   connect(edgesBox, &ElemBox::signalChangeColor, this,
           &MainWindow::slotEdgesColor);
+  connect(backBox, &BackgroundBox::signalChangeColor, this,
+          &MainWindow::slotBackgroundColor);
+
+  // background prop
   connect(centralWidget, &Viewport3D::signalChangeSize, this,
           &MainWindow::slotViewportSize);
+
+  // projection
+  connect(centralWidget, &Viewport3D::signalChangeProjection, this,
+          &MainWindow::slotProjectionType);
+}
+
+void MainWindow::setAllParameters() {
+  //! установка изначальных параметров при открытии файла
+  // controller->SetBackgroundColor(renderSetting->getBackgroundColor());
+}
+
+void MainWindow::slotProjectionType(const bool isParallel) {
+  controller->SetProjectionType(isParallel);
+  renderSetting->setProjection(isParallel);
+
+  centralWidget->update();
+}
+
+void MainWindow::slotBackgroundColor(const QColor &color) {
+  controller->SetBackgroundColor(color);
+  renderSetting->setBackgroundColor(color);
+
+  centralWidget->update();
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
-  qDebug() << "VerticesColor: " << color.red() << color.green() << color.blue();
+  controller->SetVertexColor(color);
   renderSetting->setVerticesColor(color);
+
   centralWidget->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
-  qDebug() << "VerticesType: " << text;
+  controller->SetVertexType(text);
   renderSetting->setVerticesType(text);
+
   centralWidget->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
-  qDebug() << "VerticesSize: " << value;
+  controller->SetVertexSize(value);
   renderSetting->setVerticesSize(value);
+
   centralWidget->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
-  qDebug() << "EdgesColor: " << color.red() << color.green() << color.blue();
+  controller->SetEdgeColor(color);
   renderSetting->setEdgesColor(color);
+
   centralWidget->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
-  qDebug() << "EdgesType: " << text;
+  controller->SetEdgeType(text);
   renderSetting->setEdgesType(text);
+
   centralWidget->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
-  qDebug() << "EdgesSize: " << value;
+  controller->SetEdgeSize(value);
   renderSetting->setEdgesSize(value);
+
   centralWidget->update();
 }
 
-void MainWindow::slotMoveCoords(Coords coords) {
-  qDebug() << "Move: " << coords.x << " " << coords.y << " " << coords.z;
+void MainWindow::slotLocationCoordX(int coordX) {
+  controller->SetLocationX(coordX);
+
+  centralWidget->update();
+}
+void MainWindow::slotLocationCoordY(int coordY) {
+  controller->SetLocationY(coordY);
+
   centralWidget->update();
 }
 
-void MainWindow::slotScaleCoords(Coords coords) {
-  qDebug() << "Scale: " << coords.x << " " << coords.y << " " << coords.z;
+void MainWindow::slotLocationCoordZ(int coordZ) {
+  controller->SetLocationZ(coordZ);
+
   centralWidget->update();
 }
 
-void MainWindow::slotRotateCoords(Coords coords) {
-  qDebug() << "Rotate: " << coords.x << " " << coords.y << " " << coords.z;
+void MainWindow::slotScaleCoordX(int coordX) {
+  controller->SetScaleX(coordX);
+
+  centralWidget->update();
+}
+void MainWindow::slotScaleCoordY(int coordY) {
+  controller->SetScaleY(coordY);
+
+  centralWidget->update();
 }
 
-void  MainWindow::slotViewportSize(const int w, const int h) {
+void MainWindow::slotScaleCoordZ(int coordZ) {
+  controller->SetScaleZ(coordZ);
+
+  centralWidget->update();
+}
+
+void MainWindow::slotRotateCoordX(int coordX) {
+  controller->SetRotationX(coordX);
+
+  centralWidget->update();
+}
+void MainWindow::slotRotateCoordY(int coordY) {
+  controller->SetRotationY(coordY);
+
+  centralWidget->update();
+}
+
+void MainWindow::slotRotateCoordZ(int coordZ) {
+  controller->SetRotationZ(coordZ);
+
+  centralWidget->update();
+}
+
+void MainWindow::slotViewportSize(const int w, const int h) {
+  //! нужно передавать ширину и высоту куда-то для масштабирования
   qDebug() << "Viewport size: " << w << "x" << h;
 }
 
@@ -119,14 +213,14 @@ void MainWindow::createDockWidgets() {
   QDockWidget *toolsDock = new QDockWidget("Tools", this);
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
 
-  // Create sliders (Move, Rotate, Scale)
-  moveSlidersBox = new SlidersBox("Move", this);
-  rotateSlidersBox = new SlidersBox("Rotate", this);
-  scaleSlidersBox = new SlidersBox("Scale", this);
+  // Create sliders (Location, Rotate, Scale)
+  locationSlidersBox = new SlidersBox("Location", -100, 100, this);
+  rotateSlidersBox = new SlidersBox("Rotate", -180, 180, this);
+  scaleSlidersBox = new SlidersBox("Scale", 1, 200, this);
 
   // Create verticesBox
   QStringList verticesLst;
-  verticesLst << "circle" << "square" << "none";
+  verticesLst << "circle" << "square" << "triangle" << "none";
   Setting verticesSetting{renderSetting->getVerticesType(),
                           renderSetting->getVerticesColor(),
                           renderSetting->getVerticesSize()};
@@ -134,25 +228,26 @@ void MainWindow::createDockWidgets() {
 
   // Create EdgeBox
   QStringList edgesLst;
-  edgesLst << "solid" << "dashed" << "none";
+  edgesLst << "line" << "dashed" << "none";
   Setting edgesSetting{renderSetting->getEdgesType(),
                        renderSetting->getEdgesColor(),
                        renderSetting->getEdgesSize()};
   edgesBox = new ElemBox("Edges", edgesLst, edgesSetting, this);
 
+  // create backgroundBox
+  // QColor backColor = renderSetting->getBackgroundColor();
+  backBox = new BackgroundBox("Background", renderSetting->getBackgroundColor(),
+                              this);
+
   // Fill left dock
   QWidget *box = new QWidget();
   box->setLayout(new QVBoxLayout);
-  box->layout()->addWidget(moveSlidersBox);
+  box->layout()->addWidget(locationSlidersBox);
   box->layout()->addWidget(rotateSlidersBox);
   box->layout()->addWidget(scaleSlidersBox);
   box->layout()->addWidget(verticesBox);
   box->layout()->addWidget(edgesBox);
-
-  //! Раскрывающееся меню (CollapseButton)
-  // CollapseButton *collapseButton = new CollapseButton();
-  // collapseButton->setContent(scaleSlidersBox);
-  // box->layout()->addWidget(scaleSlidersBox);
+  box->layout()->addWidget(backBox);
 
   toolsDock->setWidget(box);
 
@@ -207,6 +302,9 @@ void MainWindow::openFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
                                                   tr("Images (*.obj)"));
   qDebug() << fileName;
+
+  // upload all user render param to controller
+  setAllParameters();
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();

@@ -2,35 +2,21 @@
 
 #include <QColor>
 #include <QColorDialog>
-#include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QOpenGLFunctions>
 #include <QPushButton>
-#include <QSpinBox>
 #include <QString>
 #include <QWidget>
 
-struct Setting {
-  QString type;
-  QColor color;
-  int size;
-};
-
-class ElemBox : public QWidget {
+class BackgroundBox : public QWidget {
   Q_OBJECT
 
-  QLabel *typeLabel, *sizeLabel, *colorLabel;
-  QComboBox *type;
+  QLabel *colorLabel;
   QVBoxLayout *layout;
-  QSpinBox *size;
   QColor color;
   QPushButton *colorButton;
-
-  inline void typeChange(const QString &text) { emit signalChangeType(text); }
-
-  inline void sizeChange(const int value) { emit signalChangeSize(value); }
 
   void colorChange() {
     QColorDialog *colorDialog = new QColorDialog(this);
@@ -50,37 +36,15 @@ class ElemBox : public QWidget {
   }
 
  signals:
-  void signalChangeType(const QString &text);
-  void signalChangeSize(const int size);
   void signalChangeColor(const QColor &color);
 
  public:
-  ElemBox(const char *name, QStringList &lst, Setting &setting,
-          QWidget *parent = nullptr)
+  BackgroundBox(const char *name, QColor color, QWidget *parent = nullptr)
       : QWidget(parent) {
-    // type
-    typeLabel = new QLabel("Type:");
-    type = new QComboBox(this);
-    type->addItems(lst);
-    type->setCurrentText(setting.type);
-    type->setEditable(true);
-    QHBoxLayout *typeLayout = new QHBoxLayout();
-    typeLayout->addWidget(typeLabel);
-    typeLayout->addWidget(type);
-
-    // size
-    sizeLabel = new QLabel("Size:");
-    size = new QSpinBox(this);
-    size->setRange(0, 100);
-    size->setValue(setting.size);
-    QHBoxLayout *sizeLayout = new QHBoxLayout();
-    sizeLayout->addWidget(sizeLabel);
-    sizeLayout->addWidget(size);
-
     // color
     colorLabel = new QLabel("Color:");
     colorButton = new QPushButton(" ");
-    color = setting.color;
+    color = color;
     setColorButton();
 
     // boxing
@@ -89,8 +53,6 @@ class ElemBox : public QWidget {
     colorLayout->addWidget(colorButton);
 
     QVBoxLayout *groupBoxLayout = new QVBoxLayout();
-    groupBoxLayout->addLayout(typeLayout);
-    groupBoxLayout->addLayout(sizeLayout);
     groupBoxLayout->addLayout(colorLayout);
 
     QGroupBox *groupBox = new QGroupBox(name);
@@ -100,8 +62,7 @@ class ElemBox : public QWidget {
     mainLayout->addWidget(groupBox);
     setLayout(mainLayout);
 
-    connect(type, &QComboBox::currentTextChanged, this, &ElemBox::typeChange);
-    connect(size, &QSpinBox::valueChanged, this, &ElemBox::sizeChange);
-    connect(colorButton, &QPushButton::clicked, this, &ElemBox::colorChange);
+    connect(colorButton, &QPushButton::clicked, this,
+            &BackgroundBox::colorChange);
   };
 };

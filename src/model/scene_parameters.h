@@ -10,7 +10,7 @@ enum class ProjectionTypes {
   kCentral,
 };
 
-enum class VertexStyle { kNone, kDot, kSquare, kCircle, kTriangle };
+enum class VertexStyle { kNone, kSquare, kCircle, kTriangle };
 enum class EdgeStyle { kNone, kLine, kDashed };
 
 struct Color {
@@ -20,6 +20,7 @@ struct Color {
 };
 
 class SceneParameters {
+ public:
   // Getters
   float GetScaleX() const { return scale_x_; }
   float GetScaleY() const { return scale_y_; }
@@ -34,6 +35,9 @@ class SceneParameters {
   float GetLocationZ() const { return location_z_; }
 
   ProjectionTypes GetProjectionType() const { return projection_type_; }
+
+  Color GetBackgroundColor() const { return background_color_; }
+
   VertexStyle GetVertexStyle() const { return vertex_style_; }
   int GetVertexSize() const { return vertex_size_; }
   Color GetVertexColor() const { return vertex_color_; }
@@ -56,6 +60,9 @@ class SceneParameters {
   void SetLocationZ(float value) { location_z_ = Clamp(value, -1.0f, 1.0f); }
 
   void SetProjectionType(ProjectionTypes type) { projection_type_ = type; }
+
+  void SetBackgroundColor(Color color) { background_color_ = color; }
+
   void SetVertexStyle(VertexStyle style) { vertex_style_ = style; }
   void SetVertexSize(int size) { vertex_size_ = size; }
   void SetVertexColor(Color color) { vertex_color_ = color; }
@@ -81,6 +88,7 @@ class SceneParameters {
   EdgeStyle edge_style_;
   int edge_size_;
   Color edge_color_;
+  Color background_color_;
 
   // Helper functions
   static float Clamp(float value, float min, float max) {

@@ -14,6 +14,10 @@ class RenderSetting {
   QColor edgesColor;
   int edgesSize;
 
+  QColor backgroundColor;
+
+  bool isParallelProjection;
+
  public:
   RenderSetting() { readRenderSetting(); }
   ~RenderSetting() = default;
@@ -28,6 +32,10 @@ class RenderSetting {
     settings.setValue("edgesType", edgesType);
     settings.setValue("edgesColor", edgesColor);
     settings.setValue("edgesSize", edgesSize);
+
+    settings.setValue("backgroundColor", backgroundColor);
+
+    settings.setValue("isParallelProjection", isParallelProjection);
   }
 
   void readRenderSetting() {
@@ -42,27 +50,48 @@ class RenderSetting {
     edgesColor =
         settings.value("edgesColor", QColor(Qt::white)).value<QColor>();
     edgesSize = settings.value("edgesSize", 10).toInt();
+
+    backgroundColor =
+        settings.value("backgroundColor", QColor(Qt::white)).value<QColor>();
+
+    isParallelProjection = settings.value("isParallelProjection", true).toBool();
+  }
+
+  inline bool getProjection() const { return isParallelProjection; }
+
+  inline void setProjection(bool isParallel) {
+    this->isParallelProjection = isParallel;
+  }
+
+  inline QColor getBackgroundColor() const { return backgroundColor; }
+
+  inline void setBackgroundColor(const QColor &backgroundColor) {
+    this->backgroundColor = backgroundColor;
   }
 
   inline QString getVerticesType() const { return verticesType; }
 
-  inline  void setVerticesType(const QString &verticesType) {
+  inline void setVerticesType(const QString &verticesType) {
     this->verticesType = verticesType;
   }
 
   inline QColor getVerticesColor() const { return verticesColor; }
 
-inline   void setVerticesColor(const QColor &verticesColor) {
+  inline void setVerticesColor(const QColor &verticesColor) {
     this->verticesColor = verticesColor;
   }
 
   inline int getVerticesSize() const { return verticesSize; }
 
-  inline void setVerticesSize(int verticesSize) { this->verticesSize = verticesSize; }
+  inline void setVerticesSize(int verticesSize) {
+    this->verticesSize = verticesSize;
+  }
 
   inline QString getEdgesType() const { return edgesType; }
 
-  inline void setEdgesType(const QString &edgesType) { this->edgesType = edgesType; }
+  inline void setEdgesType(const QString &edgesType) {
+    this->edgesType = edgesType;
+  }
 
   inline QColor getEdgesColor() const { return edgesColor; }
 

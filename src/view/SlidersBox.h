@@ -8,17 +8,13 @@
 #include <QWidget>
 
 struct Coords {
-  double x, y, z;
+  int x, y, z;
 };
 
 class SlidersBox : public QWidget {
   Q_OBJECT
 
-  // TODO slider->value() as float?
-  const float min = -100.0;
-  const float max = 100.0;
-  const float midle = (min + max) / 2.0;
-  const float step = 1;
+  int step = 1;
   QLabel *xLabel, *yLabel, *zLabel;
   QSlider *xSlider, *ySlider, *zSlider;
   QLabel *xValue, *yValue, *zValue;
@@ -26,27 +22,31 @@ class SlidersBox : public QWidget {
   QVBoxLayout *layout;
 
   inline void xChange() {
-    xValue->setText(QString::number(xSlider->value() / 100.0, 'f', 2));
-    emit signalChangeCoords(sendCoords());
+    xValue->setText(QString::number(xSlider->value()));
+    emit signalChangeX(xSlider->value());
   }
   inline void yChange() {
-    yValue->setText(QString::number(ySlider->value() / 100.0, 'f', 2));
-    emit signalChangeCoords(sendCoords());
+    yValue->setText(QString::number(ySlider->value()));
+    emit signalChangeY(ySlider->value());
   }
   inline void zChange() {
-    zValue->setText(QString::number(zSlider->value() / 100.0, 'f', 2));
-    emit signalChangeCoords(sendCoords());
+    zValue->setText(QString::number(zSlider->value()));
+    emit signalChangeZ(zSlider->value());
   }
 
  signals:
-  void signalChangeCoords(Coords coords);
+  void signalChangeX(int coordX);
+  void signalChangeY(int coordY);
+  void signalChangeZ(int coordZ);
 
  public:
-  SlidersBox(const char *name, QWidget *parent = nullptr) : QWidget(parent) {
+  SlidersBox(const char *name, float min, float max, QWidget *parent = nullptr)
+      : QWidget(parent) {
     xLabel = new QLabel(" X ");
     yLabel = new QLabel(" Y ");
     zLabel = new QLabel(" Z ");
 
+    int midle = (min + max) / 2;
     xSlider = new QSlider(Qt::Horizontal, this);
     xSlider->setRange(min, max);
     xSlider->setTickInterval(step);
@@ -65,9 +65,15 @@ class SlidersBox : public QWidget {
     zSlider->setTickInterval(step);
     zSlider->setValue(midle);
 
-    xValue = new QLabel(QString::number(xSlider->value() / 100.0, 'f', 2));
-    yValue = new QLabel(QString::number(ySlider->value() / 100.0, 'f', 2));
-    zValue = new QLabel(QString::number(zSlider->value() / 100.0, 'f', 2));
+    xValue = new QLabel(QString::number(xSlider->value()));
+    xValue->setFixedWidth(4 * QFontMetrics(xValue->font()).averageCharWidth());
+    xValue->setAlignment(Qt::AlignRight);
+    yValue = new QLabel(QString::number(ySlider->value()));
+    yValue->setFixedWidth(4 * QFontMetrics(yValue->font()).averageCharWidth());
+    yValue->setAlignment(Qt::AlignRight);
+    zValue = new QLabel(QString::number(zSlider->value()));
+    zValue->setFixedWidth(4 * QFontMetrics(zValue->font()).averageCharWidth());
+    zValue->setAlignment(Qt::AlignRight);
 
     xLayout = new QHBoxLayout();
     xLayout->addWidget(xLabel);
@@ -96,14 +102,13 @@ class SlidersBox : public QWidget {
     mainLayout->addWidget(groupBox);
     setLayout(mainLayout);
 
-    connect(xSlider, &QSlider::sliderMoved, this, &SlidersBox::xChange);
-    connect(ySlider, &QSlider::sliderMoved, this, &SlidersBox::yChange);
-    connect(zSlider, &QSlider::sliderMoved, this, &SlidersBox::zChange);
+    connect(xSlider, &QSlider::valueChanged, this, &SlidersBox::xChange);
+    connect(ySlider, &QSlider::valueChanged, this, &SlidersBox::yChange);
+    connect(zSlider, &QSlider::valueChanged, this, &SlidersBox::zChange);
   };
 
  private:
   Coords sendCoords() {
-    return Coords{xSlider->value() / 100.0, ySlider->value() / 100.0,
-                  zSlider->value() / 100.0};
+    return Coords{xSlider->value(), ySlider->value(), zSlider->value()};
   }
 };
