@@ -39,12 +39,12 @@ class BackgroundBox : public QWidget {
   void signalChangeColor(const QColor &color);
 
  public:
-  BackgroundBox(const char *name, QColor color, QWidget *parent = nullptr)
+  BackgroundBox(const char *name, QColor clr, QWidget *parent = nullptr)
       : QWidget(parent) {
     // color
     colorLabel = new QLabel("Color:");
     colorButton = new QPushButton(" ");
-    color = color;
+    color = clr;
     setColorButton();
 
     // boxing
