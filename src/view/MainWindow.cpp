@@ -3,8 +3,9 @@
 MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
     : QMainWindow(parent) {
   controller = controller;
-  renderSetting = new RenderSetting();
+
   setupUI();
+
   restoreLayout();  // Load previous layout
 
   // Location coordinates
@@ -59,8 +60,18 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
 }
 
 void MainWindow::setAllParameters() {
-  //! установка изначальных параметров при открытии файла
-  // controller->SetBackgroundColor(renderSetting->getBackgroundColor());
+  // set users parameters in controller
+  controller->SetBackgroundColor(renderSetting->getBackgroundColor());
+
+  controller->SetProjectionType(renderSetting->getProjection());
+
+  controller->SetVertexColor(renderSetting->getVerticesColor());
+  controller->SetVertexType(renderSetting->getVerticesType());
+  controller->SetVertexSize(renderSetting->getVerticesSize());
+
+  controller->SetEdgeColor(renderSetting->getEdgesColor());
+  controller->SetEdgeType(renderSetting->getEdgesType());
+  controller->SetEdgeSize(renderSetting->getEdgesSize());
 }
 
 void MainWindow::slotProjectionType(const bool isParallel) {
@@ -171,11 +182,13 @@ void MainWindow::slotRotateCoordZ(int coordZ) {
 }
 
 void MainWindow::slotViewportSize(const int w, const int h) {
-  //! нужно передавать ширину и высоту куда-то для масштабирования
-  qDebug() << "Viewport size: " << w << "x" << h;
+  controller->SetViewportSize(w, h);
 }
 
 void MainWindow::setupUI() {
+  // read saved settings
+  renderSetting = new RenderSetting();
+
   // Window properties
   setWindowTitle("Blender-like UI");
   resize(1280, 720);
@@ -303,6 +316,9 @@ void MainWindow::openFile() {
                                                   tr("Images (*.obj)"));
   qDebug() << fileName;
 
+  //! if cancel
+  if (fileName.isEmpty()) return;
+  
   // upload all user render param to controller
   setAllParameters();
 

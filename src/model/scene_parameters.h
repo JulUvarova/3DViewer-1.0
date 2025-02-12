@@ -38,6 +38,8 @@ class SceneParameters {
 
   Color GetBackgroundColor() const { return background_color_; }
 
+  float GetAspectRate() const { return aspect_rate_; }
+
   VertexStyle GetVertexStyle() const { return vertex_style_; }
   int GetVertexSize() const { return vertex_size_; }
   Color GetVertexColor() const { return vertex_color_; }
@@ -62,6 +64,8 @@ class SceneParameters {
   void SetProjectionType(ProjectionTypes type) { projection_type_ = type; }
 
   void SetBackgroundColor(Color color) { background_color_ = color; }
+
+  void SetAspectRate(float value) { aspect_rate_ = value; }
 
   void SetVertexStyle(VertexStyle style) { vertex_style_ = style; }
   void SetVertexSize(int size) { vertex_size_ = size; }
@@ -89,6 +93,7 @@ class SceneParameters {
   int edge_size_;
   Color edge_color_;
   Color background_color_;
+  float aspect_rate_{1.0f};
 
   // Helper functions
   static float Clamp(float value, float min, float max) {

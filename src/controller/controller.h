@@ -15,6 +15,13 @@ class Controller {
   ~Controller() { delete sceneParam_; }
 
   // Setters
+  void SetViewportSize(int w, int h) {
+    sceneParam_->SetAspectRate(w / static_cast<float>(h));
+
+    std::cout << "Contr AspectRate: " << sceneParam_->GetAspectRate()
+              << std::endl;
+  }
+
   void SetScaleX(const int value) {
     sceneParam_->SetScaleX(value / 100.0);
     std::cout << "Contr Scale X: " << sceneParam_->GetScaleX() << std::endl;
