@@ -8,6 +8,7 @@
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QSettings>
 #include <QSlider>
 #include <QStatusBar>

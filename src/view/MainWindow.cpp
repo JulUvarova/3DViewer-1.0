@@ -286,7 +286,7 @@ void MainWindow::createMenuAndToolbars() {
   // Menu bar
   QMenuBar *menuBar = new QMenuBar(this);
   QMenu *fileMenu = menuBar->addMenu("File");
-  fileMenu->addAction("New", this, &MainWindow::openFile);
+  fileMenu->addAction("Open", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
   fileMenu->addSeparator();
   fileMenu->addAction("Exit", this, &MainWindow::appExit);
@@ -314,10 +314,8 @@ void MainWindow::appExit() {
 void MainWindow::openFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
                                                   tr("Images (*.obj)"));
-  qDebug() << fileName;
-
   //! if cancel
-  if (fileName.isEmpty()) return;
+  if (fileName.isEmpty()) {return;}
 
   // upload all user render param to controller
   setAllParameters();
@@ -327,6 +325,12 @@ void MainWindow::openFile() {
 
   // parser test
   obj_data.Parse(cstr);
+
+  //! check canOpen
+  // if (!isSaved)
+  // QMessageBox::information(this, tr("Unable to open file"),
+  //                          "File is not opened =(");
+
   propsInfo->setText(QString::fromStdString(obj_data.toString()));
 }
 
@@ -336,23 +340,18 @@ void MainWindow::saveImage() {
   QString fileName = QFileDialog::getSaveFileName(
       this, tr("Choose folder"), "./", tr("*.jpeg;;*.bmp"), &selectedFilter);
 
-  qDebug() << fileName;
+  QString postfix;
+  if (selectedFilter == "*.bmp")
+    postfix = "bmp";
+  else if (selectedFilter == "*.jpeg")
+    postfix = ".jpeg";
 
-  if (selectedFilter == "*.bmp") {
-    qDebug() << "bmp";
-    centralWidget->grab().save(fileName + ".bmp");
-
-  } else if (selectedFilter == "*.jpeg") {
-    qDebug() << "jpeg";
-    centralWidget->grab().save(fileName + ".jpeg");
-  }
-
-  // QFile file(fileName);
-  // if (!file.open(QIODevice::WriteOnly)) {
-  //   QMessageBox::information(this, tr("Unable to open file"),
-  //                            file.errorString());
-  //   return;
-  // }
+  bool isSaved = centralWidget->grab().save(fileName + postfix);
+  if (!isSaved)
+    QMessageBox::information(this, tr("Unable to save file"),
+                             "File is not saved =(");
+  else
+    QMessageBox::information(this, tr("File saved"), "File is saved! =)");
 }
 
 void MainWindow::saveLayout() {
