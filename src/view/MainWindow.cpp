@@ -183,6 +183,8 @@ void MainWindow::slotRotateCoordZ(int coordZ) {
 
 void MainWindow::slotViewportSize(const int w, const int h) {
   controller->SetViewportSize(w, h);
+
+  centralWidget->update();
 }
 
 void MainWindow::setupUI() {
@@ -293,8 +295,10 @@ void MainWindow::createMenuAndToolbars() {
   // QIcon(tr("path/name.smth")) - иконки
 
   QMenu *settingMenu = menuBar->addMenu("Setting");
-  settingMenu->addAction("Save Layout", this, &MainWindow::saveLayout);
-  settingMenu->addAction("Restore Layout", this, &MainWindow::restoreLayout);
+  settingMenu->addAction("Save layout", this, &MainWindow::saveLayout);
+  settingMenu->addAction("Restore layout", this, &MainWindow::restoreLayout);
+  settingMenu->addAction("Reset render settings", this,
+                         &MainWindow::resetRenderSettings);
   setMenuBar(menuBar);
 
   // // Top toolbar
@@ -315,7 +319,9 @@ void MainWindow::openFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
                                                   tr("Images (*.obj)"));
   //! if cancel
-  if (fileName.isEmpty()) {return;}
+  if (fileName.isEmpty()) {
+    return;
+  }
 
   // upload all user render param to controller
   setAllParameters();
@@ -362,6 +368,10 @@ void MainWindow::saveLayout() {
 void MainWindow::restoreLayout() {
   QSettings settings;
   restoreState(settings.value("windowState").toByteArray());
+}
+
+void MainWindow::resetRenderSettings() {
+
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {

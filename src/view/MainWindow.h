@@ -82,6 +82,7 @@ class MainWindow : public QMainWindow {
   void createMenuAndToolbars();
   void saveLayout();
   void restoreLayout();
+  void resetRenderSettings();
   void openFile();
   void saveImage();
   void appExit();

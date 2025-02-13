@@ -117,27 +117,27 @@ class Controller {
   }
 
   void SetVertexColor(const QColor& color) {
-    sceneParam_->SetVertexColor({static_cast<float>(color.red() / 100.0),
-                                 static_cast<float>(color.green() / 100.0),
-                                 static_cast<float>(color.blue() / 100.0)});
+    sceneParam_->SetVertexColor({static_cast<float>(color.red() / 255.0),
+                                 static_cast<float>(color.green() / 255.0),
+                                 static_cast<float>(color.blue() / 255.0)});
     std::cout << "Contr VertexColor: r" << sceneParam_->GetVertexColor().r
               << " g" << sceneParam_->GetVertexColor().g << " b"
               << sceneParam_->GetVertexColor().b << std::endl;
   }
 
   void SetEdgeColor(const QColor& color) {
-    sceneParam_->SetEdgeColor({static_cast<float>(color.red() / 100.0),
-                               static_cast<float>(color.green() / 100.0),
-                               static_cast<float>(color.blue() / 100.0)});
+    sceneParam_->SetEdgeColor({static_cast<float>(color.red() / 255.0),
+                               static_cast<float>(color.green() / 255.0),
+                               static_cast<float>(color.blue() / 255.0)});
     std::cout << "Contr EdgeColor: r" << sceneParam_->GetEdgeColor().r << " g"
               << sceneParam_->GetEdgeColor().g << " b"
               << sceneParam_->GetEdgeColor().b << std::endl;
   }
 
   void SetBackgroundColor(const QColor& color) {
-    sceneParam_->SetBackgroundColor({static_cast<float>(color.red() / 100.0),
-                                     static_cast<float>(color.green() / 100.0),
-                                     static_cast<float>(color.blue() / 100.0)});
+    sceneParam_->SetBackgroundColor({static_cast<float>(color.red() / 255.0),
+                                     static_cast<float>(color.green() / 255.0),
+                                     static_cast<float>(color.blue() / 255.0)});
     std::cout << "Contr BackgroundColor: r"
               << sceneParam_->GetBackgroundColor().r << " g"
               << sceneParam_->GetBackgroundColor().g << " b"
