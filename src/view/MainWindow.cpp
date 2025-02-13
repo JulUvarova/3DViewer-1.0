@@ -318,7 +318,7 @@ void MainWindow::openFile() {
 
   //! if cancel
   if (fileName.isEmpty()) return;
-  
+
   // upload all user render param to controller
   setAllParameters();
 
@@ -340,11 +340,11 @@ void MainWindow::saveImage() {
 
   if (selectedFilter == "*.bmp") {
     qDebug() << "bmp";
-    //! сохраняем как bmp
+    centralWidget->grab().save(fileName + ".bmp");
 
   } else if (selectedFilter == "*.jpeg") {
     qDebug() << "jpeg";
-    //! сохраняем как jpeg
+    centralWidget->grab().save(fileName + ".jpeg");
   }
 
   // QFile file(fileName);
