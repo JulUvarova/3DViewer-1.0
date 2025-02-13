@@ -65,4 +65,9 @@ class BackgroundBox : public QWidget {
     connect(colorButton, &QPushButton::clicked, this,
             &BackgroundBox::colorChange);
   };
+
+  void setSetting(QColor clr) {
+    color = clr;
+    setColorButton();
+  }
 };

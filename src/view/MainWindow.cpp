@@ -59,7 +59,7 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
           &MainWindow::slotProjectionType);
 }
 
-void MainWindow::setAllParameters() {
+void MainWindow::setSceneParameters() {
   // set users parameters in controller
   controller->SetBackgroundColor(renderSetting->getBackgroundColor());
 
@@ -292,11 +292,17 @@ void MainWindow::createMenuAndToolbars() {
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
   fileMenu->addSeparator();
   fileMenu->addAction("Exit", this, &MainWindow::appExit);
-  // QIcon(tr("path/name.smth")) - иконки
+  //! QIcon(tr("path/name.smth")) - иконки
 
   QMenu *settingMenu = menuBar->addMenu("Setting");
   settingMenu->addAction("Save layout", this, &MainWindow::saveLayout);
   settingMenu->addAction("Restore layout", this, &MainWindow::restoreLayout);
+  settingMenu->addAction("Reset layout", this, &MainWindow::resetLayout);
+  settingMenu->addSeparator();
+  settingMenu->addAction("Save render settings", this,
+                         &MainWindow::saveRenderSettings);
+  settingMenu->addAction("Restore render settings", this,
+                         &MainWindow::restoreRenderSettings);
   settingMenu->addAction("Reset render settings", this,
                          &MainWindow::resetRenderSettings);
   setMenuBar(menuBar);
@@ -311,7 +317,7 @@ void MainWindow::createMenuAndToolbars() {
 
 void MainWindow::appExit() {
   // сохраняем настройки отображения QSettings
-  renderSetting->saveRenderSetting();
+  renderSetting->save();
   close();
 }
 
@@ -324,7 +330,7 @@ void MainWindow::openFile() {
   }
 
   // upload all user render param to controller
-  setAllParameters();
+  setSceneParameters();
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
@@ -348,7 +354,7 @@ void MainWindow::saveImage() {
 
   QString postfix;
   if (selectedFilter == "*.bmp")
-    postfix = "bmp";
+    postfix = ".bmp";
   else if (selectedFilter == "*.jpeg")
     postfix = ".jpeg";
 
@@ -370,11 +376,43 @@ void MainWindow::restoreLayout() {
   restoreState(settings.value("windowState").toByteArray());
 }
 
-void MainWindow::resetRenderSettings() {
-
+void MainWindow::resetLayout() {
+  QSettings settings;
+  restoreState(settings.value("windowState").toByteArray());
 }
 
+void MainWindow::resetRenderSettings() {
+  renderSetting->remove();
+  renderSetting->read();
+  setSceneParameters();
+  setVisualParameters();
+}
+
+void MainWindow::restoreRenderSettings() {
+  renderSetting->read();
+  setSceneParameters();
+  setVisualParameters();
+}
+
+void MainWindow::saveRenderSettings() { renderSetting->save(); }
+
 void MainWindow::closeEvent(QCloseEvent *event) {
-  renderSetting->saveRenderSetting();
+  renderSetting->save();
   QMainWindow::closeEvent(event);
+}
+
+void MainWindow::setVisualParameters() {
+  Setting edgesSetting{renderSetting->getEdgesType(),
+                       renderSetting->getEdgesColor(),
+                       renderSetting->getEdgesSize()};
+  edgesBox->setSetting(edgesSetting);
+
+  Setting verticesSetting{renderSetting->getVerticesType(),
+                          renderSetting->getVerticesColor(),
+                          renderSetting->getVerticesSize()};
+  verticesBox->setSetting(verticesSetting);
+
+  backBox->setSetting(renderSetting->getBackgroundColor());
+
+  //! projection
 }

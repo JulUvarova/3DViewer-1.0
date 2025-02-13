@@ -81,11 +81,15 @@ class MainWindow : public QMainWindow {
   void createDockWidgets();
   void createMenuAndToolbars();
   void saveLayout();
+  void resetLayout();
   void restoreLayout();
+  void saveRenderSettings();
   void resetRenderSettings();
+  void restoreRenderSettings();
   void openFile();
   void saveImage();
   void appExit();
   void closeEvent(QCloseEvent *event) override;
-  void setAllParameters();
+  void setSceneParameters();
+  void setVisualParameters();
 };

@@ -6,6 +6,8 @@
 
 class RenderSetting {
  private:
+  const QString fileMemory{"./usersettings.xml"};
+
   QString verticesType;
   QColor verticesColor;
   int verticesSize;
@@ -19,11 +21,11 @@ class RenderSetting {
   bool isParallelProjection;
 
  public:
-  RenderSetting() { readRenderSetting(); }
+  RenderSetting() { read(); }
   ~RenderSetting() = default;
 
-  void saveRenderSetting() {
-    QSettings settings("./usersettings.xml", QSettings::NativeFormat);
+  void save() {
+    QSettings settings(fileMemory, QSettings::NativeFormat);
 
     settings.setValue("verticesType", verticesType);
     settings.setValue("verticesColor", verticesColor);
@@ -38,8 +40,8 @@ class RenderSetting {
     settings.setValue("isParallelProjection", isParallelProjection);
   }
 
-  void readRenderSetting() {
-    QSettings settings("./usersettings.xml", QSettings::NativeFormat);
+  void read() {
+    QSettings settings(fileMemory, QSettings::NativeFormat);
 
     verticesType = settings.value("verticesType", "circle").toString();
     verticesColor =
@@ -52,9 +54,15 @@ class RenderSetting {
     edgesSize = settings.value("edgesSize", 10).toInt();
 
     backgroundColor =
-        settings.value("backgroundColor", QColor(Qt::white)).value<QColor>();
+        settings.value("backgroundColor", QColor(Qt::black)).value<QColor>();
 
-    isParallelProjection = settings.value("isParallelProjection", true).toBool();
+    isParallelProjection =
+        settings.value("isParallelProjection", true).toBool();
+  }
+
+  void remove() {
+    QSettings settings(fileMemory, QSettings::NativeFormat);
+    settings.clear();
   }
 
   inline bool getProjection() const { return isParallelProjection; }
