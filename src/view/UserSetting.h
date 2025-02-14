@@ -4,9 +4,9 @@
 #include <QSettings>
 #include <QString>
 
-class RenderSetting {
+class UserSetting {
  private:
-  const QString fileMemory{"./usersettings.xml"};
+  const QString fileMemory{"view/settings/usersettings.xml"};
 
   QString verticesType;
   QColor verticesColor;
@@ -20,12 +20,20 @@ class RenderSetting {
 
   bool isParallelProjection;
 
- public:
-  RenderSetting() { read(); }
-  ~RenderSetting() = default;
+  QByteArray layoutState;
 
-  void save() {
+ public:
+  UserSetting() {
+    readRenderSettings();
+    readLayoutSettings();
+  }
+
+  ~UserSetting() = default;
+
+  void saveRenderSettings() {
     QSettings settings(fileMemory, QSettings::NativeFormat);
+
+    settings.beginGroup("render");
 
     settings.setValue("verticesType", verticesType);
     settings.setValue("verticesColor", verticesColor);
@@ -38,10 +46,14 @@ class RenderSetting {
     settings.setValue("backgroundColor", backgroundColor);
 
     settings.setValue("isParallelProjection", isParallelProjection);
+
+    settings.endGroup();
   }
 
-  void read() {
+  void readRenderSettings() {
     QSettings settings(fileMemory, QSettings::NativeFormat);
+
+    settings.beginGroup("render");
 
     verticesType = settings.value("verticesType", "circle").toString();
     verticesColor =
@@ -58,11 +70,40 @@ class RenderSetting {
 
     isParallelProjection =
         settings.value("isParallelProjection", true).toBool();
+
+    settings.endGroup();
   }
 
-  void remove() {
+  void removeRenderSettings() {
     QSettings settings(fileMemory, QSettings::NativeFormat);
-    settings.clear();
+    settings.remove("render");
+  }
+
+   void saveLayoutSettings() {
+    QSettings settings(fileMemory, QSettings::NativeFormat);
+
+    settings.beginGroup("layout");
+    settings.setValue("layoutState", layoutState);
+    settings.endGroup();
+  }
+
+  void readLayoutSettings() {
+    QSettings settings(fileMemory, QSettings::NativeFormat);
+
+    settings.beginGroup("layout");
+    layoutState = settings.value("layoutState", "").toByteArray();
+    settings.endGroup();
+  }
+
+  void removeLayoutSettings() {
+    QSettings settings(fileMemory, QSettings::NativeFormat);
+    settings.remove("layout");
+  }
+
+  inline QByteArray getLayoutState() const { return layoutState; }
+
+  inline void setLayoutState(QByteArray state) {
+    this->layoutState = state;
   }
 
   inline bool getProjection() const { return isParallelProjection; }

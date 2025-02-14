@@ -12,7 +12,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   void signalChangeProjection(const bool isParallel);
 
  public:
-  Viewport3D(RenderSetting *setting, QWidget *parent = nullptr)
+  Viewport3D(UserSetting *setting, QWidget *parent = nullptr)
       : QOpenGLWidget(parent) {
     renderSetting = setting;
 
@@ -102,7 +102,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
  private:
   ProjectionButton *projectionButton;
-  RenderSetting *renderSetting;
+  UserSetting *renderSetting;
 
   void changeProjection(bool isParallel) {
     emit signalChangeProjection(isParallel);

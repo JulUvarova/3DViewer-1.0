@@ -20,8 +20,8 @@
 #include "../model/obj/obj_data.h"
 #include "BackgroundBox.h"
 #include "ElemBox.h"
-#include "RenderSetting.h"
 #include "SlidersBox.h"
+#include "UserSetting.h"
 #include "Viewport3D.h"
 
 class MainWindow : public QMainWindow {
@@ -60,8 +60,7 @@ class MainWindow : public QMainWindow {
  private:
   //! useless
   QSlider *xSlider, *ySlider, *zSlider;
-  QLabel *xValue, *yValue, *zValue;
-  QLabel *propsInfo;
+  QLabel *xValue, *yValue, *zValue, *propsInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
@@ -74,18 +73,20 @@ class MainWindow : public QMainWindow {
   s21::Controller *controller;
 
   // user choice for vertices & edges
-  RenderSetting *renderSetting;
+  UserSetting *userSetting;
   Viewport3D *centralWidget;
+
+  // UI elements
+  // QDockWidget *toolsDock, *propsDock, *timelineDock;
 
   void setupUI();
   void createDockWidgets();
   void createMenuAndToolbars();
   void saveLayout();
-  void resetLayout();
   void restoreLayout();
-  void saveRenderSettings();
-  void resetRenderSettings();
-  void restoreRenderSettings();
+  void saveUserSettings();
+  void resetUserSettings();
+  void restoreUserSettings();
   void openFile();
   void saveImage();
   void appExit();

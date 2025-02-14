@@ -6,7 +6,7 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
 
   setupUI();
 
-  restoreLayout();  // Load previous layout
+  saveLayout();
 
   // Location coordinates
   connect(locationSlidersBox, &SlidersBox::signalChangeX, this,
@@ -61,71 +61,71 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
 
 void MainWindow::setSceneParameters() {
   // set users parameters in controller
-  controller->SetBackgroundColor(renderSetting->getBackgroundColor());
+  controller->SetBackgroundColor(userSetting->getBackgroundColor());
 
-  controller->SetProjectionType(renderSetting->getProjection());
+  controller->SetProjectionType(userSetting->getProjection());
 
-  controller->SetVertexColor(renderSetting->getVerticesColor());
-  controller->SetVertexType(renderSetting->getVerticesType());
-  controller->SetVertexSize(renderSetting->getVerticesSize());
+  controller->SetVertexColor(userSetting->getVerticesColor());
+  controller->SetVertexType(userSetting->getVerticesType());
+  controller->SetVertexSize(userSetting->getVerticesSize());
 
-  controller->SetEdgeColor(renderSetting->getEdgesColor());
-  controller->SetEdgeType(renderSetting->getEdgesType());
-  controller->SetEdgeSize(renderSetting->getEdgesSize());
+  controller->SetEdgeColor(userSetting->getEdgesColor());
+  controller->SetEdgeType(userSetting->getEdgesType());
+  controller->SetEdgeSize(userSetting->getEdgesSize());
 }
 
 void MainWindow::slotProjectionType(const bool isParallel) {
   controller->SetProjectionType(isParallel);
-  renderSetting->setProjection(isParallel);
+  userSetting->setProjection(isParallel);
 
   centralWidget->update();
 }
 
 void MainWindow::slotBackgroundColor(const QColor &color) {
   controller->SetBackgroundColor(color);
-  renderSetting->setBackgroundColor(color);
+  userSetting->setBackgroundColor(color);
 
   centralWidget->update();
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
   controller->SetVertexColor(color);
-  renderSetting->setVerticesColor(color);
+  userSetting->setVerticesColor(color);
 
   centralWidget->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
   controller->SetVertexType(text);
-  renderSetting->setVerticesType(text);
+  userSetting->setVerticesType(text);
 
   centralWidget->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
   controller->SetVertexSize(value);
-  renderSetting->setVerticesSize(value);
+  userSetting->setVerticesSize(value);
 
   centralWidget->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
   controller->SetEdgeColor(color);
-  renderSetting->setEdgesColor(color);
+  userSetting->setEdgesColor(color);
 
   centralWidget->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
   controller->SetEdgeType(text);
-  renderSetting->setEdgesType(text);
+  userSetting->setEdgesType(text);
 
   centralWidget->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
   controller->SetEdgeSize(value);
-  renderSetting->setEdgesSize(value);
+  userSetting->setEdgesSize(value);
 
   centralWidget->update();
 }
@@ -189,14 +189,14 @@ void MainWindow::slotViewportSize(const int w, const int h) {
 
 void MainWindow::setupUI() {
   // read saved settings
-  renderSetting = new RenderSetting();
+  userSetting = new UserSetting();
 
   // Window properties
   setWindowTitle("Blender-like UI");
   resize(1280, 720);
 
   // Central 3D viewport
-  centralWidget = new Viewport3D(renderSetting, this);
+  centralWidget = new Viewport3D(userSetting, this);
   setCentralWidget(centralWidget);
 
   // UI components
@@ -226,6 +226,8 @@ void MainWindow::setupUI() {
 void MainWindow::createDockWidgets() {
   // Left dock (Tools)
   QDockWidget *toolsDock = new QDockWidget("Tools", this);
+  toolsDock->setObjectName("toolsDock");
+  toolsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
 
   // Create sliders (Location, Rotate, Scale)
@@ -236,23 +238,22 @@ void MainWindow::createDockWidgets() {
   // Create verticesBox
   QStringList verticesLst;
   verticesLst << "circle" << "square" << "triangle" << "none";
-  Setting verticesSetting{renderSetting->getVerticesType(),
-                          renderSetting->getVerticesColor(),
-                          renderSetting->getVerticesSize()};
+  Setting verticesSetting{userSetting->getVerticesType(),
+                          userSetting->getVerticesColor(),
+                          userSetting->getVerticesSize()};
   verticesBox = new ElemBox("Vertices", verticesLst, verticesSetting, this);
 
   // Create EdgeBox
   QStringList edgesLst;
   edgesLst << "line" << "dashed" << "none";
-  Setting edgesSetting{renderSetting->getEdgesType(),
-                       renderSetting->getEdgesColor(),
-                       renderSetting->getEdgesSize()};
+  Setting edgesSetting{userSetting->getEdgesType(),
+                       userSetting->getEdgesColor(),
+                       userSetting->getEdgesSize()};
   edgesBox = new ElemBox("Edges", edgesLst, edgesSetting, this);
 
   // create backgroundBox
-  // QColor backColor = renderSetting->getBackgroundColor();
-  backBox = new BackgroundBox("Background", renderSetting->getBackgroundColor(),
-                              this);
+  backBox =
+      new BackgroundBox("Background", userSetting->getBackgroundColor(), this);
 
   // Fill left dock
   QWidget *box = new QWidget();
@@ -268,7 +269,9 @@ void MainWindow::createDockWidgets() {
 
   // Right dock (Properties)
   QDockWidget *propsDock = new QDockWidget("Properties", this);
-  propsDock->setWidget(new QWidget);  // Add property editors here
+  propsDock->setObjectName("propsDock");
+  propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  propsDock->setWidget(new QWidget); 
   addDockWidget(Qt::RightDockWidgetArea, propsDock);
 
   // Scene info on Properties
@@ -277,7 +280,10 @@ void MainWindow::createDockWidgets() {
 
   // Bottom dock (Timeline)
   QDockWidget *timelineDock = new QDockWidget("Timeline", this);
-  timelineDock->setWidget(new QWidget);  // Add timeline/console widgets
+  timelineDock->setObjectName("timelineDock");
+  timelineDock->setWidget(new QWidget);
+  timelineDock->setAllowedAreas(Qt::BottomDockWidgetArea);
+  timelineDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
   addDockWidget(Qt::BottomDockWidgetArea, timelineDock);
 
   // Enable docking features
@@ -295,16 +301,14 @@ void MainWindow::createMenuAndToolbars() {
   //! QIcon(tr("path/name.smth")) - иконки
 
   QMenu *settingMenu = menuBar->addMenu("Setting");
-  settingMenu->addAction("Save layout", this, &MainWindow::saveLayout);
   settingMenu->addAction("Restore layout", this, &MainWindow::restoreLayout);
-  settingMenu->addAction("Reset layout", this, &MainWindow::resetLayout);
   settingMenu->addSeparator();
   settingMenu->addAction("Save render settings", this,
-                         &MainWindow::saveRenderSettings);
+                         &MainWindow::saveUserSettings);
   settingMenu->addAction("Restore render settings", this,
-                         &MainWindow::restoreRenderSettings);
+                         &MainWindow::restoreUserSettings);
   settingMenu->addAction("Reset render settings", this,
-                         &MainWindow::resetRenderSettings);
+                         &MainWindow::resetUserSettings);
   setMenuBar(menuBar);
 
   // // Top toolbar
@@ -317,7 +321,7 @@ void MainWindow::createMenuAndToolbars() {
 
 void MainWindow::appExit() {
   // сохраняем настройки отображения QSettings
-  renderSetting->save();
+  userSetting->saveRenderSettings();
   close();
 }
 
@@ -367,52 +371,48 @@ void MainWindow::saveImage() {
 }
 
 void MainWindow::saveLayout() {
-  QSettings settings;
-  settings.setValue("windowState", saveState());
+  userSetting->setLayoutState(saveState());
+  userSetting->saveLayoutSettings();
 }
 
 void MainWindow::restoreLayout() {
-  QSettings settings;
-  restoreState(settings.value("windowState").toByteArray());
+  userSetting->readLayoutSettings();
+  restoreState(userSetting->getLayoutState());
 }
 
-void MainWindow::resetLayout() {
-  QSettings settings;
-  restoreState(settings.value("windowState").toByteArray());
-}
-
-void MainWindow::resetRenderSettings() {
-  renderSetting->remove();
-  renderSetting->read();
+void MainWindow::resetUserSettings() {
+  userSetting->removeRenderSettings();
+  userSetting->readRenderSettings();
   setSceneParameters();
   setVisualParameters();
 }
 
-void MainWindow::restoreRenderSettings() {
-  renderSetting->read();
+void MainWindow::restoreUserSettings() {
+  userSetting->readRenderSettings();
   setSceneParameters();
   setVisualParameters();
 }
 
-void MainWindow::saveRenderSettings() { renderSetting->save(); }
+void MainWindow::saveUserSettings() { userSetting->saveRenderSettings(); }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-  renderSetting->save();
+  userSetting->saveRenderSettings();
+  userSetting->removeLayoutSettings();
   QMainWindow::closeEvent(event);
 }
 
 void MainWindow::setVisualParameters() {
-  Setting edgesSetting{renderSetting->getEdgesType(),
-                       renderSetting->getEdgesColor(),
-                       renderSetting->getEdgesSize()};
+  Setting edgesSetting{userSetting->getEdgesType(),
+                       userSetting->getEdgesColor(),
+                       userSetting->getEdgesSize()};
   edgesBox->setSetting(edgesSetting);
 
-  Setting verticesSetting{renderSetting->getVerticesType(),
-                          renderSetting->getVerticesColor(),
-                          renderSetting->getVerticesSize()};
+  Setting verticesSetting{userSetting->getVerticesType(),
+                          userSetting->getVerticesColor(),
+                          userSetting->getVerticesSize()};
   verticesBox->setSetting(verticesSetting);
 
-  backBox->setSetting(renderSetting->getBackgroundColor());
+  backBox->setSetting(userSetting->getBackgroundColor());
 
   //! projection
 }
