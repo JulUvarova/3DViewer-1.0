@@ -9,9 +9,11 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
  signals:
   void signalChangeSize(const int w, const int h);
+  void signalChangeProjection(const bool isParallel);
 
  public:
-  Viewport3D(RenderSetting * setting, QWidget *parent = nullptr) : QOpenGLWidget(parent) {
+  Viewport3D(UserSetting *setting, QWidget *parent = nullptr)
+      : QOpenGLWidget(parent) {
     renderSetting = setting;
 
     projectionButton = new ProjectionButton(this);
@@ -22,9 +24,17 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
  protected:
+  void setBackColor() {
+    glClearColor(
+        renderSetting->getBackgroundColor().red() / 255.0,
+        renderSetting->getBackgroundColor().green() / 255.0,
+        renderSetting->getBackgroundColor().blue() / 255.0,
+        0);  
+  }
+
   void initializeGL() override {
     initializeOpenGLFunctions();
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);  // Dark gray background
+    setBackColor();
   }
 
   void resizeGL(int w, int h) override {
@@ -33,13 +43,15 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     // resize button
     projectionButton->setLocation(width());
 
-    // send to MainWindow changed size 
+    // send to MainWindow changed size
     emit signalChangeSize(width(), height());
   }
 
   void paintGL() override {
     // Add 3D rendering logic here
-
+    
+    setBackColor();
+    
     // Очищаем экран
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -59,7 +71,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     glTranslatef(0.0, 0.0, -5.0);
 
     // Устанавливаем цвет
-    glColor3f(1.0, 0.0, 0.0);
+    glColor3f(renderSetting->getEdgesColor().red()/255.0, renderSetting->getEdgesColor().green()/255.0, renderSetting->getEdgesColor().blue()/255.0);
 
     // Определяем вершины куба
     GLfloat vertices[] = {-0.5f, -0.5f, -0.5f, 0.5f,  -0.5f, -0.5f, 0.5f, 0.5f,
@@ -90,9 +102,9 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
  private:
   ProjectionButton *projectionButton;
-  RenderSetting *renderSetting;
+  UserSetting *renderSetting;
 
   void changeProjection(bool isParallel) {
-    qDebug() << "changeProjection on " << (isParallel ? "parallel" : "central");
+    emit signalChangeProjection(isParallel);
   }
 };
