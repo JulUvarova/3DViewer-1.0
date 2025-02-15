@@ -28,27 +28,6 @@ class ElemBox : public QWidget {
   QColor color;
   QPushButton *colorButton;
 
-  inline void typeChange(const QString &text) { emit signalChangeType(text); }
-
-  inline void sizeChange(const int value) { emit signalChangeSize(value); }
-
-  void colorChange() {
-    QColorDialog *colorDialog = new QColorDialog(this);
-    colorDialog->setCurrentColor(color);
-    if (colorDialog->exec() == QDialog::Accepted) {
-      color = colorDialog->currentColor();
-      setColorButton();
-      emit signalChangeColor(color);
-    }
-  }
-
-  void setColorButton() {
-    colorButton->setStyleSheet("border: none; background-color: rgb(" +
-                               QString::number(color.red()) + ", " +
-                               QString::number(color.green()) + ", " +
-                               QString::number(color.blue()) + ")");
-  }
-
  signals:
   void signalChangeType(const QString &text);
   void signalChangeSize(const int size);
@@ -80,7 +59,7 @@ class ElemBox : public QWidget {
     // color
     colorLabel = new QLabel("Color:");
     colorButton = new QPushButton(" ");
-    color = QColor(setting.color);
+    color = setting.color;
     setColorButton();
 
     // boxing
@@ -104,4 +83,33 @@ class ElemBox : public QWidget {
     connect(size, &QSpinBox::valueChanged, this, &ElemBox::sizeChange);
     connect(colorButton, &QPushButton::clicked, this, &ElemBox::colorChange);
   };
+
+  void setSetting(Setting &setting) {
+    type->setCurrentText(setting.type);
+    size->setValue(setting.size);
+    color = setting.color;
+    setColorButton();
+  }
+
+ private:
+  inline void typeChange(const QString &text) { emit signalChangeType(text); }
+
+  inline void sizeChange(const int value) { emit signalChangeSize(value); }
+
+  void colorChange() {
+    QColorDialog *colorDialog = new QColorDialog(this);
+    colorDialog->setCurrentColor(color);
+    if (colorDialog->exec() == QDialog::Accepted) {
+      color = colorDialog->currentColor();
+      setColorButton();
+      emit signalChangeColor(color);
+    }
+  }
+
+  void setColorButton() {
+    colorButton->setStyleSheet("border: none; background-color: rgb(" +
+                               QString::number(color.red()) + ", " +
+                               QString::number(color.green()) + ", " +
+                               QString::number(color.blue()) + ")");
+  }
 };
