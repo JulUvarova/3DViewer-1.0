@@ -237,7 +237,7 @@ void MainWindow::createDockWidgets() {
 
   // Create verticesBox
   QStringList verticesLst;
-  verticesLst << "circle" << "square" << "triangle" << "none";
+  verticesLst << "circle" << "square" << "none";
   Setting verticesSetting{userSetting->getVerticesType(),
                           userSetting->getVerticesColor(),
                           userSetting->getVerticesSize()};
@@ -271,7 +271,7 @@ void MainWindow::createDockWidgets() {
   QDockWidget *propsDock = new QDockWidget("Properties", this);
   propsDock->setObjectName("propsDock");
   propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  propsDock->setWidget(new QWidget); 
+  propsDock->setWidget(new QWidget);
   addDockWidget(Qt::RightDockWidgetArea, propsDock);
 
   // Scene info on Properties
@@ -341,6 +341,8 @@ void MainWindow::openFile() {
 
   // parser test
   obj_data.Parse(cstr);
+  obj_data.Normalize();
+  centralWidget->setScene(&obj_data);
 
   //! check canOpen
   // if (!isSaved)
@@ -367,6 +369,7 @@ void MainWindow::saveImage() {
     QMessageBox::information(this, tr("Unable to save file"),
                              "File is not saved =(");
   else
+    //! отладка
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
 }
 

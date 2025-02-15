@@ -10,7 +10,7 @@ enum class ProjectionTypes {
   kCentral,
 };
 
-enum class VertexStyle { kNone, kSquare, kCircle, kTriangle };
+enum class VertexStyle { kNone, kSquare, kCircle };
 enum class EdgeStyle { kNone, kLine, kDashed };
 
 struct Color {

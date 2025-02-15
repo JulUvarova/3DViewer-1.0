@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "../model/obj/obj_data.h"
 #include "../model/scene_parameters.h"
 
 namespace s21 {
@@ -9,10 +10,20 @@ namespace s21 {
 class Controller {
  private:
   SceneParameters* sceneParam_;
+  OBJData* scene = nullptr;
 
  public:
   Controller() : sceneParam_(new SceneParameters()) {}
   ~Controller() { delete sceneParam_; }
+
+  // Upload scene
+  OBJData* UploadScene(const char* filename) {
+    if (scene) delete scene;
+    scene = new s21::OBJData();
+    scene->Parse(filename);
+    scene->Normalize();
+    return scene;
+  }
 
   // Setters
   void SetViewportSize(int w, int h) {
@@ -86,8 +97,6 @@ class Controller {
       sceneParam_->SetVertexStyle(VertexStyle::kCircle);
     } else if (type == "square") {
       sceneParam_->SetVertexStyle(VertexStyle::kSquare);
-    } else if (type == "triangle") {
-      sceneParam_->SetVertexStyle(VertexStyle::kTriangle);
     } else {
       sceneParam_->SetVertexStyle(VertexStyle::kNone);
     }
