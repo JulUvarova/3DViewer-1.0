@@ -1,7 +1,9 @@
 #pragma once
 
+#include <QIntValidator>
 #include <QLabel>
 #include <QLayout>
+#include <QLineEdit>
 #include <QOpenGLFunctions>
 #include <QSlider>
 #include <QString>
@@ -17,22 +19,9 @@ class SlidersBox : public QWidget {
   int step = 1;
   QLabel *xLabel, *yLabel, *zLabel;
   QSlider *xSlider, *ySlider, *zSlider;
-  QLabel *xValue, *yValue, *zValue;
+  QLineEdit *xValue, *yValue, *zValue;
   QHBoxLayout *xLayout, *yLayout, *zLayout;
   QVBoxLayout *layout;
-
-  inline void xChange() {
-    xValue->setText(QString::number(xSlider->value()));
-    emit signalChangeX(xSlider->value());
-  }
-  inline void yChange() {
-    yValue->setText(QString::number(ySlider->value()));
-    emit signalChangeY(ySlider->value());
-  }
-  inline void zChange() {
-    zValue->setText(QString::number(zSlider->value()));
-    emit signalChangeZ(zSlider->value());
-  }
 
  signals:
   void signalChangeX(int coordX);
@@ -40,7 +29,7 @@ class SlidersBox : public QWidget {
   void signalChangeZ(int coordZ);
 
  public:
-  SlidersBox(const char *name, float min, float max, QWidget *parent = nullptr)
+  SlidersBox(const char *name, int min, int max, QWidget *parent = nullptr)
       : QWidget(parent) {
     xLabel = new QLabel(" X ");
     yLabel = new QLabel(" Y ");
@@ -65,15 +54,29 @@ class SlidersBox : public QWidget {
     zSlider->setTickInterval(step);
     zSlider->setValue(midle);
 
-    xValue = new QLabel(QString::number(xSlider->value()));
+    xValue = new QLineEdit(this);
+    QIntValidator *xValidator = new QIntValidator(min, max, this);
+    xValue->setValidator(xValidator);
+    xValue->setText(QString::number(xSlider->value()));
     xValue->setFixedWidth(4 * QFontMetrics(xValue->font()).averageCharWidth());
     xValue->setAlignment(Qt::AlignRight);
-    yValue = new QLabel(QString::number(ySlider->value()));
+    xValue->setFrame(false);
+
+    yValue = new QLineEdit(this);
+    QIntValidator *yValidator = new QIntValidator(min, max, this);
+    yValue->setValidator(yValidator);
+    yValue->setText(QString::number(ySlider->value()));
     yValue->setFixedWidth(4 * QFontMetrics(yValue->font()).averageCharWidth());
     yValue->setAlignment(Qt::AlignRight);
-    zValue = new QLabel(QString::number(zSlider->value()));
+    yValue->setFrame(false);
+
+    zValue = new QLineEdit(this);
+    QIntValidator *zValidator = new QIntValidator(min, max, this);
+    zValue->setValidator(zValidator);
+    zValue->setText(QString::number(zSlider->value()));
     zValue->setFixedWidth(4 * QFontMetrics(zValue->font()).averageCharWidth());
     zValue->setAlignment(Qt::AlignRight);
+    zValue->setFrame(false);
 
     xLayout = new QHBoxLayout();
     xLayout->addWidget(xLabel);
@@ -102,12 +105,44 @@ class SlidersBox : public QWidget {
     mainLayout->addWidget(groupBox);
     setLayout(mainLayout);
 
-    connect(xSlider, &QSlider::valueChanged, this, &SlidersBox::xChange);
-    connect(ySlider, &QSlider::valueChanged, this, &SlidersBox::yChange);
-    connect(zSlider, &QSlider::valueChanged, this, &SlidersBox::zChange);
+    connect(xSlider, &QSlider::valueChanged, this, &SlidersBox::sliderChangeX);
+    connect(ySlider, &QSlider::valueChanged, this, &SlidersBox::sliderChangeY);
+    connect(zSlider, &QSlider::valueChanged, this, &SlidersBox::sliderChangeZ);
+
+    connect(xValue, &QLineEdit::textChanged, this, &SlidersBox::labelChangeX);
+    connect(yValue, &QLineEdit::textChanged, this, &SlidersBox::labelChangeY);
+    connect(zValue, &QLineEdit::textChanged, this, &SlidersBox::labelChangeZ);
   };
 
  private:
+  void labelChangeX() {
+    xSlider->setValue(xValue->text().toInt());
+    emit signalChangeX(xSlider->value());
+  }
+
+  void labelChangeY() {
+    ySlider->setValue(yValue->text().toInt());
+    emit signalChangeY(ySlider->value());
+  }
+
+  void labelChangeZ() {
+    zSlider->setValue(zValue->text().toInt());
+    emit signalChangeZ(zSlider->value());
+  }
+
+  void sliderChangeX() {
+    xValue->setText(QString::number(xSlider->value()));
+    emit signalChangeX(xSlider->value());
+  }
+  void sliderChangeY() {
+    yValue->setText(QString::number(ySlider->value()));
+    emit signalChangeY(ySlider->value());
+  }
+  void sliderChangeZ() {
+    zValue->setText(QString::number(zSlider->value()));
+    emit signalChangeZ(zSlider->value());
+  }
+
   Coords sendCoords() {
     return Coords{xSlider->value(), ySlider->value(), zSlider->value()};
   }
