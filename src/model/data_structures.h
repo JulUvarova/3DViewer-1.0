@@ -1,4 +1,5 @@
 #pragma once
+
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -7,30 +8,47 @@ namespace s21 {
 
 // 2D Vector
 struct Vec2f {
-  float x{}, y{};
+  float x{0.0f}, y{0.0f};
 
-  constexpr Vec2f operator+(const Vec2f& other) const {
+  Vec2f() = default;
+  Vec2f(float x, float y) : x(x), y(y) {};
+  Vec2f(const Vec2f&) = default;
+  Vec2f& operator=(const Vec2f&) = default;
+  Vec2f(Vec2f&&) = default;
+  Vec2f& operator=(Vec2f&&) = default;
+
+  ~Vec2f() = default;
+
+
+  Vec2f operator+(const Vec2f& other) const {
     return {x + other.x, y + other.y};
   }
-  constexpr Vec2f operator-(const Vec2f& other) const {
+  Vec2f operator-(const Vec2f& other) const {
     return {x - other.x, y - other.y};
   }
-  constexpr Vec2f operator*(float scalar) const {
+  Vec2f operator*(float scalar) const {
     return {x * scalar, y * scalar};
   }
 };
 
 // 3D Vector
 struct Vec3f {
-  float x{}, y{}, z{};
+  float x{0.0f}, y{0.0f}, z{0.0f};
 
-  constexpr Vec3f operator+(const Vec3f& other) const {
+  Vec3f() = default;
+  Vec3f(float x, float y, float z) : x(x), y(y), z(z){};
+  Vec3f(const Vec3f&) {}
+  Vec3f& operator=(const Vec3f&) = default;
+  Vec3f(Vec3f&&) = default;
+  Vec3f& operator=(Vec3f&&) = default;
+
+  Vec3f operator+(const Vec3f& other) const {
     return {x + other.x, y + other.y, z + other.z};
   }
-  constexpr Vec3f operator-(const Vec3f& other) const {
+  Vec3f operator-(const Vec3f& other) const {
     return {x - other.x, y - other.y, z - other.z};
   }
-  constexpr Vec3f operator*(float scalar) const {
+  Vec3f operator*(float scalar) const {
     return {x * scalar, y * scalar, z * scalar};
   }
 
