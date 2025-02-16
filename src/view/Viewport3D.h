@@ -65,7 +65,26 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     // gluPerspective(45.0, (GLfloat)width() / (GLfloat)height(), 0.1, 100.0);
-    glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
+    
+    //glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
+    GLdouble aspect = (GLdouble)width() / (GLdouble)height();
+    GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
+    GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
+
+    if (renderSetting->getProjection() == true) {  //TODO: некрасиво
+      glOrtho(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0, nearPlane, farPlane);
+    } else {
+      // Вычисляем границы усечённой пирамиды
+    GLdouble fov = 45.0;  // поле зрения в градусах
+
+    // Вычисляем границы усечённой пирамиды
+    GLdouble top = nearPlane * tan(fov * M_PI / 360.0);  // fov/2 в радианах
+    GLdouble bottom = -top;
+    GLdouble right = top * aspect;
+    GLdouble left = -right;
+
+    glFrustum(left, right, bottom, top, nearPlane, farPlane);
+    }
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -5.0);
