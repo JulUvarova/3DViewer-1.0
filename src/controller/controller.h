@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "../model/obj/obj_data.h"
+#include "../model/scene.h"
 #include "../model/scene_parameters.h"
 
 namespace s21 {
@@ -10,19 +11,22 @@ namespace s21 {
 class Controller {
  private:
   SceneParameters* sceneParam_;
-  OBJData* scene = nullptr;
+  Scene* scene_{nullptr};
+
 
  public:
   Controller() : sceneParam_(new SceneParameters()) {}
   ~Controller() { delete sceneParam_; }
 
   // Upload scene
-  OBJData* UploadScene(const char* filename) {
-    if (scene) delete scene;
-    scene = new s21::OBJData();
-    scene->Parse(filename);
-    scene->Normalize();
-    return scene;
+  SceneMeshData* UploadScene(const char* filename) {
+    OBJData raw_obj_data;
+    //! получаем OBJData, если FALSE -> "Не удалось загрузить объект" во фронт
+    raw_obj_data.Parse(filename);
+    raw_obj_data.Normalize();
+    //! возвращаем код ER/SUC  
+    scene_ = new Scene();
+    return scene_->LoadSceneMeshData(raw_obj_data);
   }
 
   // Setters

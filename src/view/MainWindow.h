@@ -17,7 +17,6 @@
 #include <QWidget>
 
 #include "../controller/controller.h"
-#include "../model/obj/obj_data.h"
 #include "BackgroundBox.h"
 #include "ElemBox.h"
 #include "SlidersBox.h"
@@ -58,16 +57,13 @@ class MainWindow : public QMainWindow {
   void slotProjectionType(const bool isParallel);
 
  private:
-  //! useless
-  QSlider *xSlider, *ySlider, *zSlider;
-  QLabel *xValue, *yValue, *zValue, *propsInfo;
+  QLabel *xValue, *yValue, *zValue;
+  QLabel *propsInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
-  //!
 
-  // Check parser
-  s21::OBJData obj_data;
+  s21::SceneMeshData* scene{nullptr};
 
   // Controller
   s21::Controller *controller;

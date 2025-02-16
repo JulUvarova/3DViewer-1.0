@@ -338,18 +338,15 @@ void MainWindow::openFile() {
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
-
-  // parser test
-  obj_data.Parse(cstr);
-  obj_data.Normalize();
-  centralWidget->setScene(&obj_data);
-
+  scene = controller->UploadScene(cstr);
+  centralWidget->setScene(scene);
+  centralWidget->update();
   //! check canOpen
   // if (!isSaved)
   // QMessageBox::information(this, tr("Unable to open file"),
   //                          "File is not opened =(");
 
-  propsInfo->setText(QString::fromStdString(obj_data.toString()));
+  propsInfo->setText(QString::fromStdString(scene->obj_info));
 }
 
 void MainWindow::saveImage() {
