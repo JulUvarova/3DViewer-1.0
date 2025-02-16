@@ -31,7 +31,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   void setBackColor() {
     glClearColor(renderSetting->getBackgroundColor().red() / 255.0,
                  renderSetting->getBackgroundColor().green() / 255.0,
-                 renderSetting->getBackgroundColor().blue() / 255.0, 0);
+                 renderSetting->getBackgroundColor().blue() / 255.0, 1.0);
   }
 
   void initializeGL() override {
@@ -130,22 +130,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     chooseProjection();
 
-    // vertices
-    if (renderSetting->getVerticesType() != "none") {
-      if (renderSetting->getVerticesType() == "circle")
-        glEnable(GL_POINT_SMOOTH);  // без него рисуем квадратами
-      glPointSize(renderSetting->getVerticesSize());
-      glColor3f(renderSetting->getVerticesColor().red() / 255.0,
-                renderSetting->getVerticesColor().green() / 255.0,
-                renderSetting->getVerticesColor().blue() / 255.0);
-
-      glEnableClientState(GL_VERTEX_ARRAY);
-      glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(scene->vertexes.size()));
-      glDisableClientState(GL_VERTEX_ARRAY);
-      if (renderSetting->getVerticesType() == "circle")
-        glDisable(GL_POINT_SMOOTH);
-    }
-
     // edges
     if (renderSetting->getEdgesType() != "none") {
       if (renderSetting->getEdgesType() == "dashed") {
@@ -175,6 +159,22 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
       glDrawElements(GL_LINES, raw_indices.size(), GL_UNSIGNED_INT, indices);
       glDisableClientState(GL_VERTEX_ARRAY);
+    }
+
+    // vertices
+    if (renderSetting->getVerticesType() != "none") {
+      if (renderSetting->getVerticesType() == "circle")
+        glEnable(GL_POINT_SMOOTH);  // без него рисуем квадратами
+      glPointSize(renderSetting->getVerticesSize());
+      glColor3f(renderSetting->getVerticesColor().red() / 255.0,
+                renderSetting->getVerticesColor().green() / 255.0,
+                renderSetting->getVerticesColor().blue() / 255.0);
+
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(scene->vertexes.size()));
+      glDisableClientState(GL_VERTEX_ARRAY);
+      if (renderSetting->getVerticesType() == "circle")
+        glDisable(GL_POINT_SMOOTH);
     }
     // close options
     glDisableClientState(GL_VERTEX_ARRAY);
