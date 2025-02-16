@@ -10,8 +10,11 @@ namespace s21 {
 
 class Scene {
  public:
-  SceneMeshData* LoadSceneMeshData(OBJData& obj_data);
+  explicit Scene(OBJData& obj_data) { LoadSceneMeshData(obj_data); }
+
+  void LoadSceneMeshData(OBJData& obj_data);
   void TransformSceneMeshData(Mat4f& transform_matrix);
+  inline SceneMeshData* GetSceneMeshData() { return &scene_mesh_data_; }
 
  private:
   SceneMeshData scene_mesh_data_;

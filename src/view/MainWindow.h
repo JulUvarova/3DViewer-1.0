@@ -19,6 +19,7 @@
 #include "../controller/controller.h"
 #include "BackgroundBox.h"
 #include "ElemBox.h"
+#include "ProjectionButton.h"
 #include "SlidersBox.h"
 #include "UserSetting.h"
 #include "Viewport3D.h"
@@ -63,7 +64,7 @@ class MainWindow : public QMainWindow {
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
 
-  s21::SceneMeshData* scene{nullptr};
+  s21::SceneMeshData *scene{nullptr};
 
   // Controller
   s21::Controller *controller;

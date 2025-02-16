@@ -13,7 +13,6 @@ class Controller {
   SceneParameters* sceneParam_;
   Scene* scene_{nullptr};
 
-
  public:
   Controller() : sceneParam_(new SceneParameters()) {}
   ~Controller() { delete sceneParam_; }
@@ -24,9 +23,10 @@ class Controller {
     //! получаем OBJData, если FALSE -> "Не удалось загрузить объект" во фронт
     raw_obj_data.Parse(filename);
     raw_obj_data.Normalize();
-    //! возвращаем код ER/SUC  
-    scene_ = new Scene();
-    return scene_->LoadSceneMeshData(raw_obj_data);
+    //! возвращаем код ER/SUC
+    if (!scene_) delete scene_;
+    scene_ = new Scene(raw_obj_data);
+    return scene_->GetSceneMeshData();
   }
 
   // Setters

@@ -63,7 +63,7 @@ void MainWindow::setSceneParameters() {
   // set users parameters in controller
   controller->SetBackgroundColor(userSetting->getBackgroundColor());
 
-  controller->SetProjectionType(userSetting->getProjection());
+  controller->SetProjectionType(userSetting->IsParallelProjectrion());
 
   controller->SetVertexColor(userSetting->getVerticesColor());
   controller->SetVertexType(userSetting->getVerticesType());
@@ -339,12 +339,13 @@ void MainWindow::openFile() {
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
   scene = controller->UploadScene(cstr);
+    // QMessageBox::information(this, tr("Unable to open file"),
+  //                          "File is not opened =(");
   centralWidget->setScene(scene);
   centralWidget->update();
   //! check canOpen
   // if (!isSaved)
-  // QMessageBox::information(this, tr("Unable to open file"),
-  //                          "File is not opened =(");
+
 
   propsInfo->setText(QString::fromStdString(scene->obj_info));
 }

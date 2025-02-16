@@ -1,7 +1,7 @@
 #include "scene.h"
 
 namespace s21 {
-SceneMeshData* Scene::LoadSceneMeshData(OBJData& obj_data) {
+void Scene::LoadSceneMeshData(OBJData& obj_data) {
   scene_mesh_data_.vertexes.assign(obj_data.vertices.begin(),
                                    obj_data.vertices.end());
   for (const auto& object : obj_data.objects) {
@@ -18,7 +18,6 @@ SceneMeshData* Scene::LoadSceneMeshData(OBJData& obj_data) {
   }
 
   scene_mesh_data_.obj_info = obj_data.toString();
-  return &scene_mesh_data_;
 }
 
 void Scene::TransformSceneMeshData(Mat4f& transform_matrix) {

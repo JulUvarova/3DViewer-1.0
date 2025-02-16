@@ -106,7 +106,7 @@ class UserSetting {
     this->layoutState = state;
   }
 
-  inline bool getProjection() const { return isParallelProjection; }
+  inline bool IsParallelProjectrion() const { return isParallelProjection; }
 
   inline void setProjection(bool isParallel) {
     this->isParallelProjection = isParallel;
