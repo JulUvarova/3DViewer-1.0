@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 
 MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
-    : QMainWindow(parent), controller(ctrl){
+    : QMainWindow(parent), controller(ctrl) {
   setupUI();
 
   saveLayout();
@@ -129,54 +129,45 @@ void MainWindow::slotEdgesSize(const int value) {
 }
 
 void MainWindow::slotLocationCoordX(int coordX) {
-  controller->SetLocationX(coordX);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetLocationX(coordX);
+  drawScene(scene);
 }
 void MainWindow::slotLocationCoordY(int coordY) {
-  controller->SetLocationY(coordY);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetLocationY(coordY);
+  drawScene(scene);
 }
 
 void MainWindow::slotLocationCoordZ(int coordZ) {
-  controller->SetLocationZ(coordZ);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetLocationZ(coordZ);
+  drawScene(scene);
 }
 
 void MainWindow::slotScaleCoordX(int coordX) {
-  controller->SetScaleX(coordX);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetScaleX(coordX);
+  drawScene(scene);
 }
 void MainWindow::slotScaleCoordY(int coordY) {
-  controller->SetScaleY(coordY);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetScaleY(coordY);
+  drawScene(scene);
 }
 
 void MainWindow::slotScaleCoordZ(int coordZ) {
-  controller->SetScaleZ(coordZ);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetScaleZ(coordZ);
+  drawScene(scene);
 }
 
 void MainWindow::slotRotateCoordX(int coordX) {
-  controller->SetRotationX(coordX);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetRotationX(coordX);
+  drawScene(scene);
 }
 void MainWindow::slotRotateCoordY(int coordY) {
-  controller->SetRotationY(coordY);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetRotationY(coordY);
+  drawScene(scene);
 }
 
 void MainWindow::slotRotateCoordZ(int coordZ) {
-  controller->SetRotationZ(coordZ);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetRotationZ(coordZ);
+  drawScene(scene);
 }
 
 void MainWindow::slotViewportSize(const int w, const int h) {
@@ -340,12 +331,16 @@ void MainWindow::openFile() {
   //                          "File is not opened =(");
 
   s21::DrawSceneData scene = controller->LoadScene(cstr);
-  centralWidget->setScene(scene.vertices, scene.vertex_indices);
-  centralWidget->update();
+  drawScene(scene);
   //! check canOpen
   // if (!isSaved)
 
   propsInfo->setText(QString::fromStdString(scene.info));
+}
+
+void MainWindow::drawScene(s21::DrawSceneData scene) {
+  centralWidget->setScene(scene.vertices, scene.vertex_indices);
+  centralWidget->update();
 }
 
 void MainWindow::saveImage() {

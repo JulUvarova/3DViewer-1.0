@@ -49,10 +49,10 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     glViewport(0, 0, w, h);
 
     // resize button
-    // projectionButton->setLocation(width());
+    projectionButton->setLocation(width());
 
-    // // send to MainWindow changed size
-    // emit signalChangeSize(width(), height());
+    // send to MainWindow changed size
+    emit signalChangeSize(width(), height());
   }
 
   void paintGL() override {

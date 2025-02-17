@@ -90,4 +90,5 @@ class MainWindow : public QMainWindow {
   void closeEvent(QCloseEvent *event) override;
   void setSceneParameters();
   void setVisualParameters();
+  void drawScene(s21::DrawSceneData scene);
 };
