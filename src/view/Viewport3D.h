@@ -27,6 +27,14 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
   void setScene(s21::SceneMeshData *sc) { scene = sc; }
 
+  void beforeGrab() {
+    projectionButton->setVisible(false);
+  }
+
+    void afterGrab() {
+    projectionButton->setVisible(true);
+  }
+
  protected:
   void setBackColor() {
     glClearColor(renderSetting->getBackgroundColor().red() / 255.0,

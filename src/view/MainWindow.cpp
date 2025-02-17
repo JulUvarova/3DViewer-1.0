@@ -339,13 +339,12 @@ void MainWindow::openFile() {
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
   scene = controller->UploadScene(cstr);
-    // QMessageBox::information(this, tr("Unable to open file"),
+  // QMessageBox::information(this, tr("Unable to open file"),
   //                          "File is not opened =(");
   centralWidget->setScene(scene);
   centralWidget->update();
   //! check canOpen
   // if (!isSaved)
-
 
   propsInfo->setText(QString::fromStdString(scene->obj_info));
 }
@@ -362,6 +361,7 @@ void MainWindow::saveImage() {
   else if (selectedFilter == "*.jpeg")
     postfix = ".jpeg";
 
+  centralWidget->beforeGrab();
   bool isSaved = centralWidget->grab().save(fileName + postfix);
   if (!isSaved)
     QMessageBox::information(this, tr("Unable to save file"),
@@ -369,6 +369,7 @@ void MainWindow::saveImage() {
   else
     //! отладка
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  centralWidget->afterGrab();
 }
 
 void MainWindow::saveLayout() {

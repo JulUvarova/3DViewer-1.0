@@ -40,9 +40,13 @@ class SlidersBox : public QWidget {
     xSlider->setRange(min, max);
     xSlider->setTickInterval(step);
     xSlider->setValue(midle);
-    //! doesn't work?
-    // xSlider->setStyleSheet("QSlider::add-page:horizontal { background: green;
-    // }");
+    //TODO взять со школы
+    // xSlider->setStyleSheet(
+    //     "QSlider { background-color: rgba(240, 236, 236, 0); } "
+    //     "QSlider::groove:horizontal { background-color: rgb(38, 38, 38); "
+    //     "height: 5px; } QSlider::handle:horizontal { "
+    //     "background-color: rgb(131, 133, 129); width: 12px; height: 12px; "
+    //     "margin: -3px 0; border-radius: 6px; }");
 
     ySlider = new QSlider(Qt::Horizontal, this);
     ySlider->setRange(min, max);
