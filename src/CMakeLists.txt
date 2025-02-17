@@ -31,7 +31,6 @@ set(PROJECT_SOURCES
         model/obj/obj_data.h
         model/obj/obj_data.cc
 
-        controller/facade.h
 )
 
 

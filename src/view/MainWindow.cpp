@@ -1,9 +1,7 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
-    : QMainWindow(parent) {
-  controller = controller;
-
+MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
+    : QMainWindow(parent), controller(ctrl){
   setupUI();
 
   saveLayout();
@@ -192,7 +190,7 @@ void MainWindow::setupUI() {
   userSetting = new UserSetting();
 
   // Window properties
-  setWindowTitle("Blender-like UI");
+  setWindowTitle("3DViewer 2.0");
   resize(1280, 720);
 
   // Central 3D viewport
@@ -338,15 +336,16 @@ void MainWindow::openFile() {
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
-  scene = controller->UploadScene(cstr);
   // QMessageBox::information(this, tr("Unable to open file"),
   //                          "File is not opened =(");
-  centralWidget->setScene(scene);
+
+  s21::DrawSceneData scene = controller->LoadScene(cstr);
+  centralWidget->setScene(scene.vertices, scene.vertex_indices);
   centralWidget->update();
   //! check canOpen
   // if (!isSaved)
 
-  propsInfo->setText(QString::fromStdString(scene->obj_info));
+  propsInfo->setText(QString::fromStdString(scene.info));
 }
 
 void MainWindow::saveImage() {

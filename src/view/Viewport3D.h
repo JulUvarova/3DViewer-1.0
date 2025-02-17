@@ -2,7 +2,6 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
 
-#include "../model/scene_mesh_data.h"
 #include "ProjectionButton.h"
 #include "UserSetting.h"
 
@@ -25,15 +24,14 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
             &Viewport3D::changeProjection);
   }
 
-  void setScene(s21::SceneMeshData *sc) { scene = sc; }
-
-  void beforeGrab() {
-    projectionButton->setVisible(false);
+  void setScene(std::vector<float> vrtx, std::vector<int> indx) {
+    vertices = vrtx;
+    indices = indx;
   }
 
-    void afterGrab() {
-    projectionButton->setVisible(true);
-  }
+  void beforeGrab() { projectionButton->setVisible(false); }
+
+  void afterGrab() { projectionButton->setVisible(true); }
 
  protected:
   void setBackColor() {
@@ -51,86 +49,24 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     glViewport(0, 0, w, h);
 
     // resize button
-    projectionButton->setLocation(width());
+    // projectionButton->setLocation(width());
 
-    // send to MainWindow changed size
-    emit signalChangeSize(width(), height());
+    // // send to MainWindow changed size
+    // emit signalChangeSize(width(), height());
   }
-
-  // void paintGL() override {
-  //   // Add 3D rendering logic here
-
-  //   setBackColor();
-  //   // Очищаем экран
-  //   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  //   //! https://opengl.org.ru/books/open_gl/chapter3.1.html
-  //   if (!scene) return;
-
-  //   chooseProjection();
-
-  //   // print edges
-  //   if (renderSetting->getEdgesType() != "none") {
-  //     glLineWidth(renderSetting->getEdgesSize());
-  //     glColor3d(renderSetting->getEdgesColor().red() / 255.0,
-  //               renderSetting->getEdgesColor().green() / 255.0,
-  //               renderSetting->getEdgesColor().blue() / 255.0);
-  //     glEnable(GL_LINE_SMOOTH);
-  //     if (renderSetting->getEdgesType() == "dashed") {
-  //       glEnable(GL_LINE_STIPPLE);
-  //       glLineStipple(1, 0x00FF);
-  //     }
-
-  //     for (auto &face : scene->face_vertex_indices) {
-  //       glBegin(GL_LINE_LOOP);
-  //       for (auto &indx : face) {
-  //         glVertex3f(scene->vertexes[indx].x, scene->vertexes[indx].y,
-  //                    scene->vertexes[indx].z);
-  //       }
-  //       glEnd();
-  //     }
-  //     glDisable(GL_LINE_SMOOTH);
-  //     if (renderSetting->getEdgesType() == "dashed")
-  //     glDisable(GL_LINE_STIPPLE);
-  //   }
-
-  //   // print verteces
-  //   if (renderSetting->getVerticesType() != "none") {
-  //     if (renderSetting->getVerticesType() == "circle")
-  //       glEnable(GL_POINT_SMOOTH);  // без него рисуем квадратами
-  //     glPointSize(renderSetting->getVerticesSize());
-  //     glBegin(GL_POINTS);
-  //     glColor3d(renderSetting->getVerticesColor().red() / 255.0,
-  //               renderSetting->getVerticesColor().green() / 255.0,
-  //               renderSetting->getVerticesColor().blue() / 255.0);
-  //     for (long unsigned int i = 0; i < scene->vertexes.size(); i++) {
-  //       glVertex3f(scene->vertexes[i].x, scene->vertexes[i].y,
-  //                  scene->vertexes[i].z);
-  //     }
-  //     glEnd();
-  //   }
-  //   if (renderSetting->getVerticesType() == "circle")
-  //     glDisable(GL_POINT_SMOOTH);
-  // }
 
   void paintGL() override {
     setBackColor();
     // Очищаем экран
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (!scene) return;
+    if (!vertices.size()) return;
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    std::vector<float> raw_vertices;
-    for (auto &vert : scene->vertexes) {
-      raw_vertices.push_back(vert.x);
-      raw_vertices.push_back(vert.y);
-      raw_vertices.push_back(vert.z);
-    }
-    GLfloat *vertices = raw_vertices.data();
+    GLfloat *verticesGL = vertices.data();
 
-    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glVertexPointer(3, GL_FLOAT, 0, verticesGL);
 
     // Устанавливаем матрицу модели-вида-проекции
     glMatrixMode(GL_PROJECTION);
@@ -153,19 +89,10 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
                 renderSetting->getEdgesColor().blue() / 255.0);
 
       glEnableClientState(GL_VERTEX_ARRAY);
-      std::vector<int> raw_indices;
-      for (auto &face : scene->face_vertex_indices) {
-        for (size_t i = 0; i < face.size(); ++i) {
-          raw_indices.push_back(face[i]);
-          if (i == face.size() - 1)
-            raw_indices.push_back(face[0]);
-          else
-            raw_indices.push_back(face[i + 1]);
-        }
-      }
-      GLint *indices = raw_indices.data();
 
-      glDrawElements(GL_LINES, raw_indices.size(), GL_UNSIGNED_INT, indices);
+      GLint *indicesGL = indices.data();
+
+      glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, indicesGL);
       glDisableClientState(GL_VERTEX_ARRAY);
     }
 
@@ -179,7 +106,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
                 renderSetting->getVerticesColor().blue() / 255.0);
 
       glEnableClientState(GL_VERTEX_ARRAY);
-      glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(scene->vertexes.size()));
+      glDrawArrays(GL_POINTS, 0, vertices.size());
       glDisableClientState(GL_VERTEX_ARRAY);
       if (renderSetting->getVerticesType() == "circle")
         glDisable(GL_POINT_SMOOTH);
@@ -193,7 +120,9 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
  private:
   ProjectionButton *projectionButton;
   UserSetting *renderSetting;
-  s21::SceneMeshData *scene{nullptr};
+
+  std::vector<float> vertices;
+  std::vector<int> indices;
 
   void changeProjection(bool isParallel) {
     emit signalChangeProjection(isParallel);
