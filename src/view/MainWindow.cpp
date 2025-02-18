@@ -1,9 +1,7 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
-    : QMainWindow(parent) {
-  controller = controller;
-
+MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
+    : QMainWindow(parent), controller(ctrl) {
   setupUI();
 
   saveLayout();
@@ -51,140 +49,128 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
           &MainWindow::slotBackgroundColor);
 
   // background prop
-  connect(centralWidget, &Viewport3D::signalChangeSize, this,
-          &MainWindow::slotViewportSize);
+  // connect(renderWindow, &Viewport3D::signalChangeSize, this,
+  //         &MainWindow::slotViewportSize);
 
-  // projection
-  connect(centralWidget, &Viewport3D::signalChangeProjection, this,
-          &MainWindow::slotProjectionType);
+  // projection //! меняется в openGL
+  // connect(renderWindow, &Viewport3D::signalChangeProjection, this,
+  //         &MainWindow::slotProjectionType);
 }
 
-void MainWindow::setSceneParameters() {
-  // set users parameters in controller
-  controller->SetBackgroundColor(userSetting->getBackgroundColor());
+//! цвета\размеры для бэка
+// void MainWindow::setSceneParameters() {
+//   // set users parameters in controller
+//   controller->SetBackgroundColor(userSetting->getBackgroundColor());
+//   controller->SetProjectionType(userSetting->IsParallelProjectrion());
+//   controller->SetVertexColor(userSetting->getVerticesColor());
+//   controller->SetVertexType(userSetting->getVerticesType());
+//   controller->SetVertexSize(userSetting->getVerticesSize());
+//   controller->SetEdgeColor(userSetting->getEdgesColor());
+//   controller->SetEdgeType(userSetting->getEdgesType());
+//   controller->SetEdgeSize(userSetting->getEdgesSize());
+// }
 
-  controller->SetProjectionType(userSetting->getProjection());
-
-  controller->SetVertexColor(userSetting->getVerticesColor());
-  controller->SetVertexType(userSetting->getVerticesType());
-  controller->SetVertexSize(userSetting->getVerticesSize());
-
-  controller->SetEdgeColor(userSetting->getEdgesColor());
-  controller->SetEdgeType(userSetting->getEdgesType());
-  controller->SetEdgeSize(userSetting->getEdgesSize());
-}
+// void MainWindow::slotViewportSize(const int w, const int h) {
+//   controller->SetViewportSize(w, h);
+//   renderWindow->update();
+// }
 
 void MainWindow::slotProjectionType(const bool isParallel) {
-  controller->SetProjectionType(isParallel);
+  // controller->SetProjectionType(isParallel);
   userSetting->setProjection(isParallel);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotBackgroundColor(const QColor &color) {
-  controller->SetBackgroundColor(color);
+  // controller->SetBackgroundColor(color);
   userSetting->setBackgroundColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
-  controller->SetVertexColor(color);
+  // controller->SetVertexColor(color);
   userSetting->setVerticesColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
-  controller->SetVertexType(text);
+  // controller->SetVertexType(text);
   userSetting->setVerticesType(text);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
-  controller->SetVertexSize(value);
+  // controller->SetVertexSize(value);
   userSetting->setVerticesSize(value);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
-  controller->SetEdgeColor(color);
+  // controller->SetEdgeColor(color);
   userSetting->setEdgesColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
-  controller->SetEdgeType(text);
+  // controller->SetEdgeType(text);
   userSetting->setEdgesType(text);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
-  controller->SetEdgeSize(value);
+  // controller->SetEdgeSize(value);
   userSetting->setEdgesSize(value);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotLocationCoordX(int coordX) {
-  controller->SetLocationX(coordX);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetLocationX(coordX);
+  drawScene(scene);
 }
 void MainWindow::slotLocationCoordY(int coordY) {
-  controller->SetLocationY(coordY);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetLocationY(coordY);
+  drawScene(scene);
 }
 
 void MainWindow::slotLocationCoordZ(int coordZ) {
-  controller->SetLocationZ(coordZ);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetLocationZ(coordZ);
+  drawScene(scene);
 }
 
 void MainWindow::slotScaleCoordX(int coordX) {
-  controller->SetScaleX(coordX);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetScaleX(coordX);
+  drawScene(scene);
 }
 void MainWindow::slotScaleCoordY(int coordY) {
-  controller->SetScaleY(coordY);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetScaleY(coordY);
+  drawScene(scene);
 }
 
 void MainWindow::slotScaleCoordZ(int coordZ) {
-  controller->SetScaleZ(coordZ);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetScaleZ(coordZ);
+  drawScene(scene);
 }
 
 void MainWindow::slotRotateCoordX(int coordX) {
-  controller->SetRotationX(coordX);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetRotationX(coordX);
+  drawScene(scene);
 }
 void MainWindow::slotRotateCoordY(int coordY) {
-  controller->SetRotationY(coordY);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetRotationY(coordY);
+  drawScene(scene);
 }
 
 void MainWindow::slotRotateCoordZ(int coordZ) {
-  controller->SetRotationZ(coordZ);
-
-  centralWidget->update();
-}
-
-void MainWindow::slotViewportSize(const int w, const int h) {
-  controller->SetViewportSize(w, h);
-
-  centralWidget->update();
+  s21::DrawSceneData scene = controller->SetRotationZ(coordZ);
+  drawScene(scene);
 }
 
 void MainWindow::setupUI() {
@@ -192,12 +178,12 @@ void MainWindow::setupUI() {
   userSetting = new UserSetting();
 
   // Window properties
-  setWindowTitle("Blender-like UI");
+  setWindowTitle("3DViewer 2.0");
   resize(1280, 720);
 
   // Central 3D viewport
-  centralWidget = new Viewport3D(userSetting, this);
-  setCentralWidget(centralWidget);
+  renderWindow = new Viewport3D(userSetting, this);
+  setCentralWidget(renderWindow);
 
   // UI components
   createDockWidgets();
@@ -225,7 +211,7 @@ void MainWindow::setupUI() {
 
 void MainWindow::createDockWidgets() {
   // Left dock (Tools)
-  QDockWidget *toolsDock = new QDockWidget("Tools", this);
+  toolsDock = new QDockWidget("Tools", this);
   toolsDock->setObjectName("toolsDock");
   toolsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
@@ -268,7 +254,7 @@ void MainWindow::createDockWidgets() {
   toolsDock->setWidget(box);
 
   // Right dock (Properties)
-  QDockWidget *propsDock = new QDockWidget("Properties", this);
+  propsDock = new QDockWidget("Properties", this);
   propsDock->setObjectName("propsDock");
   propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   propsDock->setWidget(new QWidget);
@@ -279,7 +265,7 @@ void MainWindow::createDockWidgets() {
   propsDock->setWidget(propsInfo);
 
   // Bottom dock (Timeline)
-  QDockWidget *timelineDock = new QDockWidget("Timeline", this);
+  timelineDock = new QDockWidget("Timeline", this);
   timelineDock->setObjectName("timelineDock");
   timelineDock->setWidget(new QWidget);
   timelineDock->setAllowedAreas(Qt::BottomDockWidgetArea);
@@ -292,7 +278,7 @@ void MainWindow::createDockWidgets() {
 
 void MainWindow::createMenuAndToolbars() {
   // Menu bar
-  QMenuBar *menuBar = new QMenuBar(this);
+  menuBar = new QMenuBar(this);
   QMenu *fileMenu = menuBar->addMenu("File");
   fileMenu->addAction("Open", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
@@ -334,22 +320,24 @@ void MainWindow::openFile() {
   }
 
   // upload all user render param to controller
-  setSceneParameters();
+  // setSceneParameters();
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
-
-  // parser test
-  obj_data.Parse(cstr);
-  obj_data.Normalize();
-  centralWidget->setScene(&obj_data);
-
-  //! check canOpen
-  // if (!isSaved)
   // QMessageBox::information(this, tr("Unable to open file"),
   //                          "File is not opened =(");
 
-  propsInfo->setText(QString::fromStdString(obj_data.toString()));
+  s21::DrawSceneData scene = controller->LoadScene(cstr);
+  drawScene(scene);
+  //! check canOpen
+  // if (!isSaved)
+
+  propsInfo->setText(QString::fromStdString(scene.info));
+}
+
+void MainWindow::drawScene(s21::DrawSceneData scene) {
+  renderWindow->setScene(scene.vertices, scene.vertex_indices);
+  renderWindow->update();
 }
 
 void MainWindow::saveImage() {
@@ -364,13 +352,15 @@ void MainWindow::saveImage() {
   else if (selectedFilter == "*.jpeg")
     postfix = ".jpeg";
 
-  bool isSaved = centralWidget->grab().save(fileName + postfix);
+  renderWindow->beforeGrab();
+  bool isSaved = renderWindow->grab().save(fileName + postfix);
   if (!isSaved)
     QMessageBox::information(this, tr("Unable to save file"),
                              "File is not saved =(");
   else
     //! отладка
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  renderWindow->afterGrab();
 }
 
 void MainWindow::saveLayout() {
@@ -386,13 +376,13 @@ void MainWindow::restoreLayout() {
 void MainWindow::resetUserSettings() {
   userSetting->removeRenderSettings();
   userSetting->readRenderSettings();
-  setSceneParameters();
+  // setSceneParameters();
   setVisualParameters();
 }
 
 void MainWindow::restoreUserSettings() {
   userSetting->readRenderSettings();
-  setSceneParameters();
+  // setSceneParameters();
   setVisualParameters();
 }
 

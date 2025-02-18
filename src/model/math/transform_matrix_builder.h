@@ -1,16 +1,12 @@
-#ifndef TRANSFORMMATRIXBUILDER_H
-#define TRANSFORMMATRIXBUILDER_H
+#pragma once
 
 #include "../data_structures.h"
-#include "transform_matrix.h"
 
 namespace s21 {
 
 class TransformMatrixBuilder {
-public:
-  static Mat4f TransformMatrixBuilder::CreateRotationMatrix(float x_rot,
-                                                            float y_rot,
-                                                            float z_rot) {
+ public:
+  static Mat4f CreateRotationMatrix(float x_rot, float y_rot, float z_rot) {
     const float cosX = std::cos(x_rot);
     const float sinX = std::sin(x_rot);
     const Mat4f Rx = {
@@ -29,24 +25,20 @@ public:
     return Rz * Ry * Rx;
   }
 
-  static Mat4f TransformMatrixBuilder::CreateMoveMatrix(float x_tr, float y_tr,
-                                                        float z_tr) {
+  static Mat4f CreateMoveMatrix(float x_tr, float y_tr, float z_tr) {
     return {{{1.0f, 0.0f, 0.0f, x_tr},
              {0.0f, 1.0f, 0.0f, y_tr},
              {0.0f, 0.0f, 1.0f, z_tr},
              {0.0f, 0.0f, 0.0f, 1.0f}}};
   }
-  static Mat4f TransformMatrixBuilder::CreateScaleMatrix(float x_scale,
-                                                         float y_scale,
-                                                         float z_scale) {
+  static Mat4f CreateScaleMatrix(float x_scale, float y_scale, float z_scale) {
     return {{{x_scale, 0.0f, 0.0f, 0.0f},
              {0.0f, y_scale, 0.0f, 0.0f},
              {0.0f, 0.0f, z_scale, 0.0f},
              {0.0f, 0.0f, 0.0f, 1.0f}}};
   }
 
-private:
+ private:
   TransformMatrixBuilder() = delete;
 };
-} // namespace s21
-#endif // TRANSFORMMATRIXBUILDER_H
+}  // namespace s21

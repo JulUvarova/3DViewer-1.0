@@ -12,19 +12,19 @@ void OBJData::Normalize() {
 
   // Find min and max for x coordinate.
   auto [min_x_it, max_x_it] = minmax_element(
-      vertices, [](const Vec3& a, const Vec3& b) { return a.x < b.x; });
+      vertices, [](const Vec3f& a, const Vec3f& b) { return a.x < b.x; });
   float min_x = min_x_it->x;
   float max_x = max_x_it->x;
 
   // Find min and max for y coordinate.
   auto [min_y_it, max_y_it] = minmax_element(
-      vertices, [](const Vec3& a, const Vec3& b) { return a.y < b.y; });
+      vertices, [](const Vec3f& a, const Vec3f& b) { return a.y < b.y; });
   float min_y = min_y_it->y;
   float max_y = max_y_it->y;
 
   // Find min and max for z coordinate.
   auto [min_z_it, max_z_it] = minmax_element(
-      vertices, [](const Vec3& a, const Vec3& b) { return a.z < b.z; });
+      vertices, [](const Vec3f& a, const Vec3f& b) { return a.z < b.z; });
   float min_z = min_z_it->z;
   float max_z = max_z_it->z;
 
@@ -43,7 +43,7 @@ void OBJData::Normalize() {
   float scale_factor = std::max({dx, dy, dz}) * 2.0f;
 
   // Adjust and scale each vertex using ranges::for_each.
-  for_each(vertices, [=](Vec3& vertex) {
+  for_each(vertices, [=](Vec3f& vertex) {
     vertex.x = (vertex.x - mid_x) / scale_factor;
     vertex.y = (vertex.y - mid_y) / scale_factor;
     vertex.z = (vertex.z - mid_z) / scale_factor;
