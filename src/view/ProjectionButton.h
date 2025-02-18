@@ -20,8 +20,10 @@ class ProjectionButton : public QPushButton {
 
   void setLocation(int w) { setGeometry(w - size - 10, 10, size, size); }
 
+  bool isParallelProjection() { return isParallel; }
+  
  signals:
-  void signalChangeProjection(const bool isParallel);
+  void signalChangeProjection();
 
  private:
   bool isParallel = true;
@@ -34,6 +36,6 @@ class ProjectionButton : public QPushButton {
     } else {
       setIcon(QIcon("./view/recourses/centralproj1.png"));
     }
-    emit signalChangeProjection(isParallel);
+    emit signalChangeProjection();
   }
 };

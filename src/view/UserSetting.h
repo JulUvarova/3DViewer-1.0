@@ -24,7 +24,6 @@ class UserSetting {
 
  public:
   UserSetting() {
-    readRenderSettings();
     readLayoutSettings();
   }
 

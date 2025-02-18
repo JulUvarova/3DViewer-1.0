@@ -26,6 +26,6 @@ class Scene {
 
   //! будет ли использовано тут?
   //! Поступает все равно готовая матрица от контроллера
-  SceneParameters scene_parameters_;
+  // SceneParameters scene_parameters_;
 };
 }  // namespace s21

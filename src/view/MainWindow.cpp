@@ -49,80 +49,83 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
           &MainWindow::slotBackgroundColor);
 
   // background prop
-  connect(renderWindow, &Viewport3D::signalChangeSize, this,
-          &MainWindow::slotViewportSize);
+  // connect(renderWindow, &Viewport3D::signalChangeSize, this,
+  //         &MainWindow::slotViewportSize);
 
-  // projection
-  connect(renderWindow, &Viewport3D::signalChangeProjection, this,
-          &MainWindow::slotProjectionType);
+  // projection //! меняется в openGL
+  // connect(renderWindow, &Viewport3D::signalChangeProjection, this,
+  //         &MainWindow::slotProjectionType);
 }
 
-void MainWindow::setSceneParameters() {
-  // set users parameters in controller
-  controller->SetBackgroundColor(userSetting->getBackgroundColor());
+//! цвета\размеры для бэка
+// void MainWindow::setSceneParameters() {
+//   // set users parameters in controller
+//   controller->SetBackgroundColor(userSetting->getBackgroundColor());
+//   controller->SetProjectionType(userSetting->IsParallelProjectrion());
+//   controller->SetVertexColor(userSetting->getVerticesColor());
+//   controller->SetVertexType(userSetting->getVerticesType());
+//   controller->SetVertexSize(userSetting->getVerticesSize());
+//   controller->SetEdgeColor(userSetting->getEdgesColor());
+//   controller->SetEdgeType(userSetting->getEdgesType());
+//   controller->SetEdgeSize(userSetting->getEdgesSize());
+// }
 
-  controller->SetProjectionType(userSetting->IsParallelProjectrion());
-
-  controller->SetVertexColor(userSetting->getVerticesColor());
-  controller->SetVertexType(userSetting->getVerticesType());
-  controller->SetVertexSize(userSetting->getVerticesSize());
-
-  controller->SetEdgeColor(userSetting->getEdgesColor());
-  controller->SetEdgeType(userSetting->getEdgesType());
-  controller->SetEdgeSize(userSetting->getEdgesSize());
-}
+// void MainWindow::slotViewportSize(const int w, const int h) {
+//   controller->SetViewportSize(w, h);
+//   renderWindow->update();
+// }
 
 void MainWindow::slotProjectionType(const bool isParallel) {
-  controller->SetProjectionType(isParallel);
+  // controller->SetProjectionType(isParallel);
   userSetting->setProjection(isParallel);
 
   renderWindow->update();
 }
 
 void MainWindow::slotBackgroundColor(const QColor &color) {
-  controller->SetBackgroundColor(color);
+  // controller->SetBackgroundColor(color);
   userSetting->setBackgroundColor(color);
 
   renderWindow->update();
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
-  controller->SetVertexColor(color);
+  // controller->SetVertexColor(color);
   userSetting->setVerticesColor(color);
 
   renderWindow->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
-  controller->SetVertexType(text);
+  // controller->SetVertexType(text);
   userSetting->setVerticesType(text);
 
   renderWindow->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
-  controller->SetVertexSize(value);
+  // controller->SetVertexSize(value);
   userSetting->setVerticesSize(value);
 
   renderWindow->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
-  controller->SetEdgeColor(color);
+  // controller->SetEdgeColor(color);
   userSetting->setEdgesColor(color);
 
   renderWindow->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
-  controller->SetEdgeType(text);
+  // controller->SetEdgeType(text);
   userSetting->setEdgesType(text);
 
   renderWindow->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
-  controller->SetEdgeSize(value);
+  // controller->SetEdgeSize(value);
   userSetting->setEdgesSize(value);
 
   renderWindow->update();
@@ -168,12 +171,6 @@ void MainWindow::slotRotateCoordY(int coordY) {
 void MainWindow::slotRotateCoordZ(int coordZ) {
   s21::DrawSceneData scene = controller->SetRotationZ(coordZ);
   drawScene(scene);
-}
-
-void MainWindow::slotViewportSize(const int w, const int h) {
-  controller->SetViewportSize(w, h);
-
-  renderWindow->update();
 }
 
 void MainWindow::setupUI() {
@@ -323,7 +320,7 @@ void MainWindow::openFile() {
   }
 
   // upload all user render param to controller
-  setSceneParameters();
+  // setSceneParameters();
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
@@ -379,13 +376,13 @@ void MainWindow::restoreLayout() {
 void MainWindow::resetUserSettings() {
   userSetting->removeRenderSettings();
   userSetting->readRenderSettings();
-  setSceneParameters();
+  // setSceneParameters();
   setVisualParameters();
 }
 
 void MainWindow::restoreUserSettings() {
   userSetting->readRenderSettings();
-  setSceneParameters();
+  // setSceneParameters();
   setVisualParameters();
 }
 

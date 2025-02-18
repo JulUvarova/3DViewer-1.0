@@ -51,12 +51,11 @@ class MainWindow : public QMainWindow {
   void slotEdgesSize(const int value);
   void slotEdgesColor(const QColor &color);
 
-  void slotViewportSize(const int w, const int h);
-
   void slotBackgroundColor(const QColor &color);
 
   void slotProjectionType(const bool isParallel);
-
+  
+  // void slotViewportSize(const int w, const int h);
  private:
   // UI elements
   QDockWidget *toolsDock, *propsDock, *timelineDock;
@@ -88,7 +87,7 @@ class MainWindow : public QMainWindow {
   void saveImage();
   void appExit();
   void closeEvent(QCloseEvent *event) override;
-  void setSceneParameters();
   void setVisualParameters();
   void drawScene(s21::DrawSceneData scene);
+  // void setSceneParameters();
 };
