@@ -58,23 +58,23 @@ class MainWindow : public QMainWindow {
   void slotProjectionType(const bool isParallel);
 
  private:
-  QLabel *xValue, *yValue, *zValue;
+  // UI elements
+  QDockWidget *toolsDock, *propsDock, *timelineDock;
   QLabel *propsInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
-
-  s21::SceneMeshData *scene{nullptr};
+  QMenuBar *menuBar;
+  Viewport3D *renderWindow;
 
   // Controller
   s21::Controller *controller;
 
-  // user choice for vertices & edges
+  // user gui settings
   UserSetting *userSetting;
-  Viewport3D *centralWidget;
 
-  // UI elements
-  // QDockWidget *toolsDock, *propsDock, *timelineDock;
+  // scene data
+  s21::SceneMeshData *scene{nullptr};
 
   void setupUI();
   void createDockWidgets();

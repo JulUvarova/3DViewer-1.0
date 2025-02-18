@@ -40,23 +40,37 @@ class SlidersBox : public QWidget {
     xSlider->setRange(min, max);
     xSlider->setTickInterval(step);
     xSlider->setValue(midle);
-    //TODO взять со школы
-    // xSlider->setStyleSheet(
-    //     "QSlider { background-color: rgba(240, 236, 236, 0); } "
-    //     "QSlider::groove:horizontal { background-color: rgb(38, 38, 38); "
-    //     "height: 5px; } QSlider::handle:horizontal { "
-    //     "background-color: rgb(131, 133, 129); width: 12px; height: 12px; "
-    //     "margin: -3px 0; border-radius: 6px; }");
+    xSlider->setStyleSheet(
+        "QSlider { background-color: rgba(240, 236, 236, 0); } "
+        "QSlider::groove:horizontal { background-color: grey; "
+        "height: 4px; border: 1px solid black;} "
+        "QSlider::handle:horizontal { "
+        "background: lightgrey; width: 7px; height: 12px; "
+        "margin: -7px 0; border-radius: 2px; border: 1px solid black; }");
 
     ySlider = new QSlider(Qt::Horizontal, this);
     ySlider->setRange(min, max);
     ySlider->setTickInterval(step);
     ySlider->setValue(midle);
+    ySlider->setStyleSheet(
+        "QSlider { background-color: rgba(240, 236, 236, 0); } "
+        "QSlider::groove:horizontal { background-color: grey; "
+        "height: 4px; border: 1px solid black;} "
+        "QSlider::handle:horizontal { "
+        "background: lightgrey; width: 7px; height: 12px; "
+        "margin: -7px 0; border-radius: 2px; border: 1px solid black; }");
 
     zSlider = new QSlider(Qt::Horizontal, this);
     zSlider->setRange(min, max);
     zSlider->setTickInterval(step);
     zSlider->setValue(midle);
+    zSlider->setStyleSheet(
+        "QSlider { background-color: rgba(240, 236, 236, 0); } "
+        "QSlider::groove:horizontal { background-color: grey; "
+        "height: 4px; border: 1px solid black;} "
+        "QSlider::handle:horizontal { "
+        "background: lightgrey; width: 7px; height: 12px; "
+        "margin: -7px 0; border-radius: 2px; border: 1px solid black; }");
 
     xValue = new QLineEdit(this);
     QIntValidator *xValidator = new QIntValidator(min, max, this);

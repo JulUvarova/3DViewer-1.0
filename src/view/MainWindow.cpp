@@ -49,11 +49,11 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
           &MainWindow::slotBackgroundColor);
 
   // background prop
-  connect(centralWidget, &Viewport3D::signalChangeSize, this,
+  connect(renderWindow, &Viewport3D::signalChangeSize, this,
           &MainWindow::slotViewportSize);
 
   // projection
-  connect(centralWidget, &Viewport3D::signalChangeProjection, this,
+  connect(renderWindow, &Viewport3D::signalChangeProjection, this,
           &MainWindow::slotProjectionType);
 }
 
@@ -76,56 +76,56 @@ void MainWindow::slotProjectionType(const bool isParallel) {
   controller->SetProjectionType(isParallel);
   userSetting->setProjection(isParallel);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotBackgroundColor(const QColor &color) {
   controller->SetBackgroundColor(color);
   userSetting->setBackgroundColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
   controller->SetVertexColor(color);
   userSetting->setVerticesColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
   controller->SetVertexType(text);
   userSetting->setVerticesType(text);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
   controller->SetVertexSize(value);
   userSetting->setVerticesSize(value);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
   controller->SetEdgeColor(color);
   userSetting->setEdgesColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
   controller->SetEdgeType(text);
   userSetting->setEdgesType(text);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
   controller->SetEdgeSize(value);
   userSetting->setEdgesSize(value);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotLocationCoordX(int coordX) {
@@ -173,7 +173,7 @@ void MainWindow::slotRotateCoordZ(int coordZ) {
 void MainWindow::slotViewportSize(const int w, const int h) {
   controller->SetViewportSize(w, h);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::setupUI() {
@@ -185,8 +185,8 @@ void MainWindow::setupUI() {
   resize(1280, 720);
 
   // Central 3D viewport
-  centralWidget = new Viewport3D(userSetting, this);
-  setCentralWidget(centralWidget);
+  renderWindow = new Viewport3D(userSetting, this);
+  setCentralWidget(renderWindow);
 
   // UI components
   createDockWidgets();
@@ -214,7 +214,7 @@ void MainWindow::setupUI() {
 
 void MainWindow::createDockWidgets() {
   // Left dock (Tools)
-  QDockWidget *toolsDock = new QDockWidget("Tools", this);
+  toolsDock = new QDockWidget("Tools", this);
   toolsDock->setObjectName("toolsDock");
   toolsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
@@ -257,7 +257,7 @@ void MainWindow::createDockWidgets() {
   toolsDock->setWidget(box);
 
   // Right dock (Properties)
-  QDockWidget *propsDock = new QDockWidget("Properties", this);
+  propsDock = new QDockWidget("Properties", this);
   propsDock->setObjectName("propsDock");
   propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   propsDock->setWidget(new QWidget);
@@ -268,7 +268,7 @@ void MainWindow::createDockWidgets() {
   propsDock->setWidget(propsInfo);
 
   // Bottom dock (Timeline)
-  QDockWidget *timelineDock = new QDockWidget("Timeline", this);
+  timelineDock = new QDockWidget("Timeline", this);
   timelineDock->setObjectName("timelineDock");
   timelineDock->setWidget(new QWidget);
   timelineDock->setAllowedAreas(Qt::BottomDockWidgetArea);
@@ -281,7 +281,7 @@ void MainWindow::createDockWidgets() {
 
 void MainWindow::createMenuAndToolbars() {
   // Menu bar
-  QMenuBar *menuBar = new QMenuBar(this);
+  menuBar = new QMenuBar(this);
   QMenu *fileMenu = menuBar->addMenu("File");
   fileMenu->addAction("Open", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
@@ -339,8 +339,8 @@ void MainWindow::openFile() {
 }
 
 void MainWindow::drawScene(s21::DrawSceneData scene) {
-  centralWidget->setScene(scene.vertices, scene.vertex_indices);
-  centralWidget->update();
+  renderWindow->setScene(scene.vertices, scene.vertex_indices);
+  renderWindow->update();
 }
 
 void MainWindow::saveImage() {
@@ -355,15 +355,15 @@ void MainWindow::saveImage() {
   else if (selectedFilter == "*.jpeg")
     postfix = ".jpeg";
 
-  centralWidget->beforeGrab();
-  bool isSaved = centralWidget->grab().save(fileName + postfix);
+  renderWindow->beforeGrab();
+  bool isSaved = renderWindow->grab().save(fileName + postfix);
   if (!isSaved)
     QMessageBox::information(this, tr("Unable to save file"),
                              "File is not saved =(");
   else
     //! отладка
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
-  centralWidget->afterGrab();
+  renderWindow->afterGrab();
 }
 
 void MainWindow::saveLayout() {

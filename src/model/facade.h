@@ -22,19 +22,28 @@ class Facade {
     return scene_->DrawScene();
   }
 
-  DrawSceneData DrawScene() { return scene_->DrawScene(); }
+  DrawSceneData DrawScene() {
+    if (!scene_) return DrawSceneData();
+    return scene_->DrawScene();
+  }
 
   void MoveScene(float x, float y, float z) {
+    if (!scene_) return;
+
     Mat4f mat = TransformMatrixBuilder::CreateMoveMatrix(x, y, z);
     scene_->TransformSceneMeshData(mat);
   }
 
   void RotateScene(float x, float y, float z) {
+    if (!scene_) return;
+
     Mat4f mat = TransformMatrixBuilder::CreateRotationMatrix(x, y, z);
     scene_->TransformSceneMeshData(mat);
   }
 
   void ScaleScene(float x, float y, float z) {
+    if (!scene_) return;
+
     Mat4f mat = TransformMatrixBuilder::CreateScaleMatrix(x, y, z);
     scene_->TransformSceneMeshData(mat);
   }

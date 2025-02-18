@@ -56,7 +56,7 @@ class Controller {
     std::cout << "Contr Scale Y: " << sceneParam_->GetScaleY() << std::endl;
   }
 
-  DrawSceneData SetScaleZ(const intdvalue) {
+  DrawSceneData SetScaleZ(const int value) {
     float new_value = value / 100.0;
     facade_->ScaleScene( 0, 0,new_value - sceneParam_->GetScaleZ());
     sceneParam_->SetScaleZ(new_value);
