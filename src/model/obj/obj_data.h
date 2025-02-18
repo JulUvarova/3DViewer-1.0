@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
-#include "range/v3/all.hpp"
+
 #include <algorithm>
 #include <charconv>
 #include <fstream>
@@ -12,19 +12,12 @@
 #include <string>
 #include <vector>
 
+#include "../data_structures.h"
+#include "../math/transform_matrix_builder.h"
+#include "range/v3/all.hpp"
+
 namespace s21 {
 
-struct Vec3 {
-  float x{}, y{}, z{};
-  Vec3() = default;
-  Vec3(float x, float y, float z) : x(x), y(y), z(z) {};
-};
-
-struct Vec2 {
-  float x{}, y{};
-  Vec2() = default;
-  Vec2(float x, float y) : x(x), y(y) {};
-};
 
 struct VertexIndices {
   int v{-1};   // index of vertices, -1 if none
@@ -48,9 +41,9 @@ struct Object {
 
 class OBJData {
  public:
-  std::vector<Vec3> vertices;
-  std::vector<Vec2> texcoords;
-  std::vector<Vec3> normals;
+  std::vector<Vec3f> vertices;
+  std::vector<Vec2f> texcoords;
+  std::vector<Vec3f> normals;
   std::vector<Object> objects;
   float x_min = 0.0f, x_max = 0.0f, y_min = 0.0f, y_max = 0.0f, z_min = 0.0f, z_max = 0.0f;
 

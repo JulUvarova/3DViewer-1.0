@@ -1,21 +1,18 @@
-#ifndef SCENE_H
-#define SCENE_H
+#pragma once
 
 #include <vector>
-#include "figure/figure.h"
+#include "scene_mesh_data.h"
 #include "scene_parameters.h"
+#include "obj/obj_data.h"
 
 namespace s21 {
 
 class Scene {
  public:
-  void AddFigure(Figure& figure) { figures_.push_back(figure); }
-  std::vector<Figure>& GetFigures() { return figures_; }
-  void TransformFigures(TransformMatrix& transform_mat) { (void)transform_mat; }
-
+  void LoadSceneMeshData(OBJData& obj_data);
+  void TransformSceneMeshData(Mat4f& transform_matrix);
  private:
-  std::vector<Figure> figures_;
+  SceneMeshData scene_mesh_data_;
   SceneParameters scene_parameters_;
 };
 }  // namespace s21
-#endif  // SCENE_H
