@@ -26,12 +26,11 @@ set(PROJECT_SOURCES
         view/BackgroundBox.h
         view/ProjectionButton.h
         
+        model/scene.h
+        model/scene.cc
         model/obj/obj_data.h
         model/obj/obj_data.cc
 
-        controller/facade.h
-
-        # model/ 
 )
 
 

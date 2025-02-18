@@ -3,6 +3,7 @@
 #include <QOpenGLWidget>
 
 #include "ProjectionButton.h"
+#include "UserSetting.h"
 
 class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   Q_OBJECT
@@ -18,18 +19,26 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     projectionButton = new ProjectionButton(this);
 
-    // get new projection
+    // redraw if projection changed
     connect(projectionButton, &ProjectionButton::signalChangeProjection, this,
-            &Viewport3D::changeProjection);
+            &Viewport3D::repaint);
   }
+
+  // TODO как-то эту хрень оптимизировать, начиная со сцены в фасаде
+  void setScene(std::vector<float> vrtx, std::vector<int> indx) {
+    vertices = vrtx;
+    indices = indx;
+  }
+
+  // убирают кнопку проекции для скрина
+  void beforeGrab() { projectionButton->setVisible(false); }
+  void afterGrab() { projectionButton->setVisible(true); }
 
  protected:
   void setBackColor() {
-    glClearColor(
-        renderSetting->getBackgroundColor().red() / 255.0,
-        renderSetting->getBackgroundColor().green() / 255.0,
-        renderSetting->getBackgroundColor().blue() / 255.0,
-        0);  
+    glClearColor(renderSetting->getBackgroundColor().red() / 255.0,
+                 renderSetting->getBackgroundColor().green() / 255.0,
+                 renderSetting->getBackgroundColor().blue() / 255.0, 1.0);
   }
 
   void initializeGL() override {
@@ -42,88 +51,106 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     // resize button
     projectionButton->setLocation(width());
-
-    // send to MainWindow changed size
-    emit signalChangeSize(width(), height());
   }
 
   void paintGL() override {
-    // Add 3D rendering logic here
-    
     setBackColor();
-    
     // Очищаем экран
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //! ОТКРЫТЬ
+    if (!vertices.size()) return;
+
     glEnableClientState(GL_VERTEX_ARRAY);
-
-    // Устанавливаем режим рисования полигонов
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    // Устанавливаем матрицу модели-вида-проекции
+    GLfloat *verticesGL = vertices.data();
+    glVertexPointer(3, GL_FLOAT, 0, verticesGL);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // gluPerspective(45.0, (GLfloat)width() / (GLfloat)height(), 0.1, 100.0);
-    
-    //glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
-    GLdouble aspect = (GLdouble)width() / (GLdouble)height();
-    GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
-    GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
 
-    if (renderSetting->getProjection() == true) {  //TODO: некрасиво
-      glOrtho(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0, nearPlane, farPlane);
-    } else {
-      // Вычисляем границы усечённой пирамиды
-    GLdouble fov = 45.0;  // поле зрения в градусах
+    // projection
+    chooseProjection();
 
-    // Вычисляем границы усечённой пирамиды
-    GLdouble top = nearPlane * tan(fov * M_PI / 360.0);  // fov/2 в радианах
-    GLdouble bottom = -top;
-    GLdouble right = top * aspect;
-    GLdouble left = -right;
+    // edges
+    if (renderSetting->getEdgesType() != "none") drawEdges();
 
-    glFrustum(left, right, bottom, top, nearPlane, farPlane);
-    }
+    // vertices
+    if (renderSetting->getVerticesType() != "none") drawVertices();
+
+    // close options
+    glDisableClientState(GL_VERTEX_ARRAY);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0, 0.0, -5.0);
-
-    // Устанавливаем цвет
-    glColor3f(renderSetting->getEdgesColor().red()/255.0, renderSetting->getEdgesColor().green()/255.0, renderSetting->getEdgesColor().blue()/255.0);
-
-    // Определяем вершины куба
-    GLfloat vertices[] = {-0.5f, -0.5f, -0.5f, 0.5f,  -0.5f, -0.5f, 0.5f, 0.5f,
-                          -0.5f, -0.5f, 0.5f,  -0.5f, -0.5f, -0.5f, 0.5f, 0.5f,
-                          -0.5f, 0.5f,  0.5f,  0.5f,  0.5f,  -0.5f, 0.5f, 0.5f};
-
-    // Устанавливаем толщину ребер
-    glLineWidth(renderSetting->getEdgesSize());
-
-    // Определяем индексы куба
-    GLuint indices[] = {0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 5, 4,
-                        1, 2, 6, 5, 2, 3, 7, 6, 3, 0, 4, 7};
-
-    // Устанавливаем вершины
-    glVertexPointer(3, GL_FLOAT, 0, vertices);
-
-    // Рисуем куб
-    glDrawElements(GL_QUADS, 24, GL_UNSIGNED_INT, indices);
-
-    //! требует #include <GL/glu.h> /нет в кампусе?
-    // gluPerspective(45.0, (GLfloat)width() / (GLfloat)height(), 0.1, 100.0);
-
-    // glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
-
-    //! ЗАКРЫТЬ
-    glDisableClientState(GL_VERTEX_ARRAY);
   }
 
  private:
   ProjectionButton *projectionButton;
   UserSetting *renderSetting;
 
-  void changeProjection(bool isParallel) {
-    emit signalChangeProjection(isParallel);
+  std::vector<float> vertices;
+  std::vector<int> indices;
+
+  void chooseProjection() {
+    //  gluPerspective(45.0, (GLfloat)width() / (GLfloat)height(), 0.1, 100.0);
+
+    // glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
+
+    GLdouble nearPlane = 1.0;   // ближняя плоскость отсечения
+    GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
+
+    //! Учет пропорции окна
+    GLdouble aspect = (GLdouble)width() / (GLdouble)height();
+
+    if (projectionButton->isParallelProjection()) {
+      glOrtho(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0, nearPlane, farPlane);
+    } else {
+      // Вычисляем границы усечённой пирамиды
+      GLdouble fov = 45.0;  // поле зрения в градусах
+
+      // Вычисляем границы усечённой пирамиды
+      GLdouble top = nearPlane * tan(fov * M_PI / 360.0);  // fov/2 в радианах
+      GLdouble bottom = -top;
+      GLdouble right = top * aspect;
+      GLdouble left = -right;
+
+      glFrustum(left, right, bottom, top, nearPlane, farPlane);
+    }
+    glTranslatef(0.0, 0.0, -5.0);
   }
+
+  void drawEdges() {
+    if (renderSetting->getEdgesType() == "dashed") {
+      glEnable(GL_LINE_STIPPLE);
+      glLineStipple(1, 0x00FF);
+    } else
+      glDisable(GL_LINE_STIPPLE);
+
+    glLineWidth(renderSetting->getEdgesSize());
+
+    glColor3f(renderSetting->getEdgesColor().red() / 255.0,
+              renderSetting->getEdgesColor().green() / 255.0,
+              renderSetting->getEdgesColor().blue() / 255.0);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    GLint *indicesGL = indices.data();
+
+    glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, indicesGL);
+    glDisableClientState(GL_VERTEX_ARRAY);
+  }
+
+  void drawVertices() {
+    if (renderSetting->getVerticesType() == "circle")
+      glEnable(GL_POINT_SMOOTH);  // без него рисуем квадратами
+    glPointSize(renderSetting->getVerticesSize());
+    glColor3f(renderSetting->getVerticesColor().red() / 255.0,
+              renderSetting->getVerticesColor().green() / 255.0,
+              renderSetting->getVerticesColor().blue() / 255.0);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glDrawArrays(GL_POINTS, 0, vertices.size());
+    glDisableClientState(GL_VERTEX_ARRAY);
+    if (renderSetting->getVerticesType() == "circle")
+      glDisable(GL_POINT_SMOOTH);
+  }
+
+  void repaint() { update(); }
 };

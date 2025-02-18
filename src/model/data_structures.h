@@ -19,16 +19,13 @@ struct Vec2f {
 
   ~Vec2f() = default;
 
-
   Vec2f operator+(const Vec2f& other) const {
     return {x + other.x, y + other.y};
   }
   Vec2f operator-(const Vec2f& other) const {
     return {x - other.x, y - other.y};
   }
-  Vec2f operator*(float scalar) const {
-    return {x * scalar, y * scalar};
-  }
+  Vec2f operator*(float scalar) const { return {x * scalar, y * scalar}; }
 };
 
 // 3D Vector
@@ -36,7 +33,7 @@ struct Vec3f {
   float x{0.0f}, y{0.0f}, z{0.0f};
 
   Vec3f() = default;
-  Vec3f(float x, float y, float z) : x(x), y(y), z(z){};
+  Vec3f(float x, float y, float z) : x(x), y(y), z(z) {};
   Vec3f(const Vec3f&) {}
   Vec3f& operator=(const Vec3f&) = default;
   Vec3f(Vec3f&&) = default;
@@ -65,9 +62,8 @@ struct Vec4f {
   float x{}, y{}, z{}, w{};
 
   Vec4f() = default;
-  Vec4f(float x, float y, float z, float w) : x(x), y(y), z(z), w(w){};
-  
-  Vec4f(const Vec3f& other){
+  Vec4f(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
+  Vec4f(const Vec3f& other) {
     x = other.x;
     y = other.y;
     z = other.z;
@@ -94,7 +90,7 @@ struct Vec4f {
 };
 
 // 4x4 Matrix
-using Mat4f =  std::array<std::array<float, 4>, 4>;
+using Mat4f = std::array<std::array<float, 4>, 4>;
 
 // Matrix-Matrix Multiplication (External)
 inline Mat4f operator*(const Mat4f& a, const Mat4f& b) {
@@ -102,7 +98,7 @@ inline Mat4f operator*(const Mat4f& a, const Mat4f& b) {
   for (int row = 0; row < 4; ++row) {
     for (int col = 0; col < 4; ++col) {
       result[row][col] = a[row][0] * b[0][col] + a[row][1] * b[1][col] +
-                           a[row][2] * b[2][col] + a[row][3] * b[3][col];
+                         a[row][2] * b[2][col] + a[row][3] * b[3][col];
     }
   }
   return result;
@@ -119,8 +115,6 @@ inline Vec4f operator*(const Mat4f& mat, const Vec4f& vec) {
               mat[3][3] * vec.w};
 }
 
-inline Vec4f operator*(const Vec4f& vec, const Mat4f& mat) {
-  return mat * vec;
-}
+inline Vec4f operator*(const Vec4f& vec, const Mat4f& mat) { return mat * vec; }
 
 }  // namespace s21
