@@ -32,15 +32,15 @@ class Controller {
 
   // Setters
   DrawSceneData SetScaleX(const int value) {
-    return facade_->ScaleX(value / kScaleCorrection);
+    return facade_->Scale(value / kScaleCorrection);
   }
 
   DrawSceneData SetScaleY(const int value) {
-    return facade_->ScaleY(value / kScaleCorrection);
+    return facade_->Scale(value / kScaleCorrection);
   }
 
   DrawSceneData SetScaleZ(const int value) {
-    return facade_->ScaleZ(value / kScaleCorrection);
+    return facade_->Scale(value / kScaleCorrection);
   }
 
   DrawSceneData SetLocationX(const int value) {
