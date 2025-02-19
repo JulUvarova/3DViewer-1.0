@@ -6,6 +6,16 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
 
   saveLayout();
 
+  // Settings
+  connect(resetCoordsButton, &QPushButton::clicked, this,
+          &MainWindow::resetCoords);
+  connect(resetElemsButton, &QPushButton::clicked, this,
+          &MainWindow::resetUserSettings);
+  connect(restoreElemsButton, &QPushButton::clicked, this,
+          &MainWindow::restoreUserSettings);
+  connect(saveElemsButton, &QPushButton::clicked, this,
+          &MainWindow::saveUserSettings);
+
   // Location coordinates
   connect(locationSlidersBox, &SlidersBox::signalChangeX, this,
           &MainWindow::slotLocationCoordX);
@@ -47,33 +57,16 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
           &MainWindow::slotEdgesColor);
   connect(backBox, &BackgroundBox::signalChangeColor, this,
           &MainWindow::slotBackgroundColor);
-
-  // background prop
-  // connect(renderWindow, &Viewport3D::signalChangeSize, this,
-  //         &MainWindow::slotViewportSize);
-
-  // projection //! меняется в openGL
-  // connect(renderWindow, &Viewport3D::signalChangeProjection, this,
-  //         &MainWindow::slotProjectionType);
 }
 
-//! цвета\размеры для бэка
-// void MainWindow::setSceneParameters() {
-//   // set users parameters in controller
-//   controller->SetBackgroundColor(userSetting->getBackgroundColor());
-//   controller->SetProjectionType(userSetting->IsParallelProjectrion());
-//   controller->SetVertexColor(userSetting->getVerticesColor());
-//   controller->SetVertexType(userSetting->getVerticesType());
-//   controller->SetVertexSize(userSetting->getVerticesSize());
-//   controller->SetEdgeColor(userSetting->getEdgesColor());
-//   controller->SetEdgeType(userSetting->getEdgesType());
-//   controller->SetEdgeSize(userSetting->getEdgesSize());
-// }
+void MainWindow::resetCoords() {
+  // TODO каждый ползунок обрабатывается отдельно, сложная петля
+  scaleSlidersBox->resetCoords();
+  locationSlidersBox->resetCoords();
+  rotateSlidersBox->resetCoords();
 
-// void MainWindow::slotViewportSize(const int w, const int h) {
-//   controller->SetViewportSize(w, h);
-//   renderWindow->update();
-// }
+  renderWindow->update();
+}
 
 void MainWindow::slotProjectionType(const bool isParallel) {
   // controller->SetProjectionType(isParallel);
@@ -217,9 +210,12 @@ void MainWindow::createDockWidgets() {
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
 
   // Create sliders (Location, Rotate, Scale)
-  locationSlidersBox = new SlidersBox("Location", -100, 100, this);
-  rotateSlidersBox = new SlidersBox("Rotate", -180, 180, this);
-  scaleSlidersBox = new SlidersBox("Scale", 1, 200, this);
+  locationSlidersBox =
+      new SlidersBox("Location", std::pair<int, int>{-100, 100}, 3, this);
+  rotateSlidersBox =
+      new SlidersBox("Rotate", std::pair<int, int>{-180, 180}, 3, this);
+  scaleSlidersBox =
+      new SlidersBox("Scale", std::pair<int, int>{1, 200}, 1, this);
 
   // Create verticesBox
   QStringList verticesLst;
@@ -241,15 +237,25 @@ void MainWindow::createDockWidgets() {
   backBox =
       new BackgroundBox("Background", userSetting->getBackgroundColor(), this);
 
+  // reset buttons
+  resetCoordsButton = new QPushButton("Reset coords");
+  resetElemsButton = new QPushButton("Reset settings");
+  restoreElemsButton = new QPushButton("Restore settings");
+  saveElemsButton = new QPushButton("Save settings");
+
   // Fill left dock
   QWidget *box = new QWidget();
   box->setLayout(new QVBoxLayout);
   box->layout()->addWidget(locationSlidersBox);
   box->layout()->addWidget(rotateSlidersBox);
   box->layout()->addWidget(scaleSlidersBox);
+  box->layout()->addWidget(resetCoordsButton);
   box->layout()->addWidget(verticesBox);
   box->layout()->addWidget(edgesBox);
   box->layout()->addWidget(backBox);
+  box->layout()->addWidget(saveElemsButton);
+  box->layout()->addWidget(restoreElemsButton);
+  box->layout()->addWidget(resetElemsButton);
 
   toolsDock->setWidget(box);
 
@@ -326,7 +332,7 @@ void MainWindow::openFile() {
   const char *cstr = byteArray.constData();
   // QMessageBox::information(this, tr("Unable to open file"),
   //                          "File is not opened =(");
-
+  resetCoords();
   s21::DrawSceneData scene = controller->LoadScene(cstr);
   drawScene(scene);
   //! check canOpen
@@ -378,12 +384,14 @@ void MainWindow::resetUserSettings() {
   userSetting->readRenderSettings();
   // setSceneParameters();
   setVisualParameters();
+  renderWindow->update();
 }
 
 void MainWindow::restoreUserSettings() {
   userSetting->readRenderSettings();
   // setSceneParameters();
   setVisualParameters();
+  renderWindow->update();
 }
 
 void MainWindow::saveUserSettings() { userSetting->saveRenderSettings(); }

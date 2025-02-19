@@ -50,7 +50,7 @@ class ElemBox : public QWidget {
     // size
     sizeLabel = new QLabel("Size:");
     size = new QSpinBox(this);
-    size->setRange(0, 100);
+    size->setRange(0, 15);
     size->setValue(setting.size);
     QHBoxLayout *sizeLayout = new QHBoxLayout();
     sizeLayout->addWidget(sizeLabel);

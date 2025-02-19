@@ -55,7 +55,6 @@ class MainWindow : public QMainWindow {
 
   void slotProjectionType(const bool isParallel);
   
-  // void slotViewportSize(const int w, const int h);
  private:
   // UI elements
   QDockWidget *toolsDock, *propsDock, *timelineDock;
@@ -65,6 +64,10 @@ class MainWindow : public QMainWindow {
   BackgroundBox *backBox;
   QMenuBar *menuBar;
   Viewport3D *renderWindow;
+  QPushButton *resetCoordsButton;
+  QPushButton *resetElemsButton;
+  QPushButton *saveElemsButton;
+  QPushButton *restoreElemsButton;
 
   // Controller
   s21::Controller *controller;
@@ -89,5 +92,5 @@ class MainWindow : public QMainWindow {
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
   void drawScene(s21::DrawSceneData scene);
-  // void setSceneParameters();
+  void resetCoords();
 };
