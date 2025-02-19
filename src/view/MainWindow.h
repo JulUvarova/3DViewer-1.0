@@ -54,11 +54,11 @@ class MainWindow : public QMainWindow {
   void slotBackgroundColor(const QColor &color);
 
   void slotProjectionType(const bool isParallel);
-  
+
  private:
   // UI elements
-  QDockWidget *toolsDock, *propsDock, *timelineDock;
-  QLabel *propsInfo;
+  QDockWidget *toolsDock, *propsDock;
+  QLabel *propsFileInfo, *propsObjectsInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
@@ -93,4 +93,6 @@ class MainWindow : public QMainWindow {
   void setVisualParameters();
   void drawScene(s21::DrawSceneData scene);
   void resetCoords();
+  void fillToolsDockWidget();
+  void fillPropsDockWidget();
 };

@@ -38,7 +38,7 @@ class SlidersBox : public QWidget {
   Q_OBJECT
 
   int kSlidersCount;
-  int kMidle;
+  int kMiddle;
   const int kStep = 1;
 
   Slider *xSlider, *ySlider, *zSlider;
@@ -64,7 +64,7 @@ class SlidersBox : public QWidget {
              QWidget *parent = nullptr)
       : QWidget(parent), kSlidersCount(sliderCount) {
     layout = new QVBoxLayout();
-    kMidle = (minMax.first + minMax.second) / 2;
+    kMiddle = (minMax.first + minMax.second) / 2;
     QIntValidator *validator =
         new QIntValidator(minMax.first, minMax.second, this);
 
@@ -72,7 +72,7 @@ class SlidersBox : public QWidget {
       sliders[i] = new Slider(this);
       sliders[i]->setRange(minMax.first, minMax.second);
       sliders[i]->setTickInterval(kStep);
-      sliders[i]->setValue(kMidle);
+      sliders[i]->setValue(kMiddle);
 
       values[i] = new QLineEdit(this);
       values[i]->setValidator(validator);
@@ -116,13 +116,12 @@ class SlidersBox : public QWidget {
   };
 
   void resetCoords() {
-    for (int i = 0; i < kSlidersCount; ++i)
-    resetSlider(sliders[i]);
+    for (int i = 0; i < kSlidersCount; ++i) sliders[i]->setValue(kMiddle);
   }
 
  private:
   void resetSlider(Slider *slider) {
-    slider->setValue(kMidle);
+    slider->setValue(kMiddle);
     emit signalChangeX(slider->value());
   }
 

@@ -60,7 +60,8 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
 }
 
 void MainWindow::resetCoords() {
-  // TODO каждый ползунок обрабатывается отдельно, сложная петля
+  controller->ResetScene();
+
   scaleSlidersBox->resetCoords();
   locationSlidersBox->resetCoords();
   rotateSlidersBox->resetCoords();
@@ -69,56 +70,48 @@ void MainWindow::resetCoords() {
 }
 
 void MainWindow::slotProjectionType(const bool isParallel) {
-  // controller->SetProjectionType(isParallel);
   userSetting->setProjection(isParallel);
 
   renderWindow->update();
 }
 
 void MainWindow::slotBackgroundColor(const QColor &color) {
-  // controller->SetBackgroundColor(color);
   userSetting->setBackgroundColor(color);
 
   renderWindow->update();
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
-  // controller->SetVertexColor(color);
   userSetting->setVerticesColor(color);
 
   renderWindow->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
-  // controller->SetVertexType(text);
   userSetting->setVerticesType(text);
 
   renderWindow->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
-  // controller->SetVertexSize(value);
   userSetting->setVerticesSize(value);
 
   renderWindow->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
-  // controller->SetEdgeColor(color);
   userSetting->setEdgesColor(color);
 
   renderWindow->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
-  // controller->SetEdgeType(text);
   userSetting->setEdgesType(text);
 
   renderWindow->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
-  // controller->SetEdgeSize(value);
   userSetting->setEdgesSize(value);
 
   renderWindow->update();
@@ -209,7 +202,42 @@ void MainWindow::createDockWidgets() {
   toolsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
 
-  // Create sliders (Location, Rotate, Scale)
+  fillToolsDockWidget();
+
+  propsDock = new QDockWidget("Properties", this);
+  propsDock->setObjectName("propsDock");
+  propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  propsDock->setWidget(new QWidget);
+  addDockWidget(Qt::RightDockWidgetArea, propsDock);
+
+  fillPropsDockWidget();
+
+  // Enable docking features
+  setDockOptions(QMainWindow::AllowNestedDocks | QMainWindow::AllowTabbedDocks);
+}
+
+void MainWindow::fillPropsDockWidget() {
+  //TODO отдельной кнопкой с открытием окна информации?
+  QWidget *propBox = new QWidget();
+  propBox->setLayout(new QVBoxLayout);
+
+  propsFileInfo = new QLabel();
+  propsObjectsInfo = new QLabel();
+
+  QGroupBox *fileNameBox = new QGroupBox("File name:");
+  fileNameBox->setLayout(new QHBoxLayout);
+  fileNameBox->layout()->addWidget(propsFileInfo);
+
+  QGroupBox *infoBox = new QGroupBox("Objects info:");
+  infoBox->setLayout(new QHBoxLayout);
+  infoBox->layout()->addWidget(propsObjectsInfo);
+
+  propBox->layout()->addWidget(fileNameBox);
+  propBox->layout()->addWidget(infoBox);
+  propsDock->setWidget(propBox);
+}
+
+void MainWindow::fillToolsDockWidget() {
   locationSlidersBox =
       new SlidersBox("Location", std::pair<int, int>{-100, 100}, 3, this);
   rotateSlidersBox =
@@ -244,42 +272,20 @@ void MainWindow::createDockWidgets() {
   saveElemsButton = new QPushButton("Save settings");
 
   // Fill left dock
-  QWidget *box = new QWidget();
-  box->setLayout(new QVBoxLayout);
-  box->layout()->addWidget(locationSlidersBox);
-  box->layout()->addWidget(rotateSlidersBox);
-  box->layout()->addWidget(scaleSlidersBox);
-  box->layout()->addWidget(resetCoordsButton);
-  box->layout()->addWidget(verticesBox);
-  box->layout()->addWidget(edgesBox);
-  box->layout()->addWidget(backBox);
-  box->layout()->addWidget(saveElemsButton);
-  box->layout()->addWidget(restoreElemsButton);
-  box->layout()->addWidget(resetElemsButton);
+  QWidget *toolBox = new QWidget();
+  toolBox->setLayout(new QVBoxLayout);
+  toolBox->layout()->addWidget(locationSlidersBox);
+  toolBox->layout()->addWidget(rotateSlidersBox);
+  toolBox->layout()->addWidget(scaleSlidersBox);
+  toolBox->layout()->addWidget(resetCoordsButton);
+  toolBox->layout()->addWidget(verticesBox);
+  toolBox->layout()->addWidget(edgesBox);
+  toolBox->layout()->addWidget(backBox);
+  toolBox->layout()->addWidget(saveElemsButton);
+  toolBox->layout()->addWidget(restoreElemsButton);
+  toolBox->layout()->addWidget(resetElemsButton);
 
-  toolsDock->setWidget(box);
-
-  // Right dock (Properties)
-  propsDock = new QDockWidget("Properties", this);
-  propsDock->setObjectName("propsDock");
-  propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  propsDock->setWidget(new QWidget);
-  addDockWidget(Qt::RightDockWidgetArea, propsDock);
-
-  // Scene info on Properties
-  propsInfo = new QLabel();
-  propsDock->setWidget(propsInfo);
-
-  // Bottom dock (Timeline)
-  timelineDock = new QDockWidget("Timeline", this);
-  timelineDock->setObjectName("timelineDock");
-  timelineDock->setWidget(new QWidget);
-  timelineDock->setAllowedAreas(Qt::BottomDockWidgetArea);
-  timelineDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
-  addDockWidget(Qt::BottomDockWidgetArea, timelineDock);
-
-  // Enable docking features
-  setDockOptions(QMainWindow::AllowNestedDocks | QMainWindow::AllowTabbedDocks);
+  toolsDock->setWidget(toolBox);
 }
 
 void MainWindow::createMenuAndToolbars() {
@@ -302,17 +308,9 @@ void MainWindow::createMenuAndToolbars() {
   settingMenu->addAction("Reset render settings", this,
                          &MainWindow::resetUserSettings);
   setMenuBar(menuBar);
-
-  // // Top toolbar
-  // QToolBar *toolbar = new QToolBar("Main Toolbar", this);
-  // toolbar->addAction("Edit Mode");
-  // toolbar->addSeparator();
-  // toolbar->addAction("Render");
-  // toolbar->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 }
 
 void MainWindow::appExit() {
-  // сохраняем настройки отображения QSettings
   userSetting->saveRenderSettings();
   close();
 }
@@ -325,9 +323,6 @@ void MainWindow::openFile() {
     return;
   }
 
-  // upload all user render param to controller
-  // setSceneParameters();
-
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
   // QMessageBox::information(this, tr("Unable to open file"),
@@ -338,7 +333,8 @@ void MainWindow::openFile() {
   //! check canOpen
   // if (!isSaved)
 
-  propsInfo->setText(QString::fromStdString(scene.info));
+  propsFileInfo->setText(fileName);
+  propsObjectsInfo->setText(QString::fromStdString(scene.info));
 }
 
 void MainWindow::drawScene(s21::DrawSceneData scene) {
@@ -382,14 +378,12 @@ void MainWindow::restoreLayout() {
 void MainWindow::resetUserSettings() {
   userSetting->removeRenderSettings();
   userSetting->readRenderSettings();
-  // setSceneParameters();
   setVisualParameters();
   renderWindow->update();
 }
 
 void MainWindow::restoreUserSettings() {
   userSetting->readRenderSettings();
-  // setSceneParameters();
   setVisualParameters();
   renderWindow->update();
 }
@@ -414,6 +408,4 @@ void MainWindow::setVisualParameters() {
   verticesBox->setSetting(verticesSetting);
 
   backBox->setSetting(userSetting->getBackgroundColor());
-
-  //! projection
 }
