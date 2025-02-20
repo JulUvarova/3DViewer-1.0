@@ -76,7 +76,7 @@ class MainWindow : public QMainWindow {
   UserSetting *userSetting;
 
   // scene data
-  s21::SceneMeshData *scene{nullptr};
+  // s21::DrawSceneData *scene{nullptr};
 
   void setupUI();
   void createDockWidgets();
@@ -91,7 +91,7 @@ class MainWindow : public QMainWindow {
   void appExit();
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
-  void drawScene(s21::DrawSceneData scene);
+  // void drawScene(s21::DrawSceneData scene);
   void resetCoords();
   void fillToolsDockWidget();
   void fillPropsDockWidget();

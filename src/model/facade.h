@@ -20,102 +20,89 @@ class Facade {
     delete sceneParam_;
   }
 
-  DrawSceneData LoadScene(const char *path) {
+  DrawSceneData* LoadScene(const char *path) {
     if (scene_) delete scene_;
 
     scene_ = new Scene();
-    scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
-
+    return scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
     // TODO проверка загрузилась ли сцена
-    return scene_->DrawScene();
   }
 
-  DrawSceneData resetScenePosition() {
-    if (!scene_) return DrawSceneData();
+  void resetScenePosition() {
+    if (!scene_) return;
 
     sceneParam_ = std::move(new SceneParameters());
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData Scale(const float value) {
-    if (!scene_) return DrawSceneData();
+  void Scale(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData ScaleX(const float value) {
-    if (!scene_) return DrawSceneData();
+  void ScaleX(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData ScaleY(const float value) {
-    if (!scene_) return DrawSceneData();
+  void ScaleY(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData ScaleZ(const float value) {
-    if (!scene_) return DrawSceneData();
+  void ScaleZ(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData MoveX(const float value) {
-    if (!scene_) return DrawSceneData();
+  void MoveX(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetLocationX(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData MoveY(const float value) {
-    if (!scene_) return DrawSceneData();
+  void MoveY(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetLocationY(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData MoveZ(const float value) {
-    if (!scene_) return DrawSceneData();
+  void MoveZ(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetLocationZ(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData RotateX(const float value) {
-    if (!scene_) return DrawSceneData();
+  void RotateX(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetRotationX(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData RotateY(const float value) {
-    if (!scene_) return DrawSceneData();
+  void RotateY(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetRotationY(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
-  DrawSceneData RotateZ(const float value) {
-    if (!scene_) return DrawSceneData();
+  void RotateZ(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetRotationZ(value);
     TransformScene();
-    return scene_->DrawScene();
   }
 
  private:
@@ -123,7 +110,7 @@ class Facade {
   Scene *scene_{nullptr};
   SceneParameters *sceneParam_;
 
-  DrawSceneData DrawScene() { return scene_->DrawScene(); }
+  // DrawSceneData DrawScene() { return scene_->DrawScene(); }
 
   void TransformScene() {
     Mat4f move_mat = TransformMatrixBuilder::CreateMoveMatrix(

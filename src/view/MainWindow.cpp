@@ -118,45 +118,54 @@ void MainWindow::slotEdgesSize(const int value) {
 }
 
 void MainWindow::slotLocationCoordX(int coordX) {
-  s21::DrawSceneData scene = controller->SetLocationX(coordX);
-  drawScene(scene);
+  controller->SetLocationX(coordX);
+
+  renderWindow->update();
 }
 void MainWindow::slotLocationCoordY(int coordY) {
-  s21::DrawSceneData scene = controller->SetLocationY(coordY);
-  drawScene(scene);
+  controller->SetLocationY(coordY);
+
+  renderWindow->update();
 }
 
 void MainWindow::slotLocationCoordZ(int coordZ) {
-  s21::DrawSceneData scene = controller->SetLocationZ(coordZ);
-  drawScene(scene);
+  controller->SetLocationZ(coordZ);
+
+  renderWindow->update();
 }
 
 void MainWindow::slotScaleCoordX(int coordX) {
-  s21::DrawSceneData scene = controller->SetScaleX(coordX);
-  drawScene(scene);
+  controller->SetScaleX(coordX);
+
+  renderWindow->update();
 }
 void MainWindow::slotScaleCoordY(int coordY) {
-  s21::DrawSceneData scene = controller->SetScaleY(coordY);
-  drawScene(scene);
+  controller->SetScaleY(coordY);
+
+  renderWindow->update();
 }
 
 void MainWindow::slotScaleCoordZ(int coordZ) {
-  s21::DrawSceneData scene = controller->SetScaleZ(coordZ);
-  drawScene(scene);
+  controller->SetScaleZ(coordZ);
+
+  renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordX(int coordX) {
-  s21::DrawSceneData scene = controller->SetRotationX(coordX);
-  drawScene(scene);
+  controller->SetRotationX(coordX);
+
+  renderWindow->update();
 }
 void MainWindow::slotRotateCoordY(int coordY) {
-  s21::DrawSceneData scene = controller->SetRotationY(coordY);
-  drawScene(scene);
+  controller->SetRotationY(coordY);
+
+  renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordZ(int coordZ) {
-  s21::DrawSceneData scene = controller->SetRotationZ(coordZ);
-  drawScene(scene);
+  controller->SetRotationZ(coordZ);
+
+  renderWindow->update();
 }
 
 void MainWindow::setupUI() {
@@ -319,28 +328,25 @@ void MainWindow::openFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
                                                   tr("Images (*.obj)"));
   //! if cancel
-  if (fileName.isEmpty()) {
+  if (fileName.isEmpty()) 
     return;
-  }
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
   // QMessageBox::information(this, tr("Unable to open file"),
   //                          "File is not opened =(");
   resetCoords();
-  s21::DrawSceneData scene = controller->LoadScene(cstr);
-  drawScene(scene);
+  s21::DrawSceneData *scene = controller->LoadScene(cstr);
+  renderWindow->setScene(scene);
+
   //! check canOpen
   // if (!isSaved)
 
   propsFileInfo->setText(fileName);
-  propsObjectsInfo->setText(QString::fromStdString(scene.info));
+  propsObjectsInfo->setText(QString::fromStdString(scene->info));
 }
 
-void MainWindow::drawScene(s21::DrawSceneData scene) {
-  renderWindow->setScene(scene.vertices, scene.vertex_indices);
-  renderWindow->update();
-}
+// void MainWindow::drawScene(s21::DrawSceneData scene) { renderWindow->update(); }
 
 void MainWindow::saveImage() {
   // file name & save location
