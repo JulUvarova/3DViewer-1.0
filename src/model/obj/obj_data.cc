@@ -1,9 +1,11 @@
 #include "obj_data.h"
 #include "../exceptions.h"
+#include "Logger.h"
 
 namespace s21 {
 
 void OBJData::Normalize() {
+  LogInfo << "Normalizing loaded mesh..." << std::endl;
   using namespace ranges;
 
   // Ensure there is at least one vertex to avoid undefined behavior.
@@ -49,13 +51,16 @@ void OBJData::Normalize() {
     vertex.y = (vertex.y - mid_y) / scale_factor;
     vertex.z = (vertex.z - mid_z) / scale_factor;
   });
+  LogInfo << "Normalization complete." << std::endl;
 }
 
 void OBJData::Parse(const std::string& filename) {
   // Memory mapping
+  LogInfo << "Opening file: " << filename << std::endl;
 
   int fd = open(filename.c_str(), O_RDONLY);
   if (fd == -1) {
+    LogError << "Failed to open file: " << filename << std::endl;
     throw MeshLoadException("Failed to open file: " + filename);
   }
   size_t size = lseek(fd, 0, SEEK_END);
@@ -63,6 +68,7 @@ void OBJData::Parse(const std::string& filename) {
       static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, 0));
       if (buffer == MAP_FAILED) {
     close(fd);
+    LogError << "Failed to map file: " << filename << std::endl;
     throw MeshLoadException("Failed to map file: " + filename);
   }
   close(fd);
@@ -87,7 +93,12 @@ void OBJData::Parse(const std::string& filename) {
   }
 
   munmap(buffer, size);
-
+  LogInfo << "Parsing complete." << std::endl;
+  LogInfo << "Vertices: " << vertices.size() << std::endl;
+  LogInfo << "Normals: " << normals.size() << std::endl;
+  LogInfo << "Texcoords: " << texcoords.size() << std::endl;
+  LogInfo << "Objects: " << objects.size() << std::endl;
+  
 }
 
 void OBJData::ProcessLine(std::string_view line) {
