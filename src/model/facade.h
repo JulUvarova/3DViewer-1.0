@@ -20,140 +20,89 @@ class Facade {
     delete sceneParam_;
   }
 
-  DrawSceneData LoadScene(const char *path) {
+  DrawSceneData* LoadScene(const char *path) {
     if (scene_) delete scene_;
 
     scene_ = new Scene();
-    scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
-
+    return scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
     // TODO проверка загрузилась ли сцена
-    return scene_->DrawScene();
   }
 
-  DrawSceneData Scale(const float value) {
-    if (!scene_) return DrawSceneData();
+  void resetScenePosition() {
+    if (!scene_) return;
+
+    sceneParam_ = std::move(new SceneParameters());
+    TransformScene();
+  }
+
+  void Scale(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // ScaleScene(value, value, value);
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData ScaleX(const float value) {
-    if (!scene_) return DrawSceneData();
+  void ScaleX(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // ScaleScene(value - sceneParam_->GetScaleX(), 0, 0);
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData ScaleY(const float value) {
-    if (!scene_) return DrawSceneData();
+  void ScaleY(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // ScaleScene(0, value - sceneParam_->GetScaleY(), 0);
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData ScaleZ(const float value) {
-    if (!scene_) return DrawSceneData();
+  void ScaleZ(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // ScaleScene(0, 0, value - sceneParam_->GetScaleZ());
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData MoveX(const float value) {
-    if (!scene_) return DrawSceneData();
+  void MoveX(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetLocationX(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // MoveScene(sceneParam_->GetLocationX(), 0, 0);
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData MoveY(const float value) {
-    if (!scene_) return DrawSceneData();
+  void MoveY(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetLocationY(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // MoveScene(0, sceneParam_->GetLocationY(), 0);
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData MoveZ(const float value) {
-    if (!scene_) return DrawSceneData();
+  void MoveZ(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetLocationZ(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // MoveScene(0, 0, sceneParam_->GetLocationZ());
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData RotateX(const float value) {
-    if (!scene_) return DrawSceneData();
-
-    std::cout << value << std::endl;  //!
+  void RotateX(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetRotationX(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // RotateScene(sceneParam_->GetRotationX(), sceneParam_->GetRotationY(),
-    //             sceneParam_->GetRotationZ());
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData RotateY(const float value) {
-    if (!scene_) return DrawSceneData();
+  void RotateY(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetRotationY(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    // RotateScene(sceneParam_->GetRotationX(), sceneParam_->GetRotationY(),
-    //             sceneParam_->GetRotationZ());
-    return scene_->DrawScene();
+    TransformScene();
   }
 
-  DrawSceneData RotateZ(const float value) {
-    if (!scene_) return DrawSceneData();
+  void RotateZ(const float value) {
+    if (!scene_) return;
 
     sceneParam_->SetRotationZ(value);
-    TransformScene(sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-                   sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
-                   sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
-                   sceneParam_->GetScaleX());
-    //  RotateScene(sceneParam_->GetRotationX(),
-    //                            sceneParam_->GetRotationY(),
-    //                            sceneParam_->GetRotationZ());
-    return scene_->DrawScene();
+    TransformScene();
   }
 
  private:
@@ -161,15 +110,18 @@ class Facade {
   Scene *scene_{nullptr};
   SceneParameters *sceneParam_;
 
-  DrawSceneData DrawScene() { return scene_->DrawScene(); }
+  // DrawSceneData DrawScene() { return scene_->DrawScene(); }
 
-  void TransformScene(float m_x, float m_y, float m_z, float r_x, float r_y,
-                      float r_z, float scale) {
-    Mat4f move_mat = TransformMatrixBuilder::CreateMoveMatrix(m_x, m_y, m_z);
-    Mat4f rotate_mat =
-        TransformMatrixBuilder::CreateRotationMatrix(r_x, r_y, r_z);
-    Mat4f scale_mat =
-        TransformMatrixBuilder::CreateScaleMatrix(scale, scale, scale);
+  void TransformScene() {
+    Mat4f move_mat = TransformMatrixBuilder::CreateMoveMatrix(
+        sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
+        sceneParam_->GetLocationZ());
+    Mat4f rotate_mat = TransformMatrixBuilder::CreateRotationMatrix(
+        sceneParam_->GetRotationX(), sceneParam_->GetRotationY(),
+        sceneParam_->GetRotationZ());
+    Mat4f scale_mat = TransformMatrixBuilder::CreateScaleMatrix(
+        sceneParam_->GetScaleX(), sceneParam_->GetScaleX(),
+        sceneParam_->GetScaleX());
     Mat4f transform_mat = scale_mat * move_mat * rotate_mat;
     scene_->TransformSceneMeshData(transform_mat);
   }

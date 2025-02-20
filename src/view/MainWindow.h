@@ -54,17 +54,20 @@ class MainWindow : public QMainWindow {
   void slotBackgroundColor(const QColor &color);
 
   void slotProjectionType(const bool isParallel);
-  
-  // void slotViewportSize(const int w, const int h);
+
  private:
   // UI elements
-  QDockWidget *toolsDock, *propsDock, *timelineDock;
-  QLabel *propsInfo;
+  QDockWidget *toolsDock, *propsDock;
+  QLabel *propsFileInfo, *propsObjectsInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
   QMenuBar *menuBar;
   Viewport3D *renderWindow;
+  QPushButton *resetCoordsButton;
+  QPushButton *resetElemsButton;
+  QPushButton *saveElemsButton;
+  QPushButton *restoreElemsButton;
 
   // Controller
   s21::Controller *controller;
@@ -73,7 +76,7 @@ class MainWindow : public QMainWindow {
   UserSetting *userSetting;
 
   // scene data
-  s21::SceneMeshData *scene{nullptr};
+  // s21::DrawSceneData *scene{nullptr};
 
   void setupUI();
   void createDockWidgets();
@@ -88,6 +91,8 @@ class MainWindow : public QMainWindow {
   void appExit();
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
-  void drawScene(s21::DrawSceneData scene);
-  // void setSceneParameters();
+  // void drawScene(s21::DrawSceneData scene);
+  void resetCoords();
+  void fillToolsDockWidget();
+  void fillPropsDockWidget();
 };

@@ -25,10 +25,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   // TODO как-то эту хрень оптимизировать, начиная со сцены в фасаде
-  void setScene(std::vector<float> vrtx, std::vector<int> indx) {
-    vertices = vrtx;
-    indices = indx;
-  }
+  void setScene(s21::DrawSceneData *sc) { scene = sc; }
 
   // убирают кнопку проекции для скрина
   void beforeGrab() { projectionButton->setVisible(false); }
@@ -58,11 +55,10 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     // Очищаем экран
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (!vertices.size()) return;
+    if (!scene || scene->vertices.empty()) return;
 
     glEnableClientState(GL_VERTEX_ARRAY);
-    GLfloat *verticesGL = vertices.data();
-    glVertexPointer(3, GL_FLOAT, 0, verticesGL);
+    glVertexPointer(3, GL_FLOAT, 0, scene->vertices.data());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -85,8 +81,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   ProjectionButton *projectionButton;
   UserSetting *renderSetting;
 
-  std::vector<float> vertices;
-  std::vector<int> indices;
+  s21::DrawSceneData *scene{nullptr};
 
   void chooseProjection() {
     //  gluPerspective(45.0, (GLfloat)width() / (GLfloat)height(), 0.1, 100.0);
@@ -131,9 +126,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    GLint *indicesGL = indices.data();
-
-    glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, indicesGL);
+    glDrawElements(GL_LINES, scene->vertex_indices.size(), GL_UNSIGNED_INT, scene->vertex_indices.data());
     glDisableClientState(GL_VERTEX_ARRAY);
   }
 
@@ -146,7 +139,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
               renderSetting->getVerticesColor().blue() / 255.0);
 
     glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawArrays(GL_POINTS, 0, vertices.size());
+    glDrawArrays(GL_POINTS, 0, scene->vertices.size());
     glDisableClientState(GL_VERTEX_ARRAY);
     if (renderSetting->getVerticesType() == "circle")
       glDisable(GL_POINT_SMOOTH);
