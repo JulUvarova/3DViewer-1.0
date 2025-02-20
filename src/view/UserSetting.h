@@ -24,7 +24,7 @@ class UserSetting {
 
  public:
   UserSetting() {
-    readLayoutSettings();
+    readRenderSettings();
   }
 
   ~UserSetting() = default;

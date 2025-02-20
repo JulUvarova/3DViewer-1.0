@@ -61,8 +61,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     if (!vertices.size()) return;
 
     glEnableClientState(GL_VERTEX_ARRAY);
-    GLfloat *verticesGL = vertices.data();
-    glVertexPointer(3, GL_FLOAT, 0, verticesGL);
+    glVertexPointer(3, GL_FLOAT, 0, vertices.data());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -131,9 +130,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    GLint *indicesGL = indices.data();
-
-    glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, indicesGL);
+    glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, indices.data());
     glDisableClientState(GL_VERTEX_ARRAY);
   }
 

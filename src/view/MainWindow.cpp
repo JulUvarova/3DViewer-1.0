@@ -217,7 +217,7 @@ void MainWindow::createDockWidgets() {
 }
 
 void MainWindow::fillPropsDockWidget() {
-  //TODO отдельной кнопкой с открытием окна информации?
+  // TODO отдельной кнопкой с открытием окна информации?
   QWidget *propBox = new QWidget();
   propBox->setLayout(new QVBoxLayout);
 
