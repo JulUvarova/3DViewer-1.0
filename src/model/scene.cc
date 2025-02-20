@@ -6,11 +6,12 @@ DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
   scene_mesh_data_.vertexes.assign(obj_data.vertices.begin(),
                                    obj_data.vertices.end());
   // transformed point coordinates
-  scene_mesh_data_.transformed_vertexes.assign(obj_data.vertices.begin(),
-                                               obj_data.vertices.end());
+  // scene_mesh_data_.transformed_vertexes.assign(obj_data.vertices.begin(),
+  //                                              obj_data.vertices.end());
   // vertices for render
   draw_scene_data_.vertices.reserve(scene_mesh_data_.vertexes.size());
-  for (auto& point : scene_mesh_data_.transformed_vertexes) {
+
+  for (auto& point : scene_mesh_data_.vertexes) {
     draw_scene_data_.vertices.push_back(point.x);
     draw_scene_data_.vertices.push_back(point.y);
     draw_scene_data_.vertices.push_back(point.z);
@@ -35,7 +36,7 @@ DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
   for (auto& face : scene_mesh_data_.face_vertex_indices) {
     for (size_t i = 0; i < face.size(); ++i) {
       draw_scene_data_.vertex_indices.push_back(face[i]);
-      if (i == face.size() - 1)
+      if (i == (face.size() - 1))
         draw_scene_data_.vertex_indices.push_back(face[0]);
       else
         draw_scene_data_.vertex_indices.push_back(face[i + 1]);
@@ -51,13 +52,15 @@ void Scene::TransformSceneMeshData(Mat4f& transform_matrix) {
   // transform mesh
   size_t i = 0;
   for (auto& vertex : scene_mesh_data_.vertexes) {
-    scene_mesh_data_.transformed_vertexes[i] = vertex * transform_matrix;
-    ++i;
+    // scene_mesh_data_.transformed_vertexes[i] = vertex * transform_matrix;
+    auto [x,y,z, w] = vertex * transform_matrix;
+    
+    // rewrite new vertexes for render
+    draw_scene_data_.vertices[i*3] = x;
+    draw_scene_data_.vertices[i*3 + 1] = y;
+    draw_scene_data_.vertices[i*3 + 2] = z;
 
-  // rewrite new vertexes for render
-    draw_scene_data_.vertices[i*3] = scene_mesh_data_.transformed_vertexes[i].x;
-    draw_scene_data_.vertices[i*3 + 1] = scene_mesh_data_.transformed_vertexes[i].y;
-    draw_scene_data_.vertices[i*3 + 2] = scene_mesh_data_.transformed_vertexes[i].z;
+    ++i;
   }
 }
 // DrawSceneData& Scene::DrawScene() {

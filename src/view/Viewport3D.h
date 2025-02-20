@@ -58,6 +58,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     if (!scene || scene->vertices.empty()) return;
 
     glEnableClientState(GL_VERTEX_ARRAY);
+
     glVertexPointer(3, GL_FLOAT, 0, scene->vertices.data());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -66,10 +67,14 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     chooseProjection();
 
     // edges
-    if (renderSetting->getEdgesType() != "none") drawEdges();
+    if (renderSetting->getEdgesType() != "none") {
+      drawEdges();
+    }
 
     // vertices
-    if (renderSetting->getVerticesType() != "none") drawVertices();
+    if (renderSetting->getVerticesType() != "none") {
+      drawVertices();
+    }
 
     // close options
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -84,11 +89,9 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   s21::DrawSceneData *scene{nullptr};
 
   void chooseProjection() {
-    //  gluPerspective(45.0, (GLfloat)width() / (GLfloat)height(), 0.1, 100.0);
 
-    // glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 100.0);
 
-    GLdouble nearPlane = 1.0;   // ближняя плоскость отсечения
+    GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
     GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
 
     //! Учет пропорции окна
@@ -126,23 +129,32 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    glDrawElements(GL_LINES, scene->vertex_indices.size(), GL_UNSIGNED_INT, scene->vertex_indices.data());
+    glDrawElements(GL_LINES, scene->vertex_indices.size(), GL_UNSIGNED_INT,
+                   scene->vertex_indices.data());
     glDisableClientState(GL_VERTEX_ARRAY);
   }
 
   void drawVertices() {
-    if (renderSetting->getVerticesType() == "circle")
-      glEnable(GL_POINT_SMOOTH);  // без него рисуем квадратами
+    if (renderSetting->getVerticesType() == "circle") {
+      glEnable(GL_POINT_SMOOTH);
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+    }  // без этих настроек точки будут квадратными
+
     glPointSize(renderSetting->getVerticesSize());
     glColor3f(renderSetting->getVerticesColor().red() / 255.0,
               renderSetting->getVerticesColor().green() / 255.0,
               renderSetting->getVerticesColor().blue() / 255.0);
 
     glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawArrays(GL_POINTS, 0, scene->vertices.size());
+    glDrawArrays(GL_POINTS, 0, scene->vertices.size() / 3);
     glDisableClientState(GL_VERTEX_ARRAY);
-    if (renderSetting->getVerticesType() == "circle")
+
+    if (renderSetting->getVerticesType() == "circle") {
+      glDisable(GL_BLEND);
       glDisable(GL_POINT_SMOOTH);
+    }
   }
 
   void repaint() { update(); }

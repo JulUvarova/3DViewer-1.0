@@ -1,4 +1,5 @@
 #include "obj_data.h"
+#include "../exceptions.h"
 
 namespace s21 {
 
@@ -52,10 +53,18 @@ void OBJData::Normalize() {
 
 void OBJData::Parse(const std::string& filename) {
   // Memory mapping
+
   int fd = open(filename.c_str(), O_RDONLY);
+  if (fd == -1) {
+    throw MeshLoadException("Failed to open file: " + filename);
+  }
   size_t size = lseek(fd, 0, SEEK_END);
   char* buffer =
       static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, 0));
+      if (buffer == MAP_FAILED) {
+    close(fd);
+    throw MeshLoadException("Failed to map file: " + filename);
+  }
   close(fd);
 
   // Batch reserves
@@ -78,6 +87,7 @@ void OBJData::Parse(const std::string& filename) {
   }
 
   munmap(buffer, size);
+
 }
 
 void OBJData::ProcessLine(std::string_view line) {
