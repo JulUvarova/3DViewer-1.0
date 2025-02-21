@@ -18,9 +18,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
  signals:
   void signalChangeSize(const int w, const int h);
   void signalChangeProjection(const bool isParallel);
-  void signalChangeMoveCoords(std::pair<int, int> coordsXY);
-  void signalChangeScaleCoords(std::pair<int, int> coordsXY);
-  void signalChangeRotateCoords(std::pair<int, int> coordsXY);
+  void signalChangeCoords(std::pair<int, int> coordsXY);
 
  public:
   Viewport3D(UserSetting *setting, QWidget *parent = nullptr)
@@ -97,55 +95,49 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   UserSetting *renderSetting;
   s21::DrawSceneData *scene{nullptr};
 
-  // catch mouse press and mouse release
-  MouseAction mouseAction = MouseAction::kNone;
+  // catch mouse press(true) and mouse release(false)
+  bool isDragging = false;
+  QString mouseEvent;
   QPoint mousePos;
 
   void mousePressEvent(QMouseEvent *event) override {
-    if (event->button() == Qt::LeftButton)
-      mouseAction = MouseAction::kLeftButton;
-    else if (event->button() == Qt::MiddleButton)
-      mouseAction = MouseAction::kMiddleButton;
-
-    if (mouseAction != MouseAction::kNone) {
+    if (event->button() == Qt::LeftButton ||
+        event->button() == Qt::MiddleButton) {
+      if (event->button() == Qt::LeftButton) {
+        mouseEvent = "Location";
+      } else if (event->button() == Qt::MiddleButton) {
+        mouseEvent = "Rotation";
+      } else if (event->button() == Qt::MiddleButton) {
+        mouseEvent = "Rotation";
+      }
       mousePos = event->pos();
+      isDragging = true;
+      qDebug() << "Move: " << mouseEvent;
     }
   }
 
   void mouseMoveEvent(QMouseEvent *event) override {
-    if (mouseAction != MouseAction::kNone) {
+    if (isDragging) {
       QPoint pos = event->pos();
 
-      // left will move object
-      if (mouseAction == MouseAction::kLeftButton) {
-        int shiftX = (pos.x() * 200 / width() - 100) -
-                     (mousePos.x() * 200 / width() - 100);
-        int shiftY = -((pos.y() * 200 / height() - 100) -
-                       (mousePos.y() * 200 / height() - 100));
+      int shiftX = (pos.x() * 200 / width() - 100) -
+                   (mousePos.x() * 200 / width() - 100);
+      int shiftY = -((pos.y() * 200 / width() - 100) -
+                     (mousePos.y() * 200 / width() - 100));
 
-        emit signalChangeMoveCoords(
-            std::pair<int, int>{2 * shiftX, 2 * shiftY});
-      }
-      // middle will rotate object
-      if (mouseAction == MouseAction::kMiddleButton) {
-        int shiftX = -((pos.x() * 360 / width() - 180) -
-                       (mousePos.x() * 360 / width() - 180));
-        int shiftY = -((pos.y() * 360 / height() - 180) -
-                       (mousePos.y() * 360 / height() - 180));
-
-        emit signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
-      }
       mousePos = pos;
+
+      qDebug() << "MousePos: " << shiftY << " " << shiftX;
+      emit signalChangeCoords(std::pair<int, int>{shiftX, shiftY});
     }
   }
 
-  void mouseReleaseEvent([[maybe_unused]] QMouseEvent *event) override {
-    mouseAction = MouseAction::kNone;
-  }
-
-  void wheelEvent(QWheelEvent *event) {
-    emit signalChangeScaleCoords(
-        std::pair<int, int>{event->angleDelta().y() / 24, 0});  // 5 ед
+  void mouseReleaseEvent(QMouseEvent *event) override {
+    if (event->button() == Qt::LeftButton ||
+        event->button() == Qt::MiddleButton) {
+      isDragging = false;
+      qDebug() << "Stop";
+    }
   }
 
   void chooseProjection() {

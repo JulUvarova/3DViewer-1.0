@@ -23,7 +23,7 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
           &MainWindow::slotLocationCoordY);
   connect(locationSlidersBox, &SlidersBox::signalChangeZ, this,
           &MainWindow::slotLocationCoordZ);
-  connect(renderWindow, &Viewport3D::signalChangeMoveCoords, locationSlidersBox,
+  connect(renderWindow, &Viewport3D::signalChangeCoords, locationSlidersBox,
           &SlidersBox::setCoords);
 
   // scale coordinates
