@@ -23,6 +23,8 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
           &MainWindow::slotLocationCoordY);
   connect(locationSlidersBox, &SlidersBox::signalChangeZ, this,
           &MainWindow::slotLocationCoordZ);
+  connect(renderWindow, &Viewport3D::signalChangeCoords, locationSlidersBox,
+          &SlidersBox::setCoords);
 
   // scale coordinates
   connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
@@ -328,8 +330,7 @@ void MainWindow::openFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
                                                   tr("Images (*.obj)"));
   //! if cancel
-  if (fileName.isEmpty()) 
-    return;
+  if (fileName.isEmpty()) return;
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
@@ -346,7 +347,8 @@ void MainWindow::openFile() {
   propsObjectsInfo->setText(QString::fromStdString(scene->info));
 }
 
-// void MainWindow::drawScene(s21::DrawSceneData scene) { renderWindow->update(); }
+// void MainWindow::drawScene(s21::DrawSceneData scene) {
+// renderWindow->update(); }
 
 void MainWindow::saveImage() {
   // file name & save location

@@ -1,4 +1,5 @@
 #pragma once
+#include <QMouseEvent>
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
 
@@ -11,6 +12,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
  signals:
   void signalChangeSize(const int w, const int h);
   void signalChangeProjection(const bool isParallel);
+  void signalChangeCoords(std::pair<int, int> coordsXY);
 
  public:
   Viewport3D(UserSetting *setting, QWidget *parent = nullptr)
@@ -88,10 +90,53 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
   s21::DrawSceneData *scene{nullptr};
 
+  // catch mouse press(true) and mouse release(false)
+  bool isDragging = false;
+  QString mouseEvent;
+  QPoint mousePos;
+
+  void mousePressEvent(QMouseEvent *event) override {
+    if (event->button() == Qt::LeftButton ||
+        event->button() == Qt::MiddleButton) {
+      if (event->button() == Qt::LeftButton) {
+        mouseEvent = "Location";
+      } else if (event->button() == Qt::MiddleButton) {
+        mouseEvent = "Rotation";
+      } else if (event->button() == Qt::MiddleButton) {
+        mouseEvent = "Rotation";
+      }
+      mousePos = event->pos();
+      isDragging = true;
+      qDebug() << "Move: " << mouseEvent;
+    }
+  }
+
+  void mouseMoveEvent(QMouseEvent *event) override {
+    if (isDragging) {
+      QPoint pos = event->pos();
+
+      int shiftX = (pos.x() * 200 / width() - 100) -
+                   (mousePos.x() * 200 / width() - 100);
+      int shiftY = -((pos.y() * 200 / width() - 100) -
+                     (mousePos.y() * 200 / width() - 100));
+
+      mousePos = pos;
+
+      qDebug() << "MousePos: " << shiftY << " " << shiftX;
+      emit signalChangeCoords(std::pair<int, int>{shiftX, shiftY});
+    }
+  }
+
+  void mouseReleaseEvent(QMouseEvent *event) override {
+    if (event->button() == Qt::LeftButton ||
+        event->button() == Qt::MiddleButton) {
+      isDragging = false;
+      qDebug() << "Stop";
+    }
+  }
+
   void chooseProjection() {
-
-
-    GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
+    GLdouble nearPlane = 1.0;   // ближняя плоскость отсечения
     GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
 
     //! Учет пропорции окна
