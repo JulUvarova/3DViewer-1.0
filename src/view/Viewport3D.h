@@ -123,11 +123,8 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
         int shiftY = -((pos.y() * 200 / height() - 100) -
                        (mousePos.y() * 200 / height() - 100));
 
-        //! Разве не одно и то же?
-        // int shiftX = (pos.x() - mousePos.x()) * 200 / width() - 100;
-        // int shiftY = -((pos.y() - mousePos.y()) * 200 / width() - 100);
-        // qDebug() << "x: " << shiftX << " y: " << shiftY;
-        emit signalChangeMoveCoords(std::pair<int, int>{shiftX, shiftY});
+        emit signalChangeMoveCoords(
+            std::pair<int, int>{2 * shiftX, 2 * shiftY});
       }
       // middle will rotate object
       if (mouseAction == MouseAction::kMiddleButton) {
@@ -148,7 +145,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
   void wheelEvent(QWheelEvent *event) {
     emit signalChangeScaleCoords(
-        std::pair<int, int>{event->angleDelta().y() / 120, 0});
+        std::pair<int, int>{event->angleDelta().y() / 24, 0});  // 5 ед
   }
 
   void chooseProjection() {
