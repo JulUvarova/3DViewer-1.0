@@ -19,7 +19,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   void signalChangeSize(const int w, const int h);
   void signalChangeProjection(const bool isParallel);
   void signalChangeMoveCoords(std::pair<int, int> coordsXY);
-  // void signalChangeScaleCoords(std::pair<int, int> coordsXY);
+  void signalChangeScaleCoords(std::pair<int, int> coordsXY);
   void signalChangeRotateCoords(std::pair<int, int> coordsXY);
 
  public:
@@ -109,7 +109,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     if (mouseAction != MouseAction::kNone) {
       mousePos = event->pos();
-      qDebug() << "Move: ";
     }
   }
 
@@ -121,38 +120,35 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
       if (mouseAction == MouseAction::kLeftButton) {
         int shiftX = (pos.x() * 200 / width() - 100) -
                      (mousePos.x() * 200 / width() - 100);
-        int shiftY = -((pos.y() * 200 / width() - 100) -
-                       (mousePos.y() * 200 / width() - 100));
+        int shiftY = -((pos.y() * 200 / height() - 100) -
+                       (mousePos.y() * 200 / height() - 100));
+
+        //! Разве не одно и то же?
+        // int shiftX = (pos.x() - mousePos.x()) * 200 / width() - 100;
+        // int shiftY = -((pos.y() - mousePos.y()) * 200 / width() - 100);
+        // qDebug() << "x: " << shiftX << " y: " << shiftY;
         emit signalChangeMoveCoords(std::pair<int, int>{shiftX, shiftY});
       }
       // middle will rotate object
       if (mouseAction == MouseAction::kMiddleButton) {
-        int shiftX = (pos.x() * 360 / width() - 180) -
-                     (mousePos.x() * 360 / width() - 180);
-        int shiftY = -((pos.y() * 360 / width() - 180) -
-                       (mousePos.y() * 360 / width() - 180));
+        int shiftX = -((pos.x() * 360 / width() - 180) -
+                       (mousePos.x() * 360 / width() - 180));
+        int shiftY = -((pos.y() * 360 / height() - 180) -
+                       (mousePos.y() * 360 / height() - 180));
 
         emit signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
       }
-      // wheel will scale object
-      if (mouseAction == MouseAction::kMiddleButton) {
-        int shiftX =
-            (pos.x() * 360 / width()) - (mousePos.x() * 360 / width() - 180);
-        int shiftY = -((pos.y() * 360 / width() - 180) -
-                       (mousePos.y() * 360 / width() - 180));
-
-        emit signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
-      }
-
       mousePos = pos;
     }
   }
 
   void mouseReleaseEvent([[maybe_unused]] QMouseEvent *event) override {
-    if (mouseAction != MouseAction::kNone) {
-      mouseAction = MouseAction::kNone;
-      qDebug() << "Stop";
-    }
+    mouseAction = MouseAction::kNone;
+  }
+
+  void wheelEvent(QWheelEvent *event) {
+    emit signalChangeScaleCoords(
+        std::pair<int, int>{event->angleDelta().y() / 120, 0});
   }
 
   void chooseProjection() {

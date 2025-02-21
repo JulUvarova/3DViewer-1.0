@@ -33,8 +33,8 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
           &MainWindow::slotScaleCoordY);
   connect(scaleSlidersBox, &SlidersBox::signalChangeZ, this,
           &MainWindow::slotScaleCoordZ);
-  // connect(renderWindow, &Viewport3D::signalChangeScaleCoords, scaleSlidersBox,
-  //         &SlidersBox::setCoords);
+  connect(renderWindow, &Viewport3D::signalChangeScaleCoords, scaleSlidersBox,
+          &SlidersBox::setCoords);
 
   // rotate coordinates
   connect(rotateSlidersBox, &SlidersBox::signalChangeX, this,
