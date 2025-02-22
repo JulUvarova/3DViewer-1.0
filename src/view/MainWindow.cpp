@@ -6,6 +6,11 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
 
   saveLayout();
 
+  // timer for gif animation
+  timer = new QTimer(this);
+  timer->setInterval(100);  // 1000ms = 1 sec (100 -> 10 fps)
+  connect(timer, &QTimer::timeout, this, &MainWindow::grabScene);
+
   // Settings
   connect(resetCoordsButton, &QPushButton::clicked, this,
           &MainWindow::resetCoords);
@@ -309,6 +314,8 @@ void MainWindow::createMenuAndToolbars() {
   QMenu *fileMenu = menuBar->addMenu("File");
   fileMenu->addAction("Open", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
+  fileMenu->addAction("Custom gif", this, &MainWindow::saveCustomGif);
+  fileMenu->addAction("Cycled gif", this, &MainWindow::saveCycledGif);
   fileMenu->addSeparator();
   fileMenu->addAction("Exit", this, &MainWindow::appExit);
   //! QIcon(tr("path/name.smth")) - иконки
@@ -373,8 +380,53 @@ void MainWindow::saveImage() {
                              "File is not saved =(");
   else
     //! отладка
-    QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+    QMessageBox::information(this, tr("File saved"), "GIF is saved! =)");
+
   renderWindow->afterGrab();
+}
+
+void MainWindow::saveCustomGif() {
+  // перенаправить сразу на старт таймера?
+  timer->start();
+  // далее по таймеру захват действий на 50 скринов
+}
+
+void MainWindow::saveCycledGif() {}
+
+void MainWindow::grabScene() {
+  renderWindow->beforeGrab();
+  screens.push_back(renderWindow->grab());
+  renderWindow->afterGrab();
+
+  // do 5 screen
+  if (screens.size() == 50) {
+    timer->stop();
+
+    //! try this
+    // https://github.com/dbzhang800/QtGifImage/tree/master
+
+    GifWriter gifWriter;
+    GifBegin(&gifWriter, "output.gif", screens[0].width(), screens[0].height(),
+             100);  // 100 ms - 10 per sec
+
+    for (const auto &screen : screens) {
+      // pxl massive
+      QByteArray byteArray;
+      QBuffer buffer(&byteArray);
+      buffer.open(QIODevice::WriteOnly);
+      screen.toImage().save(&buffer, "JPEG");
+
+      // Получение данных пикселей
+      const uchar *data = reinterpret_cast<const uchar *>(byteArray.data());
+      GifWriteFrame(&gifWriter, data, screen.width(), screen.height(),
+                    100);  // 10 - задержка
+    }
+
+    GifEnd(&gifWriter);
+    screens.clear();  // Очистка изображений после создания GIF
+
+    QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  }
 }
 
 void MainWindow::saveLayout() {

@@ -5,6 +5,7 @@
 
 #include "ProjectionButton.h"
 #include "UserSetting.h"
+#include "../model/scene.h"
 
 enum class MouseAction {
   kNone = 0,

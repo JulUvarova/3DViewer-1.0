@@ -1,10 +1,14 @@
 #pragma once
 
+#include "gif/gif.h"
+
+#include <QBuffer>
 #include <QByteArray>
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QGroupBox>
-#include <QLabel>
+#include <QImage>        //!
+#include <QImageWriter>  //!
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenuBar>
@@ -13,7 +17,8 @@
 #include <QSlider>
 #include <QStatusBar>
 #include <QString>
-#include <QToolBar>
+#include <QTimer>    //!
+#include <QToolBar>  //!
 #include <QWidget>
 
 #include "../controller/controller.h"
@@ -75,8 +80,9 @@ class MainWindow : public QMainWindow {
   // user gui settings
   UserSetting *userSetting;
 
-  // scene data
-  // s21::DrawSceneData *scene{nullptr};
+  // for gif
+  std::vector<QPixmap> screens;
+  QTimer *timer;
 
   void setupUI();
   void createDockWidgets();
@@ -88,11 +94,13 @@ class MainWindow : public QMainWindow {
   void restoreUserSettings();
   void openFile();
   void saveImage();
+  void saveCustomGif();
+  void saveCycledGif();
   void appExit();
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
-  // void drawScene(s21::DrawSceneData scene);
   void resetCoords();
   void fillToolsDockWidget();
   void fillPropsDockWidget();
+  void grabScene();
 };
