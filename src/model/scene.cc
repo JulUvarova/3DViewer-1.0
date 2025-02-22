@@ -49,19 +49,24 @@ DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
 }
 
 void Scene::TransformSceneMeshData(Mat4f& transform_matrix) {
-  // transform mesh
-  size_t i = 0;
-  for (auto& vertex : scene_mesh_data_.vertexes) {
-    // scene_mesh_data_.transformed_vertexes[i] = vertex * transform_matrix;
-    auto [x,y,z, w] = vertex * transform_matrix;
-    
-    // rewrite new vertexes for render
-    draw_scene_data_.vertices[i*3] = x;
-    draw_scene_data_.vertices[i*3 + 1] = y;
-    draw_scene_data_.vertices[i*3 + 2] = z;
+  // Determine the total number of vertices.
+  const size_t vertexCount = scene_mesh_data_.vertexes.size();
 
-    ++i;
-  }
+  // Use TBB's parallel_for to divide the work among available threads.
+  tbb::parallel_for(tbb::blocked_range<size_t>(0, vertexCount),
+                    [&](const tbb::blocked_range<size_t>& range) {
+                      for (size_t i = range.begin(); i < range.end(); ++i) {
+                        // Apply transformation to the vertex.
+                        auto [x, y, z, w] =
+                            scene_mesh_data_.vertexes[i] * transform_matrix;
+
+                        // Write the transformed vertex coordinates into
+                        // draw_scene_data_.
+                        draw_scene_data_.vertices[i * 3] = x;
+                        draw_scene_data_.vertices[i * 3 + 1] = y;
+                        draw_scene_data_.vertices[i * 3 + 2] = z;
+                      }
+                    });
 }
 // DrawSceneData& Scene::DrawScene() {
 //   draw_scene_data_.vertices.reserve(

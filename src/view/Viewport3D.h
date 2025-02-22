@@ -15,7 +15,7 @@ enum class MouseAction {
 class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   Q_OBJECT
 
- signals:
+ Q_SIGNALS:
   void signalChangeSize(const int w, const int h);
   void signalChangeProjection(const bool isParallel);
   void signalChangeMoveCoords(std::pair<int, int> coordsXY);
@@ -123,7 +123,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
         int shiftY = -((pos.y() * 200 / height() - 100) -
                        (mousePos.y() * 200 / height() - 100));
 
-        emit signalChangeMoveCoords(
+        Q_EMIT signalChangeMoveCoords(
             std::pair<int, int>{2 * shiftX, 2 * shiftY});
       }
       // middle will rotate object
@@ -133,7 +133,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
         int shiftY = -((pos.y() * 360 / height() - 180) -
                        (mousePos.y() * 360 / height() - 180));
 
-        emit signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
+        Q_EMIT signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
       }
       mousePos = pos;
     }
@@ -144,7 +144,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   void wheelEvent(QWheelEvent *event) {
-    emit signalChangeScaleCoords(
+    Q_EMIT signalChangeScaleCoords(
         std::pair<int, int>{event->angleDelta().y() / 24, 0});  // 5 ед
   }
 

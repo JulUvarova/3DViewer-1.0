@@ -28,7 +28,7 @@ class ElemBox : public QWidget {
   QColor color;
   QPushButton *colorButton;
 
- signals:
+ Q_SIGNALS:
   void signalChangeType(const QString &text);
   void signalChangeSize(const int size);
   void signalChangeColor(const QColor &color);
@@ -92,9 +92,9 @@ class ElemBox : public QWidget {
   }
 
  private:
-  inline void typeChange(const QString &text) { emit signalChangeType(text); }
+  inline void typeChange(const QString &text) { Q_EMIT signalChangeType(text); }
 
-  inline void sizeChange(const int value) { emit signalChangeSize(value); }
+  inline void sizeChange(const int value) { Q_EMIT signalChangeSize(value); }
 
   void colorChange() {
     QColorDialog *colorDialog = new QColorDialog(this);
@@ -102,7 +102,7 @@ class ElemBox : public QWidget {
     if (colorDialog->exec() == QDialog::Accepted) {
       color = colorDialog->currentColor();
       setColorButton();
-      emit signalChangeColor(color);
+      Q_EMIT signalChangeColor(color);
     }
   }
 

@@ -27,10 +27,10 @@ class Slider : public QSlider {
 
  protected:
   void mouseDoubleClickEvent([[maybe_unused]] QMouseEvent *event) override {
-    emit doubleClicked(this);
+    Q_EMIT doubleClicked(this);
   }
 
- signals:
+ Q_SIGNALS:
   void doubleClicked(Slider *slider);
 };
 
@@ -54,7 +54,7 @@ class SlidersBox : public QWidget {
   std::array<QHBoxLayout *, 3> layouts{new QHBoxLayout(), new QHBoxLayout(),
                                        new QHBoxLayout()};
 
- signals:
+ Q_SIGNALS:
   void signalChangeX(int coordX);
   void signalChangeY(int coordY);
   void signalChangeZ(int coordZ);
@@ -123,49 +123,49 @@ class SlidersBox : public QWidget {
     if (coordsXY.first) {
       sliders[0]->setValue(sliders[0]->value() + coordsXY.first);
       values[0]->setText(QString::number(sliders[0]->value()));
-      emit signalChangeX(sliders[0]->value());
+      Q_EMIT signalChangeX(sliders[0]->value());
     }
     if (coordsXY.second) {
       sliders[1]->setValue(sliders[1]->value() + coordsXY.second);
       values[1]->setText(QString::number(sliders[1]->value()));
-      emit signalChangeY(sliders[1]->value());
+      Q_EMIT signalChangeY(sliders[1]->value());
     }
   }
 
  private:
   void resetSlider(Slider *slider) {
     slider->setValue(kMiddle);
-    emit signalChangeX(slider->value());
+    Q_EMIT signalChangeX(slider->value());
   }
 
   void labelChangeX() {
     sliders[0]->setValue(values[0]->text().toInt());
-    emit signalChangeX(sliders[0]->value());
+    Q_EMIT signalChangeX(sliders[0]->value());
   }
 
   void labelChangeY() {
     sliders[1]->setValue(values[1]->text().toInt());
-    emit signalChangeY(sliders[1]->value());
+    Q_EMIT signalChangeY(sliders[1]->value());
   }
 
   void labelChangeZ() {
     sliders[2]->setValue(values[2]->text().toInt());
-    emit signalChangeZ(sliders[2]->value());
+    Q_EMIT signalChangeZ(sliders[2]->value());
   }
 
   void sliderChangeX() {
     values[0]->setText(QString::number(sliders[0]->value()));
-    emit signalChangeX(sliders[0]->value());
+    Q_EMIT signalChangeX(sliders[0]->value());
   }
 
   void sliderChangeY() {
     values[1]->setText(QString::number(sliders[1]->value()));
-    emit signalChangeY(sliders[1]->value());
+    Q_EMIT signalChangeY(sliders[1]->value());
   }
 
   void sliderChangeZ() {
     values[2]->setText(QString::number(sliders[2]->value()));
-    emit signalChangeZ(sliders[2]->value());
+    Q_EMIT signalChangeZ(sliders[2]->value());
   }
 
   // connect(values[i], &QLineEdit::textChanged, this, [this]() {
@@ -173,11 +173,11 @@ class SlidersBox : public QWidget {
 
   //   void labelChange(int i) {
   //   sliders[i]->setValue(values[i]->text().toInt());
-  //   emit signalChangeX(i, sliders[i]->value());
+  //   Q_EMIT signalChangeX(i, sliders[i]->value());
   // }
 
   // void sliderChange(int i) {
   //   values[i]->setText(QString::number(sliders[i]->value()));
-  //   emit signalChangeX(i, sliders[i]->value());
+  //   Q_EMIT signalChangeX(i, sliders[i]->value());
   // }
 };

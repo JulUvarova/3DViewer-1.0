@@ -1,5 +1,8 @@
 #pragma once
 
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+
 #include <vector>
 
 #include "obj/obj_data.h"
