@@ -1,5 +1,4 @@
-#ifndef FACADE_H
-#define FACADE_H
+#pragma once
 
 #include "filereader.h"
 #include "scene.h"
@@ -126,20 +125,6 @@ class Facade {
     scene_->TransformSceneMeshData(transform_mat);
   }
 
-  // void MoveScene(float x, float y, float z) {
-  //   Mat4f mat = TransformMatrixBuilder::CreateMoveMatrix(x, y, z);
-  //   scene_->TransformSceneMeshData(mat);
-  // }
-
-  // void RotateScene(float x, float y, float z) {
-  //   Mat4f mat = TransformMatrixBuilder::CreateRotationMatrix(x, y, z);
-  //   scene_->TransformSceneMeshData(mat);
-  // }
-
-  // void ScaleScene(float x, float y, float z) {
-  //   Mat4f mat = TransformMatrixBuilder::CreateScaleMatrix(x, y, z);
-  //   scene_->TransformSceneMeshData(mat);
-  // }
 };
 }  // namespace s21
-#endif  // FACADE_H
+

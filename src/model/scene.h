@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "obj/obj_data.h"
-#include "scene_mesh_data.h"
 
 namespace s21 {
 // на отрисовку
@@ -22,7 +21,7 @@ class Scene {
   void TransformSceneMeshData(Mat4f& transform_matrix);
 
  private:
-  SceneMeshData scene_mesh_data_;
+  std::vector<Vec4f> mesh_vertexes_;
   DrawSceneData draw_scene_data_;
 };
 }  // namespace s21

@@ -1,5 +1,4 @@
-#ifndef FILEREADER_H
-#define FILEREADER_H
+#pragma once
 
 #include "obj/obj_data.h"
 
@@ -15,4 +14,3 @@ class FileReader {
   }
 };
 }  // namespace s21
-#endif  // BASEFILEREADER_H
