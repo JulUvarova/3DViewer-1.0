@@ -1,14 +1,9 @@
 #pragma once
 
-#include "gif/gif.h"
-
-#include <QBuffer>
-#include <QByteArray>
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QGroupBox>
-#include <QImage>        //!
-#include <QImageWriter>  //!
+#include <QImage>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenuBar>
@@ -17,7 +12,7 @@
 #include <QSlider>
 #include <QStatusBar>
 #include <QString>
-#include <QTimer>    //!
+#include <QTimer>
 #include <QToolBar>  //!
 #include <QWidget>
 
@@ -28,6 +23,7 @@
 #include "SlidersBox.h"
 #include "UserSetting.h"
 #include "Viewport3D.h"
+#include "gif/gif.h"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -82,6 +78,7 @@ class MainWindow : public QMainWindow {
 
   // for gif
   std::vector<QPixmap> screens;
+  QString fileName;
   QTimer *timer;
 
   void setupUI();
@@ -93,6 +90,7 @@ class MainWindow : public QMainWindow {
   void resetUserSettings();
   void restoreUserSettings();
   void openFile();
+  void getFileName(const char *options);
   void saveImage();
   void saveCustomGif();
   void saveCycledGif();

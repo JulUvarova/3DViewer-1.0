@@ -358,23 +358,29 @@ void MainWindow::openFile() {
   propsObjectsInfo->setText(QString::fromStdString(scene->info));
 }
 
-// void MainWindow::drawScene(s21::DrawSceneData scene) {
-// renderWindow->update(); }
+void MainWindow::getFileName(const char *options) {
+  QString selectedFilter;
+  fileName = QFileDialog::getSaveFileName(this, tr("Choose folder"), "./",
+                                          tr(options), &selectedFilter);
+  if (fileName.isEmpty()) return;
+
+  if (selectedFilter == "*.bmp")
+    fileName.append(".bmp");
+  else if (selectedFilter == "*.jpeg")
+    fileName.append(".jpeg");
+  else if (selectedFilter == "*.gif")
+    fileName.append(".gif");
+  else
+    QMessageBox::information(this, tr("Wrong file name"),
+                             "Filename isn't correct");
+}
 
 void MainWindow::saveImage() {
-  // file name & save location
-  QString selectedFilter;
-  QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Choose folder"), "./", tr("*.jpeg;;*.bmp"), &selectedFilter);
-
-  QString postfix;
-  if (selectedFilter == "*.bmp")
-    postfix = ".bmp";
-  else if (selectedFilter == "*.jpeg")
-    postfix = ".jpeg";
+  getFileName("*.jpeg;;*.bmp");
+  if (fileName.isEmpty()) return;
 
   renderWindow->beforeGrab();
-  bool isSaved = renderWindow->grab().save(fileName + postfix);
+  bool isSaved = renderWindow->grab().save(fileName);
   if (!isSaved)
     QMessageBox::information(this, tr("Unable to save file"),
                              "File is not saved =(");
@@ -386,47 +392,45 @@ void MainWindow::saveImage() {
 }
 
 void MainWindow::saveCustomGif() {
-  // перенаправить сразу на старт таймера?
-  timer->start();
-  // далее по таймеру захват действий на 50 скринов
-}
+  getFileName("*.gif");
+  if (fileName.isEmpty()) return;
 
-void MainWindow::saveCycledGif() {}
+  timer->start();
+}
 
 void MainWindow::grabScene() {
   renderWindow->beforeGrab();
   screens.push_back(renderWindow->grab());
   renderWindow->afterGrab();
 
-  // do 5 screen
   if (screens.size() == 50) {
     timer->stop();
-
-    //! try this
-    // https://github.com/dbzhang800/QtGifImage/tree/master
-
-    GifWriter gifWriter;
-    GifBegin(&gifWriter, "output.gif", screens[0].width(), screens[0].height(),
-             100);  // 100 ms - 10 per sec
+    GifWriter gif;
+    QByteArray byteArray = fileName.toUtf8();
+    const char *cstr = byteArray.constData();
+    GifBegin(&gif, cstr, 640, 480, 10);
 
     for (const auto &screen : screens) {
-      // pxl massive
-      QByteArray byteArray;
-      QBuffer buffer(&byteArray);
-      buffer.open(QIODevice::WriteOnly);
-      screen.toImage().save(&buffer, "JPEG");
-
-      // Получение данных пикселей
-      const uchar *data = reinterpret_cast<const uchar *>(byteArray.data());
-      GifWriteFrame(&gifWriter, data, screen.width(), screen.height(),
-                    100);  // 10 - задержка
+      // pixmap->QImage->scale 640x480->colors
+      QImage scaledImage = screen.toImage()
+                               .scaled(QSize(640, 480))
+                               .convertToFormat(QImage::Format_RGBA8888);
+      GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 10);
     }
+    GifEnd(&gif);
 
-    GifEnd(&gifWriter);
-    screens.clear();  // Очистка изображений после создания GIF
-
+    screens.clear();
+    //! отладка
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
   }
+}
+
+void MainWindow::saveCycledGif() {
+  getFileName("*.gif");
+
+  screens.clear();
+  //! отладка
+  QMessageBox::information(this, tr("File saved"), "File is saved! =)");
 }
 
 void MainWindow::saveLayout() {
