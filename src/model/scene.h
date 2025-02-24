@@ -16,11 +16,11 @@ struct DrawSceneData {
 
 class Scene {
  public:
-  DrawSceneData* LoadSceneMeshData(OBJData obj_data);
+  std::shared_ptr<DrawSceneData> LoadSceneMeshData(OBJData obj_data);
   void TransformSceneMeshData(Mat4f& transform_matrix);
 
  private:
   std::vector<Vec4f> mesh_vertexes_;
-  DrawSceneData draw_scene_data_;
+  std::shared_ptr<DrawSceneData> draw_scene_data_;
 };
 }  // namespace s21

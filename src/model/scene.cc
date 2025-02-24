@@ -1,16 +1,17 @@
 #include "scene.h"
 
 namespace s21 {
-DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
+std::shared_ptr<DrawSceneData> Scene::LoadSceneMeshData(OBJData obj_data) {
+  draw_scene_data_ = std::make_shared<DrawSceneData>();
   // Store initial mesh vetrex coordinates
   mesh_vertexes_.assign(obj_data.vertices.begin(), obj_data.vertices.end());
 
   // Vertices for render
-  draw_scene_data_.vertices.reserve(mesh_vertexes_.size() * 3);
+  draw_scene_data_->vertices.reserve(mesh_vertexes_.size() * 3);
 
   // Flatten vertices into x,y,z components
   for (const auto& [x, y, z, w] : mesh_vertexes_) {
-    draw_scene_data_.vertices.insert(draw_scene_data_.vertices.end(),
+    draw_scene_data_->vertices.insert(draw_scene_data_->vertices.end(),
                                      {x, y, z});
   }
 
@@ -19,8 +20,8 @@ DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
     size_t vertices_size = face.vertices.size();
     if (vertices_size >= 2) {
       for (size_t i = 0; i < vertices_size; ++i) {
-        draw_scene_data_.vertex_indices.push_back(face.vertices[i].v);
-        draw_scene_data_.vertex_indices.push_back(
+        draw_scene_data_->vertex_indices.push_back(face.vertices[i].v);
+        draw_scene_data_->vertex_indices.push_back(
             face.vertices[(i + 1) % vertices_size].v);
       }
     }
@@ -32,12 +33,13 @@ DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
     }
   }
 
-  draw_scene_data_.info = obj_data.toString();
+  draw_scene_data_->info = obj_data.toString();
 
-  return &draw_scene_data_;
+  return draw_scene_data_;
 }
 
 void Scene::TransformSceneMeshData(Mat4f& transform_matrix) {
+  if (!draw_scene_data_) return;
   const size_t vertexCount = mesh_vertexes_.size();
 
   LogInfoOnce << "First transform..." << std::endl;
@@ -61,9 +63,9 @@ void Scene::TransformSceneMeshData(Mat4f& transform_matrix) {
     threads.emplace_back([this, &transform_matrix, start, end] {
       for (size_t j = start; j < end; ++j) {
         auto [x, y, z, w] = mesh_vertexes_[j] * transform_matrix;
-        draw_scene_data_.vertices[j * 3] = x;
-        draw_scene_data_.vertices[j * 3 + 1] = y;
-        draw_scene_data_.vertices[j * 3 + 2] = z;
+        draw_scene_data_->vertices[j * 3] = x;
+        draw_scene_data_->vertices[j * 3 + 1] = y;
+        draw_scene_data_->vertices[j * 3 + 2] = z;
       }
     });
   }

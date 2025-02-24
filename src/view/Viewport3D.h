@@ -2,6 +2,7 @@
 #include <QMouseEvent>
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
+#include <memory>
 
 #include "ProjectionButton.h"
 #include "UserSetting.h"
@@ -35,7 +36,9 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   // TODO как-то эту хрень оптимизировать, начиная со сцены в фасаде
-  void setScene(s21::DrawSceneData *sc) { scene = sc; }
+  void setScene(std::shared_ptr<s21::DrawSceneData> sc) {
+    scene = std::move(sc);
+  }
 
   // убирают кнопку проекции для скрина
   void beforeGrab() { projectionButton->setVisible(false); }
@@ -95,7 +98,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
  private:
   ProjectionButton *projectionButton;
   UserSetting *renderSetting;
-  s21::DrawSceneData *scene{nullptr};
+  std::shared_ptr<s21::DrawSceneData> scene;
 
   // catch mouse press and mouse release
   MouseAction mouseAction = MouseAction::kNone;
@@ -149,7 +152,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   void chooseProjection() {
-    GLdouble nearPlane = 1.0;   // ближняя плоскость отсечения
+    GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
     GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
 
     //! Учет пропорции окна
