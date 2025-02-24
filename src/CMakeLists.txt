@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -O2")
 
-find_package(TBB REQUIRED)
+# find_package(TBB REQUIRED)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR}OpenGL REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS OpenGLWidgets)
@@ -72,7 +72,7 @@ target_compile_definitions(3DViewer PRIVATE QT_NO_KEYWORDS)
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::OpenGL)
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::OpenGLWidgets)
-target_link_libraries(3DViewer PRIVATE TBB::tbb)
+# target_link_libraries(3DViewer PRIVATE TBB::tbb)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

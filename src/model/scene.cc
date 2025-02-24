@@ -40,19 +40,15 @@ DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
 void Scene::TransformSceneMeshData(Mat4f& transform_matrix) {
   const size_t vertexCount = mesh_vertexes_.size();
 
-  // Use TBB's parallel_for to divide the work among available threads.
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, vertexCount),
-                    [&](const tbb::blocked_range<size_t>& range) {
-                      for (size_t i = range.begin(); i < range.end(); ++i) {
-                        // Apply transformation to the vertex.
-                        auto [x, y, z, w] =
-                            mesh_vertexes_[i] * transform_matrix;
-                        // Update the vertex in the vertexes_ vector.
-                        draw_scene_data_.vertices[i * 3] = x;
-                        draw_scene_data_.vertices[i * 3 + 1] = y;
-                        draw_scene_data_.vertices[i * 3 + 2] = z;
-                      }
-                    });
+  // Regular for loop iterating over all vertices sequentially
+  for (size_t i = 0; i < vertexCount; ++i) {
+    // Apply transformation to the vertex
+    auto [x, y, z, w] = mesh_vertexes_[i] * transform_matrix;
+    // Update the vertex in the vertices array
+    draw_scene_data_.vertices[i * 3] = x;
+    draw_scene_data_.vertices[i * 3 + 1] = y;
+    draw_scene_data_.vertices[i * 3 + 2] = z;
+  }
 }
 
 }  // namespace s21
