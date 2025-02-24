@@ -19,9 +19,9 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
  signals:
   void signalChangeSize(const int w, const int h);
   void signalChangeProjection(const bool isParallel);
-  void signalChangeMoveCoords(std::array<int, 3> coords);
-  void signalChangeScaleCoords(std::array<int, 3> coords);
-  void signalChangeRotateCoords(std::array<int, 3> coords);
+  void signalChangeMoveCoords(std::pair<int, int> coordXY);
+  void signalChangeScaleCoords(std::pair<int, int> coordXY);
+  void signalChangeRotateCoords(std::pair<int, int> coordXY);
 
  public:
   Viewport3D(UserSetting *setting, QWidget *parent = nullptr)
@@ -125,7 +125,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
                        (mousePos.y() * 200 / height() - 100));
 
         emit signalChangeMoveCoords(
-            std::array<int, 3>{2 * shiftX, 2 * shiftY, 0});
+            std::pair<int, int>{2 * shiftX, 2 * shiftY});
       }
       // middle will rotate object
       if (mouseAction == MouseAction::kMiddleButton) {
@@ -134,7 +134,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
         int shiftY = -((pos.y() * 360 / height() - 180) -
                        (mousePos.y() * 360 / height() - 180));
 
-        emit signalChangeRotateCoords(std::array<int, 3>{shiftY, shiftX, 0});
+        emit signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
       }
       mousePos = pos;
     }
@@ -146,7 +146,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
   void wheelEvent(QWheelEvent *event) {
     emit signalChangeScaleCoords(
-        std::array<int, 3>{event->angleDelta().y() / 24, 0, 0});  // 5 ед
+        std::pair<int, int>{event->angleDelta().y() / 24, 0});  // 5 ед
   }
 
   void chooseProjection() {

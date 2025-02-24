@@ -99,4 +99,5 @@ class MainWindow : public QMainWindow {
   void fillToolsDockWidget();
   void fillPropsDockWidget();
   void grabScene();
+  void createGifFile();
 };

@@ -37,8 +37,6 @@ class Slider : public QSlider {
 class SlidersBox : public QWidget {
   Q_OBJECT
 
-  //! using Coords = std::array<int, 3>;
-
   int kSlidersCount;
   int kMiddle;
   const int kStep = 1;
@@ -121,39 +119,16 @@ class SlidersBox : public QWidget {
     for (int i = 0; i < kSlidersCount; ++i) sliders[i]->setValue(kMiddle);
   }
 
-  void setCoords(std::array<int, 3> coords) {
-    if (coords[0]) {
-      sliders[0]->setValue(sliders[0]->value() + coords[0]);
+   void setCoords(std::pair<int, int> coordsXY) {
+    if (coordsXY.first) {
+      sliders[0]->setValue(sliders[0]->value() + coordsXY.first);
       values[0]->setText(QString::number(sliders[0]->value()));
       emit signalChangeX(sliders[0]->value());
     }
-    if (coords[1] && kSlidersCount > 1) {
-      sliders[1]->setValue(sliders[1]->value() + coords[1]);
+    if (coordsXY.second) {
+      sliders[1]->setValue(sliders[1]->value() + coordsXY.second);
       values[1]->setText(QString::number(sliders[1]->value()));
       emit signalChangeY(sliders[1]->value());
-    }
-    if (coords[2] && kSlidersCount > 2) {
-      sliders[2]->setValue(sliders[2]->value() + coords[2]);
-      values[2]->setText(QString::number(sliders[2]->value()));
-      emit signalChangeZ(sliders[2]->value());
-    }
-  }
-
-    void changeCoords(std::array<int, 3> coords) {
-    if (coords[0]) {
-      sliders[0]->setValue( coords[0]);
-      values[0]->setText(QString::number(sliders[0]->value()));
-      emit signalChangeX(sliders[0]->value());
-    }
-    if (coords[1] && kSlidersCount > 1) {
-      sliders[1]->setValue( coords[1]);
-      values[1]->setText(QString::number(sliders[1]->value()));
-      emit signalChangeY(sliders[1]->value());
-    }
-    if (coords[2] && kSlidersCount > 2) {
-      sliders[2]->setValue(coords[2]);
-      values[2]->setText(QString::number(sliders[2]->value()));
-      emit signalChangeZ(sliders[2]->value());
     }
   }
 
@@ -199,17 +174,4 @@ class SlidersBox : public QWidget {
     values[2]->setText(QString::number(sliders[2]->value()));
     emit signalChangeZ(sliders[2]->value());
   }
-
-  // connect(values[i], &QLineEdit::textChanged, this, [this]() {
-  // labelChange(i); });
-
-  //   void labelChange(int i) {
-  //   sliders[i]->setValue(values[i]->text().toInt());
-  //   emit signalChangeX(i, sliders[i]->value());
-  // }
-
-  // void sliderChange(int i) {
-  //   values[i]->setText(QString::number(sliders[i]->value()));
-  //   emit signalChangeX(i, sliders[i]->value());
-  // }
 };

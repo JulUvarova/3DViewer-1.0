@@ -146,26 +146,23 @@ void MainWindow::slotLocationCoordZ(int coordZ) {
 
 void MainWindow::slotScaleCoordX(int coordX) {
   controller->SetScaleX(coordX);
-  qDebug() << "new scale X " << coordX;
+
   renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordX(int coordX) {
   controller->SetRotationX(coordX);
-  qDebug() << "new rotate X " << coordX;
 
   renderWindow->update();
 }
 void MainWindow::slotRotateCoordY(int coordY) {
   controller->SetRotationY(coordY);
-  qDebug() << "new rotate Y " << coordY;
 
   renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordZ(int coordZ) {
   controller->SetRotationZ(coordZ);
-  qDebug() << "new rotate Z " << coordZ;
 
   renderWindow->update();
 }
@@ -396,19 +393,8 @@ void MainWindow::grabScene() {
 
   if (screens.size() == 50) {
     timer->stop();
-    GifWriter gif;
-    QByteArray byteArray = fileName.toUtf8();
-    const char *cstr = byteArray.constData();
-    GifBegin(&gif, cstr, 640, 480, 10);
 
-    for (const auto &screen : screens) {
-      // pixmap->QImage->scale 640x480->colors
-      QImage scaledImage = screen.toImage()
-                               .scaled(QSize(640, 480))
-                               .convertToFormat(QImage::Format_RGBA8888);
-      GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 10);
-    }
-    GifEnd(&gif);
+    createGifFile();
 
     screens.clear();
     //! отладка
@@ -419,10 +405,6 @@ void MainWindow::grabScene() {
 void MainWindow::saveCycledGif() {
   getFileName("*.gif");
   if (fileName.isEmpty()) return;
-
-  GifWriter gif;
-  QByteArray byteArray = fileName.toUtf8();
-  const char *cstr = byteArray.constData();
 
   std::array<int, 3> coords;
 
@@ -439,49 +421,42 @@ void MainWindow::saveCycledGif() {
   coords = scaleSlidersBox->getCoords();
   std::pair<float, float> scaleX(100, (coords[0] - 100) / 25.0);
 
-  resetCoords();
+  screens.resize(50);
+
+  controller->ResetScene();
   renderWindow->beforeGrab();
-  screens.push_back(renderWindow->grab());
+  screens[0] = renderWindow->grab();
   renderWindow->afterGrab();
-  qDebug() << "rotX "<< rotateX.first <<" " << rotateX.second;
-  qDebug() << "rotY "<< rotateY.first <<" " << rotateY.second;
-  qDebug() << "rotZ "<< rotateZ.first <<" " << rotateZ.second;
 
-  qDebug() << "scaleX "<< scaleX.first <<" " << scaleX.second;
-  
-  qDebug() << "locationX "<< locationX.first <<" " << locationX.second;
-  qDebug() << "locationY "<< locationY.first <<" " << locationY.second;
-  qDebug() << "locationZ "<< locationZ.first <<" " << locationZ.second;
-  qDebug() << "START ";
+  for (int i = 1; i <= 25; ++i) {
+    controller->SetScaleX(scaleX.first += scaleX.second);
 
-  while (screens.size() <= 26) {
-    qDebug() << screens.size();
-    locationSlidersBox->changeCoords(std::array<int, 3>{
-        static_cast<int>(locationX.first += locationX.second),
-        static_cast<int>(locationY.first += locationY.second),
-        static_cast<int>(locationZ.first += locationZ.second)});
+    controller->SetRotationX(rotateX.first += rotateX.second);
+    controller->SetRotationY(rotateY.first += rotateY.second);
+    controller->SetRotationZ(rotateZ.first += rotateZ.second);
 
-    rotateSlidersBox->changeCoords(
-        std::array<int, 3>{static_cast<int>(rotateX.first += rotateX.second),
-                           static_cast<int>(rotateY.first += rotateY.second),
-                           static_cast<int>(rotateZ.first += rotateZ.second)});
+    controller->SetLocationX(locationX.first += locationX.second);
+    controller->SetLocationY(locationY.first += locationY.second);
+    controller->SetLocationZ(locationZ.first += locationZ.second);
 
-    scaleSlidersBox->changeCoords(std::array<int, 3>{
-        static_cast<int>(scaleX.first += scaleX.second), 0, 0});
-        
-  //   renderWindow->update();
-   
-  //  std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    renderWindow->update();
 
     renderWindow->beforeGrab();
-    screens.push_back(renderWindow->grab());
+    screens[i] = renderWindow->grab();
+    screens[50 - i] = renderWindow->grab();
     renderWindow->afterGrab();
- 
   }
+  createGifFile();
+  screens.clear();
+  //! отладка
+  QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+}
 
-  for (int i = 24; i >= 1; --i) {
-    screens.push_back(screens[i]);
-  }
+void MainWindow::createGifFile() {
+  QByteArray byteArray = fileName.toUtf8();
+  const char *cstr = byteArray.constData();
+
+  GifWriter gif;
   GifBegin(&gif, cstr, 640, 480, 10);
   for (const auto &screen : screens) {
     // pixmap->QImage->scale 640x480->colors
@@ -491,10 +466,6 @@ void MainWindow::saveCycledGif() {
     GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 0);
   }
   GifEnd(&gif);
-
-  screens.clear();
-  //! отладка
-  QMessageBox::information(this, tr("File saved"), "File is saved! =)");
 }
 
 void MainWindow::saveLayout() {
