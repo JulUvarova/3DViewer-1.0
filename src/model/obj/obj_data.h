@@ -13,11 +13,12 @@
 #include <vector>
 
 #include "../data_structures.h"
+#include "../exceptions.h"
 #include "../math/transform_matrix_builder.h"
+#include "Logger.h"
 #include "range/v3/all.hpp"
 
 namespace s21 {
-
 
 struct VertexIndices {
   int v{-1};   // index of vertices, -1 if none
@@ -45,7 +46,8 @@ class OBJData {
   std::vector<Vec2f> texcoords;
   std::vector<Vec3f> normals;
   std::vector<Object> objects;
-  float x_min = 0.0f, x_max = 0.0f, y_min = 0.0f, y_max = 0.0f, z_min = 0.0f, z_max = 0.0f;
+  float x_min = 0.0f, x_max = 0.0f, y_min = 0.0f, y_max = 0.0f, z_min = 0.0f,
+        z_max = 0.0f;
 
   void Parse(const std::string& filename);
   void Normalize();
@@ -78,7 +80,8 @@ class OBJData {
 
   inline std::string_view TrimView(std::string_view sv);
 
-  inline std::vector<std::string_view> SplitView(std::string_view str, char delimiter);
+  inline std::vector<std::string_view> SplitView(std::string_view str,
+                                                 char delimiter);
 
   inline std::vector<std::string_view> Tokenize(std::string_view line);
 };
