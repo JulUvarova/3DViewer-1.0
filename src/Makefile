@@ -1,48 +1,62 @@
-#sudo apt install qt6-base-dev
+# Dependencies: qt6-base-dev, gtest, lcov
 
-.PHONY: all
+# Define common compiler flags
+CXX = g++
+CXXFLAGS = -std=c++17 -I./model -I./include -DLOGGER_MAX_LOG_LEVEL_PRINTED=0
+LDFLAGS = -lgtest -lgtest_main -pthread
+GCOV_FLAGS = --coverage -lsubunit -lgcov
+
+# Define source files
+OBJ_DATA_SRC = model/obj/obj_data.cc
+OBJ_DATA_TEST = model/obj/test_obj_data.cc
+OBJ_DATA_TEST_BIN = test_obj_data
+TRANSFORM_TEST = model/math/test_transform.cc
+TRANSFORM_TEST_BIN = test_transform
+
+# Build directory
+BUILD_DIR = build
+
+.PHONY: all clean test gcov_report
+
 all: 
-	rm -rf build
-	mkdir -p build && \
-	cd build && \
+	mkdir -p $(BUILD_DIR) && \
+	cd $(BUILD_DIR) && \
 	cmake ../../src && \
-	make
+	make 
 	# valgrind -q -s --leak-check=full --trace-children=yes --track-origins=yes  --log-file=./VALGRIND ./build/3DViewer
-	./build/3DViewer
+	./$(BUILD_DIR)/3DViewer
 
-test:
-	g++ -std=c++17 -o test_obj_data model/obj/test_obj_data.cc model/obj/obj_data.cc -lgtest -lgtest_main -pthread -I./model -I./include -DLOGGER_MAX_LOG_LEVEL_PRINTED=0
-	./test_obj_data
-	g++ -std=c++17 -o test_transform model/math/test_transform.cc -lgtest -lgtest_main -pthread -I./model -I./include -DLOGGER_MAX_LOG_LEVEL_PRINTED=0
-	./test_transform
+# Use pattern rules for tests
+test: test_obj_data test_transform
 
-.PHONY: gcov_report
-gcov_report:
-# Run first test and capture its coverage data
-	g++ --coverage -std=c++17 model/obj/test_obj_data.cc model/obj/obj_data.cc \
-		-lgtest -lgtest_main -pthread -I./model -I./include \
-		-DLOGGER_MAX_LOG_LEVEL_PRINTED=0 -o test_obj_data -lsubunit -lgcov
-	./test_obj_data
-	lcov --ignore-errors mismatch,gcov --no-external -t "test_obj_data" \
-		-o ./test_obj_data.info -c -d .
-	lcov --remove ./test_obj_data.info "range*" \
-		--remove ./test_obj_data.info "Logger*" \
-		-o ./test_obj_data_filtered.info
+test_obj_data: $(OBJ_DATA_TEST) $(OBJ_DATA_SRC)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	./$@
 
-	# Remove gcda files before next test to avoid mixing data
-	rm -f ./*.gcda
+test_transform: $(TRANSFORM_TEST)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	./$@
 
-	# Run second test and capture its coverage data
-	g++ --coverage -std=c++17 -o test_transform model/math/test_transform.cc \
-		-lgtest -lgtest_main -pthread -I./model -I./include \
-		-DLOGGER_MAX_LOG_LEVEL_PRINTED=0 -lsubunit -lgcov
-	./test_transform
-	lcov --ignore-errors mismatch,gcov --no-external -t "test_transform" \
-		-o ./test_transform.info -c -d .
+gcov_report: clean_coverage
+	# Build and run obj_data test with coverage
+	$(CXX) $(GCOV_FLAGS) $(CXXFLAGS) $(OBJ_DATA_TEST) $(OBJ_DATA_SRC) -o $(OBJ_DATA_TEST_BIN) $(LDFLAGS)
+	./$(OBJ_DATA_TEST_BIN)
+	lcov --ignore-errors mismatch,gcov --no-external -t "$(OBJ_DATA_TEST_BIN)" -o ./$(OBJ_DATA_TEST_BIN).info -c -d .
+	lcov --remove ./$(OBJ_DATA_TEST_BIN).info "range*" --remove ./$(OBJ_DATA_TEST_BIN).info "Logger*" -o ./$(OBJ_DATA_TEST_BIN)_filtered.info
 
-	# Merge the two filtered coverage info files into one
-	lcov -a ./test_obj_data_filtered.info -a ./test_transform.info -o merged_coverage.info
+	# Build and run transform test with coverage
+	$(CXX) $(GCOV_FLAGS) $(CXXFLAGS) $(TRANSFORM_TEST) -o $(TRANSFORM_TEST_BIN) $(LDFLAGS)
+	./$(TRANSFORM_TEST_BIN)
+	lcov --ignore-errors mismatch,gcov --no-external -t "$(TRANSFORM_TEST_BIN)" -o ./$(TRANSFORM_TEST_BIN).info -c -d .
+	lcov --remove ./$(TRANSFORM_TEST_BIN).info "range*" --remove ./$(TRANSFORM_TEST_BIN).info "Logger*" -o ./$(TRANSFORM_TEST_BIN)_filtered.info
+
+	# Merge coverage data and generate report
+	#lcov -a ./$(TRANSFORM_TEST_BIN)_filtered.info -o merged_coverage.info
+	lcov -a ./$(OBJ_DATA_TEST_BIN)_filtered.info -a ./$(TRANSFORM_TEST_BIN)_filtered.info -o merged_coverage.info
 	genhtml -o report merged_coverage.info
 
-	# Cleanup
-	rm -rf ./*.info ./*.gcda ./*.gcno
+clean:
+	rm -rf $(BUILD_DIR) $(OBJ_DATA_TEST_BIN) $(TRANSFORM_TEST_BIN) report *.info
+
+clean_coverage:
+	rm -f *.gcda *.gcno *.info test_obj_data test_transform
