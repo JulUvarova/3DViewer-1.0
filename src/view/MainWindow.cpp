@@ -1,5 +1,8 @@
 #include "MainWindow.h"
 
+#include <chrono>
+#include <thread>
+
 MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
     : QMainWindow(parent), controller(ctrl) {
   setupUI();
@@ -34,10 +37,6 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
   // scale coordinates
   connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
           &MainWindow::slotScaleCoordX);
-  connect(scaleSlidersBox, &SlidersBox::signalChangeY, this,
-          &MainWindow::slotScaleCoordY);
-  connect(scaleSlidersBox, &SlidersBox::signalChangeZ, this,
-          &MainWindow::slotScaleCoordZ);
   connect(renderWindow, &Viewport3D::signalChangeScaleCoords, scaleSlidersBox,
           &SlidersBox::setCoords);
 
@@ -147,34 +146,26 @@ void MainWindow::slotLocationCoordZ(int coordZ) {
 
 void MainWindow::slotScaleCoordX(int coordX) {
   controller->SetScaleX(coordX);
-
-  renderWindow->update();
-}
-void MainWindow::slotScaleCoordY(int coordY) {
-  controller->SetScaleY(coordY);
-
-  renderWindow->update();
-}
-
-void MainWindow::slotScaleCoordZ(int coordZ) {
-  controller->SetScaleZ(coordZ);
-
+  qDebug() << "new scale X " << coordX;
   renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordX(int coordX) {
   controller->SetRotationX(coordX);
+  qDebug() << "new rotate X " << coordX;
 
   renderWindow->update();
 }
 void MainWindow::slotRotateCoordY(int coordY) {
   controller->SetRotationY(coordY);
+  qDebug() << "new rotate Y " << coordY;
 
   renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordZ(int coordZ) {
   controller->SetRotationZ(coordZ);
+  qDebug() << "new rotate Z " << coordZ;
 
   renderWindow->update();
 }
@@ -427,6 +418,70 @@ void MainWindow::grabScene() {
 
 void MainWindow::saveCycledGif() {
   getFileName("*.gif");
+  if (fileName.isEmpty()) return;
+
+  GifWriter gif;
+  QByteArray byteArray = fileName.toUtf8();
+  const char *cstr = byteArray.constData();
+
+  std::array<int, 3> coords;
+
+  coords = locationSlidersBox->getCoords();
+  std::pair<float, float> locationX(0, coords[0] / 25.0);
+  std::pair<float, float> locationY(0, coords[0] / 25.0);
+  std::pair<float, float> locationZ(0, coords[0] / 25.0);
+
+  coords = rotateSlidersBox->getCoords();
+  std::pair<float, float> rotateX(0, coords[1] / 25.0);
+  std::pair<float, float> rotateY(0, coords[1] / 25.0);
+  std::pair<float, float> rotateZ(0, coords[1] / 25.0);
+
+  coords = scaleSlidersBox->getCoords();
+  std::pair<float, float> scaleX(100, (coords[2] - 100) / 25.0);
+
+  resetCoords();
+  renderWindow->beforeGrab();
+  screens.push_back(renderWindow->grab());
+  renderWindow->afterGrab();
+
+  qDebug() << "START ";
+
+  while (screens.size() <= 26) {
+    qDebug() << screens.size();
+    locationSlidersBox->setCoords(std::array<int, 3>{
+        static_cast<int>(locationX.first += locationX.second),
+        static_cast<int>(locationY.first += locationY.second),
+        static_cast<int>(locationZ.first += locationZ.second)});
+
+    rotateSlidersBox->setCoords(
+        std::array<int, 3>{static_cast<int>(rotateX.first += rotateX.second),
+                           static_cast<int>(rotateY.first += rotateY.second),
+                           static_cast<int>(rotateZ.first += rotateZ.second)});
+
+    scaleSlidersBox->setCoords(std::array<int, 3>{
+        static_cast<int>(scaleX.first += scaleX.second), 0, 0});
+
+    renderWindow->beforeGrab();
+    screens.push_back(renderWindow->grab());
+    renderWindow->afterGrab();
+
+    // renderWindow->update();
+
+    // std::this_thread::sleep_for(std::chrono::seconds(1));
+  }
+
+  for (int i = 24; i >= 1; --i) {
+    screens.push_back(screens[i]);
+  }
+  GifBegin(&gif, cstr, 640, 480, 10);
+  for (const auto &screen : screens) {
+    // pixmap->QImage->scale 640x480->colors
+    QImage scaledImage = screen.toImage()
+                             .scaled(QSize(640, 480))
+                             .convertToFormat(QImage::Format_RGBA8888);
+    GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 10);
+  }
+  GifEnd(&gif);
 
   screens.clear();
   //! отладка

@@ -41,8 +41,6 @@ class MainWindow : public QMainWindow {
   void slotRotateCoordZ(int coordZ);
 
   void slotScaleCoordX(int coordX);
-  void slotScaleCoordY(int coordY);
-  void slotScaleCoordZ(int coordZ);
 
   void slotVerticesType(const QString &text);
   void slotVerticesSize(const int value);
@@ -76,7 +74,7 @@ class MainWindow : public QMainWindow {
   // user gui settings
   UserSetting *userSetting;
 
-  // for gif
+  // for saving
   std::vector<QPixmap> screens;
   QString fileName;
   QTimer *timer;
