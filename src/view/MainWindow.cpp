@@ -428,46 +428,55 @@ void MainWindow::saveCycledGif() {
 
   coords = locationSlidersBox->getCoords();
   std::pair<float, float> locationX(0, coords[0] / 25.0);
-  std::pair<float, float> locationY(0, coords[0] / 25.0);
-  std::pair<float, float> locationZ(0, coords[0] / 25.0);
+  std::pair<float, float> locationY(0, coords[1] / 25.0);
+  std::pair<float, float> locationZ(0, coords[2] / 25.0);
 
   coords = rotateSlidersBox->getCoords();
-  std::pair<float, float> rotateX(0, coords[1] / 25.0);
+  std::pair<float, float> rotateX(0, coords[0] / 25.0);
   std::pair<float, float> rotateY(0, coords[1] / 25.0);
-  std::pair<float, float> rotateZ(0, coords[1] / 25.0);
+  std::pair<float, float> rotateZ(0, coords[2] / 25.0);
 
   coords = scaleSlidersBox->getCoords();
-  std::pair<float, float> scaleX(100, (coords[2] - 100) / 25.0);
+  std::pair<float, float> scaleX(100, (coords[0] - 100) / 25.0);
 
   resetCoords();
   renderWindow->beforeGrab();
   screens.push_back(renderWindow->grab());
   renderWindow->afterGrab();
+  qDebug() << "rotX "<< rotateX.first <<" " << rotateX.second;
+  qDebug() << "rotY "<< rotateY.first <<" " << rotateY.second;
+  qDebug() << "rotZ "<< rotateZ.first <<" " << rotateZ.second;
 
+  qDebug() << "scaleX "<< scaleX.first <<" " << scaleX.second;
+  
+  qDebug() << "locationX "<< locationX.first <<" " << locationX.second;
+  qDebug() << "locationY "<< locationY.first <<" " << locationY.second;
+  qDebug() << "locationZ "<< locationZ.first <<" " << locationZ.second;
   qDebug() << "START ";
 
   while (screens.size() <= 26) {
     qDebug() << screens.size();
-    locationSlidersBox->setCoords(std::array<int, 3>{
+    locationSlidersBox->changeCoords(std::array<int, 3>{
         static_cast<int>(locationX.first += locationX.second),
         static_cast<int>(locationY.first += locationY.second),
         static_cast<int>(locationZ.first += locationZ.second)});
 
-    rotateSlidersBox->setCoords(
+    rotateSlidersBox->changeCoords(
         std::array<int, 3>{static_cast<int>(rotateX.first += rotateX.second),
                            static_cast<int>(rotateY.first += rotateY.second),
                            static_cast<int>(rotateZ.first += rotateZ.second)});
 
-    scaleSlidersBox->setCoords(std::array<int, 3>{
+    scaleSlidersBox->changeCoords(std::array<int, 3>{
         static_cast<int>(scaleX.first += scaleX.second), 0, 0});
+        
+  //   renderWindow->update();
+   
+  //  std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     renderWindow->beforeGrab();
     screens.push_back(renderWindow->grab());
     renderWindow->afterGrab();
-
-    // renderWindow->update();
-
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
+ 
   }
 
   for (int i = 24; i >= 1; --i) {
@@ -479,7 +488,7 @@ void MainWindow::saveCycledGif() {
     QImage scaledImage = screen.toImage()
                              .scaled(QSize(640, 480))
                              .convertToFormat(QImage::Format_RGBA8888);
-    GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 10);
+    GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 0);
   }
   GifEnd(&gif);
 

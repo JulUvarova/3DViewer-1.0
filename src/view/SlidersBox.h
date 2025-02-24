@@ -139,6 +139,24 @@ class SlidersBox : public QWidget {
     }
   }
 
+    void changeCoords(std::array<int, 3> coords) {
+    if (coords[0]) {
+      sliders[0]->setValue( coords[0]);
+      values[0]->setText(QString::number(sliders[0]->value()));
+      emit signalChangeX(sliders[0]->value());
+    }
+    if (coords[1] && kSlidersCount > 1) {
+      sliders[1]->setValue( coords[1]);
+      values[1]->setText(QString::number(sliders[1]->value()));
+      emit signalChangeY(sliders[1]->value());
+    }
+    if (coords[2] && kSlidersCount > 2) {
+      sliders[2]->setValue(coords[2]);
+      values[2]->setText(QString::number(sliders[2]->value()));
+      emit signalChangeZ(sliders[2]->value());
+    }
+  }
+
   std::array<int, 3> getCoords() {
     std::array<int, 3> coords = {sliders[0]->value(),
                                  (kSlidersCount > 1) ? sliders[1]->value() : 0,
