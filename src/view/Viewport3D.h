@@ -28,7 +28,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   void signalChangeRotateCoords(std::pair<int, int> coordXY);
 
  public:
-  Viewport3D(UserSetting *setting, QWidget *parent = nullptr)
+  Viewport3D(std::shared_ptr<UserSetting> setting, QWidget *parent = nullptr)
       : QOpenGLWidget(parent) {
     renderSetting = setting;
 
@@ -39,7 +39,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
             &Viewport3D::repaint);
   }
 
-  // TODO как-то эту хрень оптимизировать, начиная со сцены в фасаде
   void setScene(std::shared_ptr<s21::DrawSceneData> sc) {
     scene = std::move(sc);
     needBufferUpdate = true;
@@ -47,8 +46,10 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   // убирают кнопку проекции для скрина
-  void beforeGrab() { projectionButton->setVisible(false); }
-  void afterGrab() { projectionButton->setVisible(true); }
+  void beforeGrab() { projectionButton->setVisible(false);
+  updateGif(); }
+  void afterGrab() { projectionButton->setVisible(true); 
+  updateProjectionMatrix();}
 
  protected:
   void setBackColor() {
@@ -163,7 +164,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
  private:
   ProjectionButton *projectionButton;
-  UserSetting *renderSetting;
+  std::shared_ptr<UserSetting> renderSetting;
   std::shared_ptr<s21::DrawSceneData> scene;
 
   // catch mouse press and mouse release
@@ -388,11 +389,38 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     vao.release();
   }
 
+void updateGif() {
+    projectionMatrix.setToIdentity();
+
+    float aspect = static_cast<float>(width()) / (width() * 3 / 4);
+
+
+    if (projectionButton->isParallelProjection()) {
+      // Orthographic projection
+      float size = 1.0f;
+      projectionMatrix.ortho(-size * aspect, size * aspect, -size, size, 1.0f,
+                             100.0f);
+    } else {
+      // Perspective projection
+      projectionMatrix.perspective(45.0f, aspect, 1.0f, 100.0f);
+    }
+
+    // Set view matrix (camera position)
+    viewMatrix.setToIdentity();
+    viewMatrix.translate(0.0f, 0.0f, -5.0f);
+
+    // Set model matrix (identity by default)
+    modelMatrix.setToIdentity();
+  }
+
   // Update projection matrix
   void updateProjectionMatrix() {
     projectionMatrix.setToIdentity();
 
     float aspect = static_cast<float>(width()) / height();
+    //! режим гиф 
+    // float aspect = static_cast<float>(width()) / (width() * 3 / 4);
+
 
     if (projectionButton->isParallelProjection()) {
       // Orthographic projection

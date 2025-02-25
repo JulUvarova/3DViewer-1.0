@@ -29,7 +29,8 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
-  MainWindow(s21::Controller *controller, QWidget *parent = nullptr);
+  MainWindow(std::shared_ptr<s21::Controller> controller,
+             QWidget *parent = nullptr);
 
  public Q_SLOTS:
   void slotLocationCoordX(int coordX);
@@ -69,10 +70,10 @@ class MainWindow : public QMainWindow {
   QPushButton *restoreElemsButton;
 
   // Controller
-  s21::Controller *controller;
+  std::shared_ptr<s21::Controller> controller;
 
   // user gui settings
-  UserSetting *userSetting;
+  std::shared_ptr<UserSetting> userSetting;
 
   // for saving
   std::vector<QPixmap> screens;

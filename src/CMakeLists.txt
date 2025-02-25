@@ -27,11 +27,15 @@ set(PROJECT_SOURCES
         view/BackgroundBox.h
         view/ProjectionButton.h
         
+        model/facade.h
+        model/facade.cc
         model/scene.h
         model/scene.cc
         model/obj/obj_data.h
         model/obj/obj_data.cc
 
+        controller/controller.h
+        controller/controller.cc
 )
 
 
