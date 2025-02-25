@@ -5,19 +5,19 @@
 
 namespace s21 {
 
-enum class ProjectionTypes {
-  kParallel,
-  kCentral,
-};
+// enum class ProjectionTypes {
+//   kParallel,
+//   kCentral,
+// };
 
-enum class VertexStyle { kNone, kSquare, kCircle, kTriangle };
-enum class EdgeStyle { kNone, kLine, kDashed };
+// enum class VertexStyle { kNone, kSquare, kCircle };
+// enum class EdgeStyle { kNone, kLine, kDashed };
 
-struct Color {
-  float r{0.0f};
-  float g{0.0f};
-  float b{0.0f};
-};
+// struct Color {
+//   float r{0.0f};
+//   float g{0.0f};
+//   float b{0.0f};
+// };
 
 class SceneParameters {
  public:
@@ -34,20 +34,6 @@ class SceneParameters {
   float GetLocationY() const { return location_y_; }
   float GetLocationZ() const { return location_z_; }
 
-  ProjectionTypes GetProjectionType() const { return projection_type_; }
-
-  Color GetBackgroundColor() const { return background_color_; }
-
-  float GetAspectRate() const { return aspect_rate_; }
-
-  VertexStyle GetVertexStyle() const { return vertex_style_; }
-  int GetVertexSize() const { return vertex_size_; }
-  Color GetVertexColor() const { return vertex_color_; }
-
-  EdgeStyle GetEdgeStyle() const { return edge_style_; }
-  int GetEdgeSize() const { return edge_size_; }
-  Color GetEdgeColor() const { return edge_color_; }
-
   // Setters with constraints
   void SetScaleX(float value) { scale_x_ = std::clamp(value, 0.0f, 2.0f); }
   void SetScaleY(float value) { scale_y_ = std::clamp(value, 0.0f, 2.0f); }
@@ -60,20 +46,33 @@ class SceneParameters {
   void SetLocationX(float value) { location_x_ = Clamp(value, -1.0f, 1.0f); }
   void SetLocationY(float value) { location_y_ = Clamp(value, -1.0f, 1.0f); }
   void SetLocationZ(float value) { location_z_ = Clamp(value, -1.0f, 1.0f); }
+  // ProjectionTypes GetProjectionType() const { return projection_type_; }
 
-  void SetProjectionType(ProjectionTypes type) { projection_type_ = type; }
+  // Color GetBackgroundColor() const { return background_color_; }
 
-  void SetBackgroundColor(Color color) { background_color_ = color; }
+  // float GetAspectRate() const { return aspect_rate_; }
 
-  void SetAspectRate(float value) { aspect_rate_ = value; }
+  // VertexStyle GetVertexStyle() const { return vertex_style_; }
+  // int GetVertexSize() const { return vertex_size_; }
+  // Color GetVertexColor() const { return vertex_color_; }
 
-  void SetVertexStyle(VertexStyle style) { vertex_style_ = style; }
-  void SetVertexSize(int size) { vertex_size_ = size; }
-  void SetVertexColor(Color color) { vertex_color_ = color; }
+  // EdgeStyle GetEdgeStyle() const { return edge_style_; }
+  // int GetEdgeSize() const { return edge_size_; }
+  // Color GetEdgeColor() const { return edge_color_; }
 
-  void SetEdgeStyle(EdgeStyle style) { edge_style_ = style; }
-  void SetEdgeSize(int size) { edge_size_ = size; }
-  void SetEdgeColor(Color color) { edge_color_ = color; }
+  // void SetProjectionType(ProjectionTypes type) { projection_type_ = type; }
+
+  // void SetBackgroundColor(Color color) { background_color_ = color; }
+
+  // void SetAspectRate(float value) { aspect_rate_ = value; }
+
+  // void SetVertexStyle(VertexStyle style) { vertex_style_ = style; }
+  // void SetVertexSize(int size) { vertex_size_ = size; }
+  // void SetVertexColor(Color color) { vertex_color_ = color; }
+
+  // void SetEdgeStyle(EdgeStyle style) { edge_style_ = style; }
+  // void SetEdgeSize(int size) { edge_size_ = size; }
+  // void SetEdgeColor(Color color) { edge_color_ = color; }
 
  private:
   float scale_x_{1.0f};
@@ -85,15 +84,15 @@ class SceneParameters {
   float location_x_{0.0f};
   float location_y_{0.0f};
   float location_z_{0.0f};
-  ProjectionTypes projection_type_;
-  VertexStyle vertex_style_;
-  int vertex_size_;
-  Color vertex_color_;
-  EdgeStyle edge_style_;
-  int edge_size_;
-  Color edge_color_;
-  Color background_color_;
-  float aspect_rate_{1.0f};
+  // ProjectionTypes projection_type_;
+  // VertexStyle vertex_style_;
+  // int vertex_size_;
+  // Color vertex_color_;
+  // EdgeStyle edge_style_;
+  // int edge_size_;
+  // Color edge_color_;
+  // Color background_color_;
+  // float aspect_rate_{1.0f};
 
   // Helper functions
   static float Clamp(float value, float min, float max) {

@@ -17,9 +17,9 @@
 #include <QWidget>
 
 #include "../controller/controller.h"
-#include "../model/obj/obj_data.h"
 #include "BackgroundBox.h"
 #include "ElemBox.h"
+#include "ProjectionButton.h"
 #include "SlidersBox.h"
 #include "UserSetting.h"
 #include "Viewport3D.h"
@@ -30,7 +30,7 @@ class MainWindow : public QMainWindow {
  public:
   MainWindow(s21::Controller *controller, QWidget *parent = nullptr);
 
- public slots:
+ public Q_SLOTS:
   void slotLocationCoordX(int coordX);
   void slotLocationCoordY(int coordY);
   void slotLocationCoordZ(int coordZ);
@@ -51,33 +51,32 @@ class MainWindow : public QMainWindow {
   void slotEdgesSize(const int value);
   void slotEdgesColor(const QColor &color);
 
-  void slotViewportSize(const int w, const int h);
-
   void slotBackgroundColor(const QColor &color);
 
   void slotProjectionType(const bool isParallel);
 
  private:
-  //! useless
-  QSlider *xSlider, *ySlider, *zSlider;
-  QLabel *xValue, *yValue, *zValue, *propsInfo;
+  // UI elements
+  QDockWidget *toolsDock, *propsDock;
+  QLabel *propsFileInfo, *propsObjectsInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
-  //!
-
-  // Check parser
-  s21::OBJData obj_data;
+  QMenuBar *menuBar;
+  Viewport3D *renderWindow;
+  QPushButton *resetCoordsButton;
+  QPushButton *resetElemsButton;
+  QPushButton *saveElemsButton;
+  QPushButton *restoreElemsButton;
 
   // Controller
   s21::Controller *controller;
 
-  // user choice for vertices & edges
+  // user gui settings
   UserSetting *userSetting;
-  Viewport3D *centralWidget;
 
-  // UI elements
-  // QDockWidget *toolsDock, *propsDock, *timelineDock;
+  // scene data
+  // s21::DrawSceneData *scene{nullptr};
 
   void setupUI();
   void createDockWidgets();
@@ -91,6 +90,9 @@ class MainWindow : public QMainWindow {
   void saveImage();
   void appExit();
   void closeEvent(QCloseEvent *event) override;
-  void setSceneParameters();
   void setVisualParameters();
+  // void drawScene(s21::DrawSceneData scene);
+  void resetCoords();
+  void fillToolsDockWidget();
+  void fillPropsDockWidget();
 };

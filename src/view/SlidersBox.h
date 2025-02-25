@@ -1,99 +1,97 @@
 #pragma once
 
+#include <QIntValidator>
 #include <QLabel>
 #include <QLayout>
+#include <QLineEdit>
 #include <QOpenGLFunctions>
 #include <QSlider>
 #include <QString>
 #include <QWidget>
+#include <array>
 
-struct Coords {
-  int x, y, z;
+class Slider : public QSlider {
+  Q_OBJECT
+
+ public:
+  Slider(QWidget *parent = nullptr) : QSlider(parent) {
+    setOrientation(Qt::Horizontal);
+    setStyleSheet(
+        "QSlider { background-color: rgba(240, 236, 236, 0); } "
+        "QSlider::groove:horizontal { background-color: grey; "
+        "height: 4px; border: 1px solid black;} "
+        "QSlider::handle:horizontal { "
+        "background: lightgrey; width: 7px; height: 12px; "
+        "margin: -7px 0; border-radius: 2px; border: 1px solid black; }");
+  }
+
+ protected:
+  void mouseDoubleClickEvent([[maybe_unused]] QMouseEvent *event) override {
+    Q_EMIT doubleClicked(this);
+  }
+
+ Q_SIGNALS:
+  void doubleClicked(Slider *slider);
 };
 
 class SlidersBox : public QWidget {
   Q_OBJECT
 
-  int step = 1;
-  QLabel *xLabel, *yLabel, *zLabel;
-  QSlider *xSlider, *ySlider, *zSlider;
-  QLabel *xValue, *yValue, *zValue;
+  int kSlidersCount;
+  int kMiddle;
+  const int kStep = 1;
+
+  Slider *xSlider, *ySlider, *zSlider;
+  QLineEdit *xValue, *yValue, *zValue;
   QHBoxLayout *xLayout, *yLayout, *zLayout;
   QVBoxLayout *layout;
 
-  inline void xChange() {
-    xValue->setText(QString::number(xSlider->value()));
-    emit signalChangeX(xSlider->value());
-  }
-  inline void yChange() {
-    yValue->setText(QString::number(ySlider->value()));
-    emit signalChangeY(ySlider->value());
-  }
-  inline void zChange() {
-    zValue->setText(QString::number(zSlider->value()));
-    emit signalChangeZ(zSlider->value());
-  }
+  std::array<QLabel *, 3> labels{new QLabel{" X "}, new QLabel{" Y "},
+                                 new QLabel{" Z "}};
+  std::array<Slider *, 3> sliders{new Slider(), new Slider(), new Slider()};
+  std::array<QLineEdit *, 3> values{new QLineEdit(), new QLineEdit(),
+                                    new QLineEdit()};
+  std::array<QHBoxLayout *, 3> layouts{new QHBoxLayout(), new QHBoxLayout(),
+                                       new QHBoxLayout()};
 
- signals:
+ Q_SIGNALS:
   void signalChangeX(int coordX);
   void signalChangeY(int coordY);
   void signalChangeZ(int coordZ);
 
  public:
-  SlidersBox(const char *name, float min, float max, QWidget *parent = nullptr)
-      : QWidget(parent) {
-    xLabel = new QLabel(" X ");
-    yLabel = new QLabel(" Y ");
-    zLabel = new QLabel(" Z ");
-
-    int midle = (min + max) / 2;
-    xSlider = new QSlider(Qt::Horizontal, this);
-    xSlider->setRange(min, max);
-    xSlider->setTickInterval(step);
-    xSlider->setValue(midle);
-    //! doesn't work?
-    // xSlider->setStyleSheet("QSlider::add-page:horizontal { background: green;
-    // }");
-
-    ySlider = new QSlider(Qt::Horizontal, this);
-    ySlider->setRange(min, max);
-    ySlider->setTickInterval(step);
-    ySlider->setValue(midle);
-
-    zSlider = new QSlider(Qt::Horizontal, this);
-    zSlider->setRange(min, max);
-    zSlider->setTickInterval(step);
-    zSlider->setValue(midle);
-
-    xValue = new QLabel(QString::number(xSlider->value()));
-    xValue->setFixedWidth(4 * QFontMetrics(xValue->font()).averageCharWidth());
-    xValue->setAlignment(Qt::AlignRight);
-    yValue = new QLabel(QString::number(ySlider->value()));
-    yValue->setFixedWidth(4 * QFontMetrics(yValue->font()).averageCharWidth());
-    yValue->setAlignment(Qt::AlignRight);
-    zValue = new QLabel(QString::number(zSlider->value()));
-    zValue->setFixedWidth(4 * QFontMetrics(zValue->font()).averageCharWidth());
-    zValue->setAlignment(Qt::AlignRight);
-
-    xLayout = new QHBoxLayout();
-    xLayout->addWidget(xLabel);
-    xLayout->addWidget(xSlider);
-    xLayout->addWidget(xValue);
-
-    yLayout = new QHBoxLayout();
-    yLayout->addWidget(yLabel);
-    yLayout->addWidget(ySlider);
-    yLayout->addWidget(yValue);
-
-    zLayout = new QHBoxLayout();
-    zLayout->addWidget(zLabel);
-    zLayout->addWidget(zSlider);
-    zLayout->addWidget(zValue);
-
+  SlidersBox(const char *name, std::pair<int, int> minMax, int sliderCount,
+             QWidget *parent = nullptr)
+      : QWidget(parent), kSlidersCount(sliderCount) {
     layout = new QVBoxLayout();
-    layout->addLayout(xLayout);
-    layout->addLayout(yLayout);
-    layout->addLayout(zLayout);
+    kMiddle = (minMax.first + minMax.second) / 2;
+    QIntValidator *validator =
+        new QIntValidator(minMax.first, minMax.second, this);
+
+    for (int i = 0; i < kSlidersCount; ++i) {
+      sliders[i] = new Slider(this);
+      sliders[i]->setRange(minMax.first, minMax.second);
+      sliders[i]->setTickInterval(kStep);
+      sliders[i]->setValue(kMiddle);
+
+      values[i] = new QLineEdit(this);
+      values[i]->setValidator(validator);
+      values[i]->setText(QString::number(sliders[i]->value()));
+      values[i]->setFixedWidth(
+          4 * QFontMetrics(values[i]->font()).averageCharWidth());
+      values[i]->setAlignment(Qt::AlignRight);
+      values[i]->setFrame(false);
+
+      layouts[i] = new QHBoxLayout();
+      layouts[i]->addWidget(labels[i]);
+      layouts[i]->addWidget(sliders[i]);
+      layouts[i]->addWidget(values[i]);
+
+      layout->addLayout(layouts[i]);
+
+      connect(sliders[i], &Slider::doubleClicked, this,
+              &SlidersBox::resetSlider);
+    }
 
     QGroupBox *groupBox = new QGroupBox(name);
     groupBox->setLayout(layout);
@@ -102,13 +100,84 @@ class SlidersBox : public QWidget {
     mainLayout->addWidget(groupBox);
     setLayout(mainLayout);
 
-    connect(xSlider, &QSlider::valueChanged, this, &SlidersBox::xChange);
-    connect(ySlider, &QSlider::valueChanged, this, &SlidersBox::yChange);
-    connect(zSlider, &QSlider::valueChanged, this, &SlidersBox::zChange);
+    connect(sliders[0], &QSlider::valueChanged, this,
+            &SlidersBox::sliderChangeX);
+    connect(sliders[1], &QSlider::valueChanged, this,
+            &SlidersBox::sliderChangeY);
+    connect(sliders[2], &QSlider::valueChanged, this,
+            &SlidersBox::sliderChangeZ);
+
+    connect(values[0], &QLineEdit::textChanged, this,
+            &SlidersBox::labelChangeX);
+    connect(values[1], &QLineEdit::textChanged, this,
+            &SlidersBox::labelChangeY);
+    connect(values[2], &QLineEdit::textChanged, this,
+            &SlidersBox::labelChangeZ);
   };
 
- private:
-  Coords sendCoords() {
-    return Coords{xSlider->value(), ySlider->value(), zSlider->value()};
+  void resetCoords() {
+    for (int i = 0; i < kSlidersCount; ++i) sliders[i]->setValue(kMiddle);
   }
+
+  void setCoords(std::pair<int, int> coordsXY) {
+    if (coordsXY.first) {
+      sliders[0]->setValue(sliders[0]->value() + coordsXY.first);
+      values[0]->setText(QString::number(sliders[0]->value()));
+      Q_EMIT signalChangeX(sliders[0]->value());
+    }
+    if (coordsXY.second) {
+      sliders[1]->setValue(sliders[1]->value() + coordsXY.second);
+      values[1]->setText(QString::number(sliders[1]->value()));
+      Q_EMIT signalChangeY(sliders[1]->value());
+    }
+  }
+
+ private:
+  void resetSlider(Slider *slider) {
+    slider->setValue(kMiddle);
+    Q_EMIT signalChangeX(slider->value());
+  }
+
+  void labelChangeX() {
+    sliders[0]->setValue(values[0]->text().toInt());
+    Q_EMIT signalChangeX(sliders[0]->value());
+  }
+
+  void labelChangeY() {
+    sliders[1]->setValue(values[1]->text().toInt());
+    Q_EMIT signalChangeY(sliders[1]->value());
+  }
+
+  void labelChangeZ() {
+    sliders[2]->setValue(values[2]->text().toInt());
+    Q_EMIT signalChangeZ(sliders[2]->value());
+  }
+
+  void sliderChangeX() {
+    values[0]->setText(QString::number(sliders[0]->value()));
+    Q_EMIT signalChangeX(sliders[0]->value());
+  }
+
+  void sliderChangeY() {
+    values[1]->setText(QString::number(sliders[1]->value()));
+    Q_EMIT signalChangeY(sliders[1]->value());
+  }
+
+  void sliderChangeZ() {
+    values[2]->setText(QString::number(sliders[2]->value()));
+    Q_EMIT signalChangeZ(sliders[2]->value());
+  }
+
+  // connect(values[i], &QLineEdit::textChanged, this, [this]() {
+  // labelChange(i); });
+
+  //   void labelChange(int i) {
+  //   sliders[i]->setValue(values[i]->text().toInt());
+  //   Q_EMIT signalChangeX(i, sliders[i]->value());
+  // }
+
+  // void sliderChange(int i) {
+  //   values[i]->setText(QString::number(sliders[i]->value()));
+  //   Q_EMIT signalChangeX(i, sliders[i]->value());
+  // }
 };

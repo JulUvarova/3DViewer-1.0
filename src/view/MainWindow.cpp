@@ -1,12 +1,20 @@
 #include "MainWindow.h"
 
-MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
-    : QMainWindow(parent) {
-  controller = controller;
-
+MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
+    : QMainWindow(parent), controller(ctrl) {
   setupUI();
 
   saveLayout();
+
+  // Settings
+  connect(resetCoordsButton, &QPushButton::clicked, this,
+          &MainWindow::resetCoords);
+  connect(resetElemsButton, &QPushButton::clicked, this,
+          &MainWindow::resetUserSettings);
+  connect(restoreElemsButton, &QPushButton::clicked, this,
+          &MainWindow::restoreUserSettings);
+  connect(saveElemsButton, &QPushButton::clicked, this,
+          &MainWindow::saveUserSettings);
 
   // Location coordinates
   connect(locationSlidersBox, &SlidersBox::signalChangeX, this,
@@ -15,6 +23,8 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
           &MainWindow::slotLocationCoordY);
   connect(locationSlidersBox, &SlidersBox::signalChangeZ, this,
           &MainWindow::slotLocationCoordZ);
+  connect(renderWindow, &Viewport3D::signalChangeMoveCoords, locationSlidersBox,
+          &SlidersBox::setCoords);
 
   // scale coordinates
   connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
@@ -23,6 +33,8 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
           &MainWindow::slotScaleCoordY);
   connect(scaleSlidersBox, &SlidersBox::signalChangeZ, this,
           &MainWindow::slotScaleCoordZ);
+  connect(renderWindow, &Viewport3D::signalChangeScaleCoords, scaleSlidersBox,
+          &SlidersBox::setCoords);
 
   // rotate coordinates
   connect(rotateSlidersBox, &SlidersBox::signalChangeX, this,
@@ -31,6 +43,8 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
           &MainWindow::slotRotateCoordY);
   connect(rotateSlidersBox, &SlidersBox::signalChangeZ, this,
           &MainWindow::slotRotateCoordZ);
+  connect(renderWindow, &Viewport3D::signalChangeRotateCoords, rotateSlidersBox,
+          &SlidersBox::setCoords);
 
   // vertex prop
   connect(verticesBox, &ElemBox::signalChangeType, this,
@@ -49,142 +63,115 @@ MainWindow::MainWindow(s21::Controller *controller, QWidget *parent)
           &MainWindow::slotEdgesColor);
   connect(backBox, &BackgroundBox::signalChangeColor, this,
           &MainWindow::slotBackgroundColor);
-
-  // background prop
-  connect(centralWidget, &Viewport3D::signalChangeSize, this,
-          &MainWindow::slotViewportSize);
-
-  // projection
-  connect(centralWidget, &Viewport3D::signalChangeProjection, this,
-          &MainWindow::slotProjectionType);
 }
 
-void MainWindow::setSceneParameters() {
-  // set users parameters in controller
-  controller->SetBackgroundColor(userSetting->getBackgroundColor());
+void MainWindow::resetCoords() {
+  controller->ResetScene();
 
-  controller->SetProjectionType(userSetting->getProjection());
+  scaleSlidersBox->resetCoords();
+  locationSlidersBox->resetCoords();
+  rotateSlidersBox->resetCoords();
 
-  controller->SetVertexColor(userSetting->getVerticesColor());
-  controller->SetVertexType(userSetting->getVerticesType());
-  controller->SetVertexSize(userSetting->getVerticesSize());
-
-  controller->SetEdgeColor(userSetting->getEdgesColor());
-  controller->SetEdgeType(userSetting->getEdgesType());
-  controller->SetEdgeSize(userSetting->getEdgesSize());
+  renderWindow->update();
 }
 
 void MainWindow::slotProjectionType(const bool isParallel) {
-  controller->SetProjectionType(isParallel);
   userSetting->setProjection(isParallel);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotBackgroundColor(const QColor &color) {
-  controller->SetBackgroundColor(color);
   userSetting->setBackgroundColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesColor(const QColor &color) {
-  controller->SetVertexColor(color);
   userSetting->setVerticesColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesType(const QString &text) {
-  controller->SetVertexType(text);
   userSetting->setVerticesType(text);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotVerticesSize(const int value) {
-  controller->SetVertexSize(value);
   userSetting->setVerticesSize(value);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesColor(const QColor &color) {
-  controller->SetEdgeColor(color);
   userSetting->setEdgesColor(color);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesType(const QString &text) {
-  controller->SetEdgeType(text);
   userSetting->setEdgesType(text);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotEdgesSize(const int value) {
-  controller->SetEdgeSize(value);
   userSetting->setEdgesSize(value);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotLocationCoordX(int coordX) {
   controller->SetLocationX(coordX);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 void MainWindow::slotLocationCoordY(int coordY) {
   controller->SetLocationY(coordY);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotLocationCoordZ(int coordZ) {
   controller->SetLocationZ(coordZ);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotScaleCoordX(int coordX) {
   controller->SetScaleX(coordX);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 void MainWindow::slotScaleCoordY(int coordY) {
   controller->SetScaleY(coordY);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotScaleCoordZ(int coordZ) {
   controller->SetScaleZ(coordZ);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordX(int coordX) {
   controller->SetRotationX(coordX);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 void MainWindow::slotRotateCoordY(int coordY) {
   controller->SetRotationY(coordY);
 
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordZ(int coordZ) {
   controller->SetRotationZ(coordZ);
 
-  centralWidget->update();
-}
-
-void MainWindow::slotViewportSize(const int w, const int h) {
-  controller->SetViewportSize(w, h);
-
-  centralWidget->update();
+  renderWindow->update();
 }
 
 void MainWindow::setupUI() {
@@ -192,12 +179,12 @@ void MainWindow::setupUI() {
   userSetting = new UserSetting();
 
   // Window properties
-  setWindowTitle("Blender-like UI");
+  setWindowTitle("3DViewer 2.0");
   resize(1280, 720);
 
   // Central 3D viewport
-  centralWidget = new Viewport3D(userSetting, this);
-  setCentralWidget(centralWidget);
+  renderWindow = new Viewport3D(userSetting, this);
+  setCentralWidget(renderWindow);
 
   // UI components
   createDockWidgets();
@@ -225,19 +212,57 @@ void MainWindow::setupUI() {
 
 void MainWindow::createDockWidgets() {
   // Left dock (Tools)
-  QDockWidget *toolsDock = new QDockWidget("Tools", this);
+  toolsDock = new QDockWidget("Tools", this);
   toolsDock->setObjectName("toolsDock");
   toolsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
 
-  // Create sliders (Location, Rotate, Scale)
-  locationSlidersBox = new SlidersBox("Location", -100, 100, this);
-  rotateSlidersBox = new SlidersBox("Rotate", -180, 180, this);
-  scaleSlidersBox = new SlidersBox("Scale", 1, 200, this);
+  fillToolsDockWidget();
+
+  propsDock = new QDockWidget("Properties", this);
+  propsDock->setObjectName("propsDock");
+  propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  propsDock->setWidget(new QWidget);
+  addDockWidget(Qt::RightDockWidgetArea, propsDock);
+
+  fillPropsDockWidget();
+
+  // Enable docking features
+  setDockOptions(QMainWindow::AllowNestedDocks | QMainWindow::AllowTabbedDocks);
+}
+
+void MainWindow::fillPropsDockWidget() {
+  // TODO отдельной кнопкой с открытием окна информации?
+  QWidget *propBox = new QWidget();
+  propBox->setLayout(new QVBoxLayout);
+
+  propsFileInfo = new QLabel();
+  propsObjectsInfo = new QLabel();
+
+  QGroupBox *fileNameBox = new QGroupBox("File name:");
+  fileNameBox->setLayout(new QHBoxLayout);
+  fileNameBox->layout()->addWidget(propsFileInfo);
+
+  QGroupBox *infoBox = new QGroupBox("Objects info:");
+  infoBox->setLayout(new QHBoxLayout);
+  infoBox->layout()->addWidget(propsObjectsInfo);
+
+  propBox->layout()->addWidget(fileNameBox);
+  propBox->layout()->addWidget(infoBox);
+  propsDock->setWidget(propBox);
+}
+
+void MainWindow::fillToolsDockWidget() {
+  locationSlidersBox =
+      new SlidersBox("Location", std::pair<int, int>{-100, 100}, 3, this);
+  rotateSlidersBox =
+      new SlidersBox("Rotate", std::pair<int, int>{-180, 180}, 3, this);
+  scaleSlidersBox =
+      new SlidersBox("Scale", std::pair<int, int>{1, 200}, 1, this);
 
   // Create verticesBox
   QStringList verticesLst;
-  verticesLst << "circle" << "square" << "triangle" << "none";
+  verticesLst << "circle" << "square" << "none";
   Setting verticesSetting{userSetting->getVerticesType(),
                           userSetting->getVerticesColor(),
                           userSetting->getVerticesSize()};
@@ -255,44 +280,32 @@ void MainWindow::createDockWidgets() {
   backBox =
       new BackgroundBox("Background", userSetting->getBackgroundColor(), this);
 
+  // reset buttons
+  resetCoordsButton = new QPushButton("Reset coords");
+  resetElemsButton = new QPushButton("Reset settings");
+  restoreElemsButton = new QPushButton("Restore settings");
+  saveElemsButton = new QPushButton("Save settings");
+
   // Fill left dock
-  QWidget *box = new QWidget();
-  box->setLayout(new QVBoxLayout);
-  box->layout()->addWidget(locationSlidersBox);
-  box->layout()->addWidget(rotateSlidersBox);
-  box->layout()->addWidget(scaleSlidersBox);
-  box->layout()->addWidget(verticesBox);
-  box->layout()->addWidget(edgesBox);
-  box->layout()->addWidget(backBox);
+  QWidget *toolBox = new QWidget();
+  toolBox->setLayout(new QVBoxLayout);
+  toolBox->layout()->addWidget(locationSlidersBox);
+  toolBox->layout()->addWidget(rotateSlidersBox);
+  toolBox->layout()->addWidget(scaleSlidersBox);
+  toolBox->layout()->addWidget(resetCoordsButton);
+  toolBox->layout()->addWidget(verticesBox);
+  toolBox->layout()->addWidget(edgesBox);
+  toolBox->layout()->addWidget(backBox);
+  toolBox->layout()->addWidget(saveElemsButton);
+  toolBox->layout()->addWidget(restoreElemsButton);
+  toolBox->layout()->addWidget(resetElemsButton);
 
-  toolsDock->setWidget(box);
-
-  // Right dock (Properties)
-  QDockWidget *propsDock = new QDockWidget("Properties", this);
-  propsDock->setObjectName("propsDock");
-  propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  propsDock->setWidget(new QWidget); 
-  addDockWidget(Qt::RightDockWidgetArea, propsDock);
-
-  // Scene info on Properties
-  propsInfo = new QLabel();
-  propsDock->setWidget(propsInfo);
-
-  // Bottom dock (Timeline)
-  QDockWidget *timelineDock = new QDockWidget("Timeline", this);
-  timelineDock->setObjectName("timelineDock");
-  timelineDock->setWidget(new QWidget);
-  timelineDock->setAllowedAreas(Qt::BottomDockWidgetArea);
-  timelineDock->setFeatures(QDockWidget::NoDockWidgetFeatures);
-  addDockWidget(Qt::BottomDockWidgetArea, timelineDock);
-
-  // Enable docking features
-  setDockOptions(QMainWindow::AllowNestedDocks | QMainWindow::AllowTabbedDocks);
+  toolsDock->setWidget(toolBox);
 }
 
 void MainWindow::createMenuAndToolbars() {
   // Menu bar
-  QMenuBar *menuBar = new QMenuBar(this);
+  menuBar = new QMenuBar(this);
   QMenu *fileMenu = menuBar->addMenu("File");
   fileMenu->addAction("Open", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
@@ -310,17 +323,9 @@ void MainWindow::createMenuAndToolbars() {
   settingMenu->addAction("Reset render settings", this,
                          &MainWindow::resetUserSettings);
   setMenuBar(menuBar);
-
-  // // Top toolbar
-  // QToolBar *toolbar = new QToolBar("Main Toolbar", this);
-  // toolbar->addAction("Edit Mode");
-  // toolbar->addSeparator();
-  // toolbar->addAction("Render");
-  // toolbar->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 }
 
 void MainWindow::appExit() {
-  // сохраняем настройки отображения QSettings
   userSetting->saveRenderSettings();
   close();
 }
@@ -329,26 +334,25 @@ void MainWindow::openFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
                                                   tr("Images (*.obj)"));
   //! if cancel
-  if (fileName.isEmpty()) {
-    return;
-  }
-
-  // upload all user render param to controller
-  setSceneParameters();
+  if (fileName.isEmpty()) return;
 
   QByteArray byteArray = fileName.toUtf8();
   const char *cstr = byteArray.constData();
-
-  // parser test
-  obj_data.Parse(cstr);
+  // QMessageBox::information(this, tr("Unable to open file"),
+  //                          "File is not opened =(");
+  resetCoords();
+  auto scene = controller->LoadScene(cstr);
+  renderWindow->setScene(scene);
 
   //! check canOpen
   // if (!isSaved)
-  // QMessageBox::information(this, tr("Unable to open file"),
-  //                          "File is not opened =(");
 
-  propsInfo->setText(QString::fromStdString(obj_data.toString()));
+  propsFileInfo->setText(fileName);
+  propsObjectsInfo->setText(QString::fromStdString(scene->info));
 }
+
+// void MainWindow::drawScene(s21::DrawSceneData scene) {
+// renderWindow->update(); }
 
 void MainWindow::saveImage() {
   // file name & save location
@@ -362,12 +366,15 @@ void MainWindow::saveImage() {
   else if (selectedFilter == "*.jpeg")
     postfix = ".jpeg";
 
-  bool isSaved = centralWidget->grab().save(fileName + postfix);
+  renderWindow->beforeGrab();
+  bool isSaved = renderWindow->grab().save(fileName + postfix);
   if (!isSaved)
     QMessageBox::information(this, tr("Unable to save file"),
                              "File is not saved =(");
   else
+    //! отладка
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  renderWindow->afterGrab();
 }
 
 void MainWindow::saveLayout() {
@@ -383,14 +390,14 @@ void MainWindow::restoreLayout() {
 void MainWindow::resetUserSettings() {
   userSetting->removeRenderSettings();
   userSetting->readRenderSettings();
-  setSceneParameters();
   setVisualParameters();
+  renderWindow->update();
 }
 
 void MainWindow::restoreUserSettings() {
   userSetting->readRenderSettings();
-  setSceneParameters();
   setVisualParameters();
+  renderWindow->update();
 }
 
 void MainWindow::saveUserSettings() { userSetting->saveRenderSettings(); }
@@ -413,6 +420,4 @@ void MainWindow::setVisualParameters() {
   verticesBox->setSetting(verticesSetting);
 
   backBox->setSetting(userSetting->getBackgroundColor());
-
-  //! projection
 }

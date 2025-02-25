@@ -1,18 +1,26 @@
 #pragma once
 
+#include <algorithm>
+#include <thread>
 #include <vector>
-#include "scene_mesh_data.h"
-#include "scene_parameters.h"
+
 #include "obj/obj_data.h"
 
 namespace s21 {
+// на отрисовку
+struct DrawSceneData {
+  std::vector<float> vertices;
+  std::vector<int> vertex_indices;
+  std::string info;
+};
 
 class Scene {
  public:
-  void LoadSceneMeshData(OBJData& obj_data);
+  std::shared_ptr<DrawSceneData> LoadSceneMeshData(OBJData obj_data);
   void TransformSceneMeshData(Mat4f& transform_matrix);
+
  private:
-  SceneMeshData scene_mesh_data_;
-  SceneParameters scene_parameters_;
+  std::vector<Vec4f> mesh_vertexes_;
+  std::shared_ptr<DrawSceneData> draw_scene_data_;
 };
 }  // namespace s21

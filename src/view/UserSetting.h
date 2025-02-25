@@ -25,7 +25,6 @@ class UserSetting {
  public:
   UserSetting() {
     readRenderSettings();
-    readLayoutSettings();
   }
 
   ~UserSetting() = default;
@@ -58,12 +57,12 @@ class UserSetting {
     verticesType = settings.value("verticesType", "circle").toString();
     verticesColor =
         settings.value("verticesColor", QColor(Qt::white)).value<QColor>();
-    verticesSize = settings.value("verticesSize", 10).toInt();
+    verticesSize = settings.value("verticesSize", 5).toInt();
 
     edgesType = settings.value("edgesType", "solid").toString();
     edgesColor =
         settings.value("edgesColor", QColor(Qt::white)).value<QColor>();
-    edgesSize = settings.value("edgesSize", 10).toInt();
+    edgesSize = settings.value("edgesSize", 5).toInt();
 
     backgroundColor =
         settings.value("backgroundColor", QColor(Qt::black)).value<QColor>();
@@ -106,7 +105,7 @@ class UserSetting {
     this->layoutState = state;
   }
 
-  inline bool getProjection() const { return isParallelProjection; }
+  inline bool IsParallelProjectrion() const { return isParallelProjection; }
 
   inline void setProjection(bool isParallel) {
     this->isParallelProjection = isParallel;
