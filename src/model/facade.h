@@ -18,13 +18,20 @@ class Facade {
   Facade(Facade &&other) = delete;
   void operator=(const Facade &other) = delete;
 
-  static std::shared_ptr<Facade> GetInstance() {
-    if (!instance_) {
-      instance_ = std::shared_ptr<Facade>(new Facade());
-      LogInfoOnce << "Create facade" << std::endl;
-    }
-    return instance_;
+  static std::shared_ptr<Facade> GetInstance()
+  {
+    std::cout << "facade::GetInstance()" << std::endl;
+    static auto instance = std::shared_ptr<Facade>(new Facade);
+    return instance;
   }
+
+  // static std::shared_ptr<Facade> GetInstance() {
+  //   if (!instance_) {
+  //     instance_ = std::shared_ptr<Facade>(new Facade());
+  //     LogInfoOnce << "Create facade" << std::endl;
+  //   }
+  //   return instance_;
+  // }
 
   ~Facade() { LogInfoOnce << "Delete facade" << std::endl; };
 
@@ -63,7 +70,7 @@ class Facade {
   std::unique_ptr<SceneParameters> sceneParam_;
   std::shared_ptr<DrawSceneData> currentSceneData_;
   SceneUpdateCallback sceneUpdateCallback_;
-  static std::shared_ptr<Facade> instance_;
+  std::shared_ptr<Facade> instance_;
 
   Facade();
 

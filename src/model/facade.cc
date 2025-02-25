@@ -1,6 +1,6 @@
 #include "facade.h"
 
-std::shared_ptr<s21::Facade> s21::Facade::instance_ = nullptr;
+// std::shared_ptr<s21::Facade> s21::Facade::instance_ = nullptr;
 // std::once_flag s21::Facade::initFlag_;
 
 s21::Facade::Facade() {
