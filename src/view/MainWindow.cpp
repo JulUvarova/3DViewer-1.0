@@ -1,10 +1,18 @@
 #include "MainWindow.h"
 
+#include <chrono>
+#include <thread>
+
 MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
     : QMainWindow(parent), controller(ctrl) {
   setupUI();
 
   saveLayout();
+
+  // timer for gif animation
+  timer = new QTimer(this);
+  timer->setInterval(100);  // 1000ms = 1 sec (100 -> 10 fps)
+  connect(timer, &QTimer::timeout, this, &MainWindow::grabScene);
 
   // Settings
   connect(resetCoordsButton, &QPushButton::clicked, this,
@@ -29,10 +37,6 @@ MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
   // scale coordinates
   connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
           &MainWindow::slotScaleCoordX);
-  connect(scaleSlidersBox, &SlidersBox::signalChangeY, this,
-          &MainWindow::slotScaleCoordY);
-  connect(scaleSlidersBox, &SlidersBox::signalChangeZ, this,
-          &MainWindow::slotScaleCoordZ);
   connect(renderWindow, &Viewport3D::signalChangeScaleCoords, scaleSlidersBox,
           &SlidersBox::setCoords);
 
@@ -145,17 +149,6 @@ void MainWindow::slotScaleCoordX(int coordX) {
 
   renderWindow->update();
 }
-void MainWindow::slotScaleCoordY(int coordY) {
-  controller->SetScaleY(coordY);
-
-  renderWindow->update();
-}
-
-void MainWindow::slotScaleCoordZ(int coordZ) {
-  controller->SetScaleZ(coordZ);
-
-  renderWindow->update();
-}
 
 void MainWindow::slotRotateCoordX(int coordX) {
   controller->SetRotationX(coordX);
@@ -208,6 +201,12 @@ void MainWindow::setupUI() {
       border: 1px solid #404040;
     }
   )");
+
+  // Connect controller's scene update callback to viewport
+  controller->SetSceneUpdateCallback([this](const std::shared_ptr<s21::DrawSceneData>& sceneData) {
+    // This will be called whenever the scene is transformed
+    renderWindow->setScene(sceneData);
+  });
 }
 
 void MainWindow::createDockWidgets() {
@@ -309,6 +308,8 @@ void MainWindow::createMenuAndToolbars() {
   QMenu *fileMenu = menuBar->addMenu("File");
   fileMenu->addAction("Open", this, &MainWindow::openFile);
   fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
+  fileMenu->addAction("Custom gif", this, &MainWindow::saveCustomGif);
+  fileMenu->addAction("Cycled gif", this, &MainWindow::saveCycledGif);
   fileMenu->addSeparator();
   fileMenu->addAction("Exit", this, &MainWindow::appExit);
   //! QIcon(tr("path/name.smth")) - иконки
@@ -351,30 +352,126 @@ void MainWindow::openFile() {
   propsObjectsInfo->setText(QString::fromStdString(scene->info));
 }
 
-// void MainWindow::drawScene(s21::DrawSceneData scene) {
-// renderWindow->update(); }
+void MainWindow::getFileName(const char *options) {
+  QString selectedFilter;
+  fileName = QFileDialog::getSaveFileName(this, tr("Choose folder"), "./",
+                                          tr(options), &selectedFilter);
+  if (fileName.isEmpty()) return;
+
+  if (selectedFilter == "*.bmp")
+    fileName.append(".bmp");
+  else if (selectedFilter == "*.jpeg")
+    fileName.append(".jpeg");
+  else if (selectedFilter == "*.gif")
+    fileName.append(".gif");
+  else
+    QMessageBox::information(this, tr("Wrong file name"),
+                             "Filename isn't correct");
+}
 
 void MainWindow::saveImage() {
-  // file name & save location
-  QString selectedFilter;
-  QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Choose folder"), "./", tr("*.jpeg;;*.bmp"), &selectedFilter);
-
-  QString postfix;
-  if (selectedFilter == "*.bmp")
-    postfix = ".bmp";
-  else if (selectedFilter == "*.jpeg")
-    postfix = ".jpeg";
+  getFileName("*.jpeg;;*.bmp");
+  if (fileName.isEmpty()) return;
 
   renderWindow->beforeGrab();
-  bool isSaved = renderWindow->grab().save(fileName + postfix);
+  bool isSaved = renderWindow->grab().save(fileName);
   if (!isSaved)
     QMessageBox::information(this, tr("Unable to save file"),
                              "File is not saved =(");
   else
     //! отладка
-    QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+    QMessageBox::information(this, tr("File saved"), "GIF is saved! =)");
+
   renderWindow->afterGrab();
+}
+
+void MainWindow::saveCustomGif() {
+  getFileName("*.gif");
+  if (fileName.isEmpty()) return;
+
+  timer->start();
+}
+
+void MainWindow::grabScene() {
+  renderWindow->beforeGrab();
+  screens.push_back(renderWindow->grab());
+  renderWindow->afterGrab();
+
+  if (screens.size() == 50) {
+    timer->stop();
+
+    createGifFile();
+
+    screens.clear();
+    //! отладка
+    QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  }
+}
+
+void MainWindow::saveCycledGif() {
+  getFileName("*.gif");
+  if (fileName.isEmpty()) return;
+
+  std::array<int, 3> coords;
+
+  coords = locationSlidersBox->getCoords();
+  std::pair<float, float> locationX(0, coords[0] / 25.0);
+  std::pair<float, float> locationY(0, coords[1] / 25.0);
+  std::pair<float, float> locationZ(0, coords[2] / 25.0);
+
+  coords = rotateSlidersBox->getCoords();
+  std::pair<float, float> rotateX(0, coords[0] / 25.0);
+  std::pair<float, float> rotateY(0, coords[1] / 25.0);
+  std::pair<float, float> rotateZ(0, coords[2] / 25.0);
+
+  coords = scaleSlidersBox->getCoords();
+  std::pair<float, float> scaleX(100, (coords[0] - 100) / 25.0);
+
+  screens.resize(50);
+
+  controller->ResetScene();
+  renderWindow->beforeGrab();
+  screens[0] = renderWindow->grab();
+  renderWindow->afterGrab();
+
+  for (int i = 1; i <= 25; ++i) {
+    controller->SetScaleX(scaleX.first += scaleX.second);
+
+    controller->SetRotationX(rotateX.first += rotateX.second);
+    controller->SetRotationY(rotateY.first += rotateY.second);
+    controller->SetRotationZ(rotateZ.first += rotateZ.second);
+
+    controller->SetLocationX(locationX.first += locationX.second);
+    controller->SetLocationY(locationY.first += locationY.second);
+    controller->SetLocationZ(locationZ.first += locationZ.second);
+
+    renderWindow->update();
+
+    renderWindow->beforeGrab();
+    screens[i] = renderWindow->grab();
+    screens[50 - i] = renderWindow->grab();
+    renderWindow->afterGrab();
+  }
+  createGifFile();
+  screens.clear();
+  //! отладка
+  QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+}
+
+void MainWindow::createGifFile() {
+  QByteArray byteArray = fileName.toUtf8();
+  const char *cstr = byteArray.constData();
+
+  GifWriter gif;
+  GifBegin(&gif, cstr, 640, 480, 10);
+  for (const auto &screen : screens) {
+    // pixmap->QImage->scale 640x480->colors
+    QImage scaledImage = screen.toImage()
+                             .scaled(QSize(640, 480))
+                             .convertToFormat(QImage::Format_RGBA8888);
+    GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 0);
+  }
+  GifEnd(&gif);
 }
 
 void MainWindow::saveLayout() {

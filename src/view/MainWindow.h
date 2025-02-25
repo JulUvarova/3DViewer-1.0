@@ -1,10 +1,9 @@
 #pragma once
 
-#include <QByteArray>
 #include <QDockWidget>
 #include <QFileDialog>
 #include <QGroupBox>
-#include <QLabel>
+#include <QImage>
 #include <QLayout>
 #include <QMainWindow>
 #include <QMenuBar>
@@ -13,7 +12,8 @@
 #include <QSlider>
 #include <QStatusBar>
 #include <QString>
-#include <QToolBar>
+#include <QTimer>
+#include <QToolBar>  //!
 #include <QWidget>
 
 #include "../controller/controller.h"
@@ -23,6 +23,7 @@
 #include "SlidersBox.h"
 #include "UserSetting.h"
 #include "Viewport3D.h"
+#include "gif/gif.h"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -40,8 +41,6 @@ class MainWindow : public QMainWindow {
   void slotRotateCoordZ(int coordZ);
 
   void slotScaleCoordX(int coordX);
-  void slotScaleCoordY(int coordY);
-  void slotScaleCoordZ(int coordZ);
 
   void slotVerticesType(const QString &text);
   void slotVerticesSize(const int value);
@@ -75,8 +74,10 @@ class MainWindow : public QMainWindow {
   // user gui settings
   UserSetting *userSetting;
 
-  // scene data
-  // s21::DrawSceneData *scene{nullptr};
+  // for saving
+  std::vector<QPixmap> screens;
+  QString fileName;
+  QTimer *timer;
 
   void setupUI();
   void createDockWidgets();
@@ -87,12 +88,16 @@ class MainWindow : public QMainWindow {
   void resetUserSettings();
   void restoreUserSettings();
   void openFile();
+  void getFileName(const char *options);
   void saveImage();
+  void saveCustomGif();
+  void saveCycledGif();
   void appExit();
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
-  // void drawScene(s21::DrawSceneData scene);
   void resetCoords();
   void fillToolsDockWidget();
   void fillPropsDockWidget();
+  void grabScene();
+  void createGifFile();
 };
