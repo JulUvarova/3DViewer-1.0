@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 
-MainWindow::MainWindow(s21::Controller *ctrl, QWidget *parent)
+MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
     : QMainWindow(parent), controller(ctrl) {
   setupUI();
 
@@ -169,7 +169,7 @@ void MainWindow::slotRotateCoordZ(int coordZ) {
 
 void MainWindow::setupUI() {
   // read saved settings
-  userSetting = new UserSetting();
+  userSetting = std::make_shared<UserSetting>();
 
   // Window properties
   setWindowTitle("3DViewer 2.0");
@@ -203,10 +203,11 @@ void MainWindow::setupUI() {
   )");
 
   // Connect controller's scene update callback to viewport
-  controller->SetSceneUpdateCallback([this](const std::shared_ptr<s21::DrawSceneData>& sceneData) {
-    // This will be called whenever the scene is transformed
-    renderWindow->setScene(sceneData);
-  });
+  controller->SetSceneUpdateCallback(
+      [this](const std::shared_ptr<s21::DrawSceneData> &sceneData) {
+        // This will be called whenever the scene is transformed
+        renderWindow->setScene(sceneData);
+      });
 }
 
 void MainWindow::createDockWidgets() {

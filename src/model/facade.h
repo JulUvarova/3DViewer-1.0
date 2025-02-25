@@ -1,120 +1,61 @@
 #pragma once
 
+#include <functional>
+
 #include "filereader.h"
 #include "scene.h"
 #include "scene_parameters.h"
-#include <functional>
 
 namespace s21 {
 
 class Facade {
  public:
   // Define a callback type for scene updates
-  using SceneUpdateCallback = std::function<void(const std::shared_ptr<DrawSceneData>&)>;
-  
-  Facade() {
-    fileReader_ = std::make_unique<FileReader>();
-    sceneParam_ = std::make_unique<SceneParameters>();
+  using SceneUpdateCallback =
+      std::function<void(const std::shared_ptr<DrawSceneData> &)>;
+
+  Facade(const Facade &other) = delete;
+  Facade(Facade &&other) = delete;
+  void operator=(const Facade &other) = delete;
+
+  static std::shared_ptr<Facade> GetInstance() {
+    if (!instance_) {
+      instance_ = std::shared_ptr<Facade>(new Facade());
+      LogInfoOnce << "Create facade" << std::endl;
+    }
+    return instance_;
   }
 
-  ~Facade() {}
+  ~Facade() { LogInfoOnce << "Delete facade" << std::endl; };
 
   // Set callback for scene updates
-  void SetSceneUpdateCallback(SceneUpdateCallback callback) {
+  inline void SetSceneUpdateCallback(SceneUpdateCallback callback) {
     sceneUpdateCallback_ = callback;
   }
 
-  std::shared_ptr<DrawSceneData> LoadScene(const char *path) {
-    scene_.reset();
-    scene_ = std::make_unique<Scene>();
-    auto sceneData = scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
-    
-    // Store the initial scene data
-    if (sceneData) {
-      currentSceneData_ = sceneData;
-    }
-    
-    return sceneData;
-  }
+  std::shared_ptr<DrawSceneData> LoadScene(const char *path);
 
-  void resetScenePosition() {
-    if (!scene_) return;
+  void resetScenePosition();
 
-    sceneParam_ = std::make_unique<SceneParameters>();
-    TransformScene();
-  }
+  void Scale(const float value);
 
-  void Scale(const float value) {
-    if (!scene_) return;
+  void ScaleX(const float value);
 
-    sceneParam_->SetScaleX(value);
-    sceneParam_->SetScaleY(value);
-    sceneParam_->SetScaleZ(value);
-    TransformScene();
-  }
+  void ScaleY(const float value);
 
-  void ScaleX(const float value) {
-    if (!scene_) return;
+  void ScaleZ(const float value);
 
-    sceneParam_->SetScaleX(value);
-    TransformScene();
-  }
+  void MoveX(const float value);
 
-  void ScaleY(const float value) {
-    if (!scene_) return;
+  void MoveY(const float value);
 
-    sceneParam_->SetScaleY(value);
-    TransformScene();
-  }
+  void MoveZ(const float value);
 
-  void ScaleZ(const float value) {
-    if (!scene_) return;
+  void RotateX(const float value);
 
-    sceneParam_->SetScaleZ(value);
-    TransformScene();
-  }
+  void RotateY(const float value);
 
-  void MoveX(const float value) {
-    if (!scene_) return;
-
-    sceneParam_->SetLocationX(value);
-    TransformScene();
-  }
-
-  void MoveY(const float value) {
-    if (!scene_) return;
-
-    sceneParam_->SetLocationY(value);
-    TransformScene();
-  }
-
-  void MoveZ(const float value) {
-    if (!scene_) return;
-
-    sceneParam_->SetLocationZ(value);
-    TransformScene();
-  }
-
-  void RotateX(const float value) {
-    if (!scene_) return;
-
-    sceneParam_->SetRotationX(value);
-    TransformScene();
-  }
-
-  void RotateY(const float value) {
-    if (!scene_) return;
-
-    sceneParam_->SetRotationY(value);
-    TransformScene();
-  }
-
-  void RotateZ(const float value) {
-    if (!scene_) return;
-
-    sceneParam_->SetRotationZ(value);
-    TransformScene();
-  }
+  void RotateZ(const float value);
 
  private:
   std::unique_ptr<FileReader> fileReader_;
@@ -122,28 +63,10 @@ class Facade {
   std::unique_ptr<SceneParameters> sceneParam_;
   std::shared_ptr<DrawSceneData> currentSceneData_;
   SceneUpdateCallback sceneUpdateCallback_;
+  static std::shared_ptr<Facade> instance_;
 
-  // DrawSceneData DrawScene() { return scene_->DrawScene(); }
+  Facade();
 
-  void TransformScene() {
-    Mat4f move_mat = TransformMatrixBuilder::CreateMoveMatrix(
-        sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-        sceneParam_->GetLocationZ());
-    Mat4f rotate_mat = TransformMatrixBuilder::CreateRotationMatrix(
-        sceneParam_->GetRotationX(), sceneParam_->GetRotationY(),
-        sceneParam_->GetRotationZ());
-    Mat4f scale_mat = TransformMatrixBuilder::CreateScaleMatrix(
-        sceneParam_->GetScaleX(), sceneParam_->GetScaleY(),
-        sceneParam_->GetScaleZ());
-    Mat4f transform_mat = scale_mat * move_mat * rotate_mat;
-    scene_->TransformSceneMeshData(transform_mat);
-    
-    // Notify about the update if callback is set
-    if (sceneUpdateCallback_ && currentSceneData_) {
-      sceneUpdateCallback_(currentSceneData_);
-    }
-  }
-
+  void TransformScene();
 };
 }  // namespace s21
-
