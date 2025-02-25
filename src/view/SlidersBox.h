@@ -142,7 +142,6 @@ class SlidersBox : public QWidget {
  private:
   void resetSlider(Slider *slider) {
     slider->setValue(kMiddle);
-    Q_EMIT signalChangeX(slider->value());
   }
 
   void labelChangeX() {
