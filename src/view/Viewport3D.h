@@ -42,6 +42,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   void setScene(std::shared_ptr<s21::DrawSceneData> sc) {
     scene = std::move(sc);
     needBufferUpdate = true;
+    update(); // Request a repaint
   }
 
   // убирают кнопку проекции для скрина
