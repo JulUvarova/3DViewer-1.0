@@ -48,6 +48,8 @@ class Facade {
     if (!scene_) return;
 
     sceneParam_->SetScaleX(value);
+    sceneParam_->SetScaleY(value);
+    sceneParam_->SetScaleZ(value);
     TransformScene();
   }
 
