@@ -1,88 +1,77 @@
 #include "scene.h"
 
 namespace s21 {
-DrawSceneData* Scene::LoadSceneMeshData(OBJData obj_data) {
-  // initial point coordinates
-  scene_mesh_data_.vertexes.assign(obj_data.vertices.begin(),
-                                   obj_data.vertices.end());
-  // transformed point coordinates
-  // scene_mesh_data_.transformed_vertexes.assign(obj_data.vertices.begin(),
-  //                                              obj_data.vertices.end());
-  // vertices for render
-  draw_scene_data_.vertices.reserve(scene_mesh_data_.vertexes.size());
+std::shared_ptr<DrawSceneData> Scene::LoadSceneMeshData(OBJData obj_data) {
+  draw_scene_data_ = std::make_shared<DrawSceneData>();
+  // Store initial mesh vetrex coordinates
+  mesh_vertexes_.assign(obj_data.vertices.begin(), obj_data.vertices.end());
 
-  for (auto& point : scene_mesh_data_.vertexes) {
-    draw_scene_data_.vertices.push_back(point.x);
-    draw_scene_data_.vertices.push_back(point.y);
-    draw_scene_data_.vertices.push_back(point.z);
+  // Vertices for render
+  draw_scene_data_->vertices.reserve(mesh_vertexes_.size() * 3);
+
+  // Flatten vertices into x,y,z components
+  for (const auto& [x, y, z, w] : mesh_vertexes_) {
+    draw_scene_data_->vertices.insert(draw_scene_data_->vertices.end(),
+                                     {x, y, z});
   }
 
-  // edges collections with looping on the first element
-  for (const auto& object : obj_data.objects) {
-    for (const auto& mesh : object.meshes) {
-      for (const auto& face : mesh.faces) {
-        std::vector<int> face_vertices{};
-        face_vertices.reserve(face.vertices.size());
-        for (const auto& vertex : face.vertices) {
-          face_vertices.push_back(vertex.v);
-        }
-        //! Оно тут нужно? Не меняется ведь
-        // Edges for meshData
-        scene_mesh_data_.face_vertex_indices.push_back(face_vertices);
+  // Process mesh faces and edges using range-based iteration
+  auto processFace = [this](const Face& face) {
+    size_t vertices_size = face.vertices.size();
+    if (vertices_size >= 2) {
+      for (size_t i = 0; i < vertices_size; ++i) {
+        draw_scene_data_->vertex_indices.push_back(face.vertices[i].v);
+        draw_scene_data_->vertex_indices.push_back(
+            face.vertices[(i + 1) % vertices_size].v);
       }
     }
-  }
-  // Edges for render with looping on the first element
-  for (auto& face : scene_mesh_data_.face_vertex_indices) {
-    for (size_t i = 0; i < face.size(); ++i) {
-      draw_scene_data_.vertex_indices.push_back(face[i]);
-      if (i == (face.size() - 1))
-        draw_scene_data_.vertex_indices.push_back(face[0]);
-      else
-        draw_scene_data_.vertex_indices.push_back(face[i + 1]);
+  };
+
+  for (const auto& object : obj_data.objects) {
+    for (const auto& mesh : object.meshes) {
+      std::for_each(mesh.faces.begin(), mesh.faces.end(), processFace);
     }
   }
-  // create data for drawing
-  draw_scene_data_.info = obj_data.toString();
 
-  return &draw_scene_data_;
+  draw_scene_data_->info = obj_data.toString();
+
+  return draw_scene_data_;
 }
 
 void Scene::TransformSceneMeshData(Mat4f& transform_matrix) {
-  // transform mesh
-  size_t i = 0;
-  for (auto& vertex : scene_mesh_data_.vertexes) {
-    // scene_mesh_data_.transformed_vertexes[i] = vertex * transform_matrix;
-    auto [x,y,z, w] = vertex * transform_matrix;
-    
-    // rewrite new vertexes for render
-    draw_scene_data_.vertices[i*3] = x;
-    draw_scene_data_.vertices[i*3 + 1] = y;
-    draw_scene_data_.vertices[i*3 + 2] = z;
+  if (!draw_scene_data_) return;
+  const size_t vertexCount = mesh_vertexes_.size();
 
-    ++i;
+  LogInfoOnce << "First transform..." << std::endl;
+  size_t num_threads = std::thread::hardware_concurrency();  // Auto-detect
+  num_threads = (num_threads == 0) ? 1 : num_threads;        // Handle failure
+
+  LogInfoOnce << "Threads count: " << num_threads << std::endl;
+  const size_t chunk_size = (vertexCount + num_threads - 1) / num_threads;
+
+  std::vector<std::thread> threads;
+  threads.reserve(num_threads);
+
+  // Create and launch threads
+  for (size_t i = 0; i < num_threads; ++i) {
+    const size_t start = i * chunk_size;
+    const size_t end = std::min(start + chunk_size, vertexCount);
+
+    // Skip empty chunks if vertexCount < num_threads
+    if (start >= end) break;
+
+    threads.emplace_back([this, &transform_matrix, start, end] {
+      for (size_t j = start; j < end; ++j) {
+        auto [x, y, z, w] = mesh_vertexes_[j] * transform_matrix;
+        draw_scene_data_->vertices[j * 3] = x;
+        draw_scene_data_->vertices[j * 3 + 1] = y;
+        draw_scene_data_->vertices[j * 3 + 2] = z;
+      }
+    });
+  }
+  // Wait for all threads to complete
+  for (auto& thread : threads) {
+    thread.join();
   }
 }
-// DrawSceneData& Scene::DrawScene() {
-//   draw_scene_data_.vertices.reserve(
-//       scene_mesh_data_.transformed_vertexes.size());
-
-//   for (auto& point : scene_mesh_data_.transformed_vertexes) {
-//     draw_scene_data_.vertices.push_back(point.x);
-//     draw_scene_data_.vertices.push_back(point.y);
-//     draw_scene_data_.vertices.push_back(point.z);
-//   }
-
-//   for (auto& face : scene_mesh_data_.face_vertex_indices) {
-//     for (size_t i = 0; i < face.size(); ++i) {
-//       draw_scene_data_.vertex_indices.push_back(face[i]);
-//       if (i == face.size() - 1)
-//         scene.vertex_indices.push_back(face[0]);
-//       else
-//         scene.vertex_indices.push_back(face[i + 1]);
-//     }
-//   }
-//   scene.info = scene_mesh_data_.obj_info;
-//   return scene;
-// }
 }  // namespace s21

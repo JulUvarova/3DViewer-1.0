@@ -1,5 +1,4 @@
-#ifndef FACADE_H
-#define FACADE_H
+#pragma once
 
 #include "filereader.h"
 #include "scene.h"
@@ -10,28 +9,23 @@ namespace s21 {
 class Facade {
  public:
   Facade() {
-    fileReader_ = new FileReader();
-    sceneParam_ = new SceneParameters();
-  }
+    fileReader_ = std::make_unique<FileReader>();
+    sceneParam_ = std::make_unique<SceneParameters>();  }
 
   ~Facade() {
-    delete fileReader_;
-    delete scene_;
-    delete sceneParam_;
   }
 
-  DrawSceneData* LoadScene(const char *path) {
-    if (scene_) delete scene_;
-
-    scene_ = new Scene();
-    return scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
+  std::shared_ptr<DrawSceneData> LoadScene(const char *path) {
+    scene_.reset();
+    scene_ = std::make_unique<Scene>();
     // TODO проверка загрузилась ли сцена
+    return scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
   }
 
   void resetScenePosition() {
     if (!scene_) return;
 
-    sceneParam_ = std::move(new SceneParameters());
+    sceneParam_ = std::make_unique<SceneParameters>();  // Fix: Use make_unique
     TransformScene();
   }
 
@@ -106,9 +100,9 @@ class Facade {
   }
 
  private:
-  FileReader *fileReader_;
-  Scene *scene_{nullptr};
-  SceneParameters *sceneParam_;
+  std::unique_ptr<FileReader> fileReader_;
+  std::unique_ptr<Scene> scene_;
+  std::unique_ptr<SceneParameters> sceneParam_;
 
   // DrawSceneData DrawScene() { return scene_->DrawScene(); }
 
@@ -126,20 +120,6 @@ class Facade {
     scene_->TransformSceneMeshData(transform_mat);
   }
 
-  // void MoveScene(float x, float y, float z) {
-  //   Mat4f mat = TransformMatrixBuilder::CreateMoveMatrix(x, y, z);
-  //   scene_->TransformSceneMeshData(mat);
-  // }
-
-  // void RotateScene(float x, float y, float z) {
-  //   Mat4f mat = TransformMatrixBuilder::CreateRotationMatrix(x, y, z);
-  //   scene_->TransformSceneMeshData(mat);
-  // }
-
-  // void ScaleScene(float x, float y, float z) {
-  //   Mat4f mat = TransformMatrixBuilder::CreateScaleMatrix(x, y, z);
-  //   scene_->TransformSceneMeshData(mat);
-  // }
 };
 }  // namespace s21
-#endif  // FACADE_H
+

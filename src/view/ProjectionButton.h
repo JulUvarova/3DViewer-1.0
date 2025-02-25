@@ -22,7 +22,7 @@ class ProjectionButton : public QPushButton {
 
   bool isParallelProjection() { return isParallel; }
   
- signals:
+ Q_SIGNALS:
   void signalChangeProjection();
 
  private:
@@ -36,6 +36,6 @@ class ProjectionButton : public QPushButton {
     } else {
       setIcon(QIcon("./view/recourses/centralproj1.png"));
     }
-    emit signalChangeProjection();
+    Q_EMIT signalChangeProjection();
   }
 };

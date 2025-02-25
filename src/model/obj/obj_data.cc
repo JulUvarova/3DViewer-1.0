@@ -1,6 +1,4 @@
 #include "obj_data.h"
-#include "../exceptions.h"
-#include "Logger.h"
 
 namespace s21 {
 

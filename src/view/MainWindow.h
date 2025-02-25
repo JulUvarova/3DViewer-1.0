@@ -31,7 +31,7 @@ class MainWindow : public QMainWindow {
  public:
   MainWindow(s21::Controller *controller, QWidget *parent = nullptr);
 
- public slots:
+ public Q_SLOTS:
   void slotLocationCoordX(int coordX);
   void slotLocationCoordY(int coordY);
   void slotLocationCoordZ(int coordZ);

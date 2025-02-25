@@ -336,7 +336,7 @@ void MainWindow::openFile() {
   // QMessageBox::information(this, tr("Unable to open file"),
   //                          "File is not opened =(");
   resetCoords();
-  s21::DrawSceneData *scene = controller->LoadScene(cstr);
+  auto scene = controller->LoadScene(cstr);
   renderWindow->setScene(scene);
 
   //! check canOpen

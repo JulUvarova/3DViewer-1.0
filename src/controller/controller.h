@@ -22,7 +22,9 @@ class Controller {
   ~Controller() { delete facade_; }
 
   // Upload scene
-  DrawSceneData* LoadScene(const char* filename) { return facade_->LoadScene(filename); }
+  std::shared_ptr<DrawSceneData> LoadScene(const char* filename) {
+    return facade_->LoadScene(filename);
+  }
 
   void ResetScene() { facade_->resetScenePosition(); }
 

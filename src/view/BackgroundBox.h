@@ -24,7 +24,7 @@ class BackgroundBox : public QWidget {
     if (colorDialog->exec() == QDialog::Accepted) {
       color = colorDialog->currentColor();
       setColorButton();
-      emit signalChangeColor(color);
+      Q_EMIT signalChangeColor(color);
     }
   }
 
@@ -35,7 +35,7 @@ class BackgroundBox : public QWidget {
                                QString::number(color.blue()) + ")");
   }
 
- signals:
+ Q_SIGNALS:
   void signalChangeColor(const QColor &color);
 
  public:

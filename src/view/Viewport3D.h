@@ -2,6 +2,7 @@
 #include <QMouseEvent>
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
+#include <memory>
 
 #include "../model/scene.h"
 #include "ProjectionButton.h"
@@ -16,7 +17,7 @@ enum class MouseAction {
 class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   Q_OBJECT
 
- signals:
+ Q_SIGNALS:
   void signalChangeSize(const int w, const int h);
   void signalChangeProjection(const bool isParallel);
   void signalChangeMoveCoords(std::pair<int, int> coordXY);
@@ -36,7 +37,9 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   // TODO как-то эту хрень оптимизировать, начиная со сцены в фасаде
-  void setScene(s21::DrawSceneData *sc) { scene = sc; }
+  void setScene(std::shared_ptr<s21::DrawSceneData> sc) {
+    scene = std::move(sc);
+  }
 
   // убирают кнопку проекции для скрина
   void beforeGrab() { projectionButton->setVisible(false); }
@@ -96,7 +99,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
  private:
   ProjectionButton *projectionButton;
   UserSetting *renderSetting;
-  s21::DrawSceneData *scene{nullptr};
+  std::shared_ptr<s21::DrawSceneData> scene;
 
   // catch mouse press and mouse release
   MouseAction mouseAction = MouseAction::kNone;
@@ -124,7 +127,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
         int shiftY = -((pos.y() * 200 / height() - 100) -
                        (mousePos.y() * 200 / height() - 100));
 
-        emit signalChangeMoveCoords(
+        Q_EMIT signalChangeMoveCoords(
             std::pair<int, int>{2 * shiftX, 2 * shiftY});
       }
       // middle will rotate object
@@ -134,7 +137,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
         int shiftY = -((pos.y() * 360 / height() - 180) -
                        (mousePos.y() * 360 / height() - 180));
 
-        emit signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
+        Q_EMIT signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
       }
       mousePos = pos;
     }
@@ -145,12 +148,12 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   void wheelEvent(QWheelEvent *event) {
-    emit signalChangeScaleCoords(
+    Q_EMIT signalChangeScaleCoords(
         std::pair<int, int>{event->angleDelta().y() / 24, 0});  // 5 ед
   }
 
   void chooseProjection() {
-    GLdouble nearPlane = 1.0;   // ближняя плоскость отсечения
+    GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
     GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
 
     //! Учет пропорции окна
