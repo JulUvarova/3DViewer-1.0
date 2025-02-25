@@ -1,7 +1,6 @@
 #include "controller.h"
 
-std::shared_ptr<s21::Controller> s21::Controller::instance_ = nullptr;
-std::once_flag s21::Controller::initFlag_;
+// std::once_flag s21::Controller::initFlag_;
 
 s21::Controller::Controller() {
   facade_ = s21::Facade::GetInstance();
