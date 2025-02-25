@@ -201,6 +201,12 @@ void MainWindow::setupUI() {
       border: 1px solid #404040;
     }
   )");
+
+  // Connect controller's scene update callback to viewport
+  controller->SetSceneUpdateCallback([this](const std::shared_ptr<s21::DrawSceneData>& sceneData) {
+    // This will be called whenever the scene is transformed
+    renderWindow->setScene(sceneData);
+  });
 }
 
 void MainWindow::createDockWidgets() {
