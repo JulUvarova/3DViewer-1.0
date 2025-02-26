@@ -1,5 +1,4 @@
 #pragma once
-#include <QMouseEvent>
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
@@ -9,35 +8,18 @@
 
 #include "../model/scene.h"
 #include "Logger.h"
-#include "ProjectionButton.h"
 #include "UserSetting.h"
-
-enum class MouseAction {
-  kNone = 0,
-  kLeftButton,
-  kMiddleButton,
-};
 
 class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   Q_OBJECT
 
  Q_SIGNALS:
   void signalChangeSize(const int w, const int h);
-  void signalChangeProjection(const bool isParallel);
-  void signalChangeMoveCoords(std::pair<int, int> coordXY);
-  void signalChangeScaleCoords(std::pair<int, int> coordXY);
-  void signalChangeRotateCoords(std::pair<int, int> coordXY);
 
  public:
   Viewport3D(std::shared_ptr<UserSetting> setting, QWidget *parent = nullptr)
       : QOpenGLWidget(parent) {
     renderSetting = setting;
-
-    projectionButton = new ProjectionButton(this);
-
-    // redraw if projection changed
-    connect(projectionButton, &ProjectionButton::signalChangeProjection, this,
-            &Viewport3D::repaint);
   }
 
   void setScene(std::shared_ptr<s21::DrawSceneData> sc) {
@@ -46,20 +28,14 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     update();  // Request a repaint
   }
 
-  // убирают кнопку проекции для скрина
-  void beforeGrab() {
-    projectionButton->setVisible(false);
-    updateGif();
-  }
-  void afterGrab() {
-    projectionButton->setVisible(true);
-    updateProjectionMatrix();
-  }
+  //! убирают кнопку проекции для скрина
+  void beforeGrab() { updateGif(); }
+  void afterGrab() { updateProjectionMatrix(); }
+
   void UpdateModelMatrix() {
     modelMatrix.setToIdentity();
     auto [tx, ty, tz, rx, ry, rz, sx, sy, sz] =
         s21::Controller::GetInstance()->GetSceneParameters();
-
 
     // Apply translation
     modelMatrix.translate(tx, ty, tz);
@@ -73,7 +49,11 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
                        0.0f);  // Rotate around Y-axis
     modelMatrix.rotate(qRadiansToDegrees(rz), 0.0f, 0.0f,
                        1.0f);  // Rotate around Z-axis
+  }
 
+  void repaint() {
+    updateProjectionMatrix();
+    update();
   }
 
  protected:
@@ -97,9 +77,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
   void resizeGL(int w, int h) override {
     glViewport(0, 0, w, h);
-
-    // resize button
-    projectionButton->setLocation(width());
     updateProjectionMatrix();
   }
 
@@ -188,13 +165,8 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
  private:
-  ProjectionButton *projectionButton;
   std::shared_ptr<UserSetting> renderSetting;
   std::shared_ptr<s21::DrawSceneData> scene;
-
-  // catch mouse press and mouse release
-  MouseAction mouseAction = MouseAction::kNone;
-  QPoint mousePos;
 
   // New members for modern OpenGL
   QOpenGLVertexArrayObject vao;
@@ -212,53 +184,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
   // Frustum culling
   QVector4D frustumPlanes[6];  // Left, Right, Bottom, Top, Near, Far
-
-  void mousePressEvent(QMouseEvent *event) override {
-    if (event->button() == Qt::LeftButton)
-      mouseAction = MouseAction::kLeftButton;
-    else if (event->button() == Qt::MiddleButton)
-      mouseAction = MouseAction::kMiddleButton;
-
-    if (mouseAction != MouseAction::kNone) {
-      mousePos = event->pos();
-    }
-  }
-
-  void mouseMoveEvent(QMouseEvent *event) override {
-    if (mouseAction != MouseAction::kNone) {
-      QPoint pos = event->pos();
-
-      // left will move object
-      if (mouseAction == MouseAction::kLeftButton) {
-        int shiftX = (pos.x() * 200 / width() - 100) -
-                     (mousePos.x() * 200 / width() - 100);
-        int shiftY = -((pos.y() * 200 / height() - 100) -
-                       (mousePos.y() * 200 / height() - 100));
-
-        Q_EMIT signalChangeMoveCoords(
-            std::pair<int, int>{2 * shiftX, 2 * shiftY});
-      }
-      // middle will rotate object
-      if (mouseAction == MouseAction::kMiddleButton) {
-        int shiftX = -((pos.x() * 360 / width() - 180) -
-                       (mousePos.x() * 360 / width() - 180));
-        int shiftY = -((pos.y() * 360 / height() - 180) -
-                       (mousePos.y() * 360 / height() - 180));
-
-        Q_EMIT signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
-      }
-      mousePos = pos;
-    }
-  }
-
-  void mouseReleaseEvent([[maybe_unused]] QMouseEvent *event) override {
-    mouseAction = MouseAction::kNone;
-  }
-
-  void wheelEvent(QWheelEvent *event) {
-    Q_EMIT signalChangeScaleCoords(
-        std::pair<int, int>{event->angleDelta().y() / 24, 0});  // 5 ед
-  }
 
   // void chooseProjection() {
   //   GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
@@ -325,11 +250,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   //     glDisable(GL_POINT_SMOOTH);
   //   }
   // }
-
-  void repaint() {
-    updateProjectionMatrix();
-    update();
-  }
 
   // Modern OpenGL
   // Initialize shaders
@@ -419,7 +339,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     float aspect = static_cast<float>(width()) / (width() * 3 / 4);
 
-    if (projectionButton->isParallelProjection()) {
+    if (renderSetting->isParallelProjectrion()) {
       // Orthographic projection
       float size = 1.0f;
       projectionMatrix.ortho(-size * aspect, size * aspect, -size, size, 1.0f,
@@ -442,10 +362,8 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     projectionMatrix.setToIdentity();
 
     float aspect = static_cast<float>(width()) / height();
-    //! режим гиф
-    // float aspect = static_cast<float>(width()) / (width() * 3 / 4);
 
-    if (projectionButton->isParallelProjection()) {
+    if (renderSetting->isParallelProjectrion()) {
       // Orthographic projection
       float size = 1.0f;
       projectionMatrix.ortho(-size * aspect, size * aspect, -size, size, 1.0f,
@@ -523,10 +441,5 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
                                  clipMatrix(2, 3) - clipMatrix(2, 2),
                                  clipMatrix(3, 3) - clipMatrix(3, 2))
                            .normalized();
-  }
-
-  void chooseProjection() {
-    // This is now handled by updateProjectionMatrix()
-    updateProjectionMatrix();
   }
 };

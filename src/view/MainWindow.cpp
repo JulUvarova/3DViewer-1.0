@@ -1,8 +1,5 @@
 #include "MainWindow.h"
 
-#include <chrono>
-#include <thread>
-
 MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
     : QMainWindow(parent), controller(ctrl) {
   setupUI();
@@ -34,13 +31,13 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
   connect(
       locationSlidersBox, &SlidersBox::signalChangeZ, this,
       [this](int value) { slotTransform(TransformType::LocationZ, value); });
-  connect(renderWindow, &Viewport3D::signalChangeMoveCoords, locationSlidersBox,
+  connect(centralWindow, &CentralWindow::signalChangeMoveCoords, locationSlidersBox,
           &SlidersBox::setCoords);
 
   // scale coordinates
   connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
           [this](int value) { slotTransform(TransformType::Scale, value); });
-  connect(renderWindow, &Viewport3D::signalChangeScaleCoords, scaleSlidersBox,
+  connect(centralWindow, &CentralWindow::signalChangeScaleCoords, scaleSlidersBox,
           &SlidersBox::setCoords);
 
   // rotate coordinates
@@ -48,15 +45,13 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
   connect(
       rotateSlidersBox, &SlidersBox::signalChangeX, this,
       [this](int value) { slotTransform(TransformType::RotationX, value); });
-
   connect(
       rotateSlidersBox, &SlidersBox::signalChangeY, this,
       [this](int value) { slotTransform(TransformType::RotationY, value); });
-
   connect(
       rotateSlidersBox, &SlidersBox::signalChangeZ, this,
       [this](int value) { slotTransform(TransformType::RotationZ, value); });
-  connect(renderWindow, &Viewport3D::signalChangeRotateCoords, rotateSlidersBox,
+  connect(centralWindow, &CentralWindow::signalChangeRotateCoords, rotateSlidersBox,
           &SlidersBox::setCoords);
 
   // vertex prop
@@ -76,6 +71,19 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
           &MainWindow::slotEdgesColor);
   connect(backBox, &BackgroundBox::signalChangeColor, this,
           &MainWindow::slotBackgroundColor);
+
+  // perspective
+  connect(centralProj, &QRadioButton::clicked, this, [this]() {
+    userSetting->setProjection(false);
+    renderWindow->repaint();
+  });
+  connect(perspectiveProj, &QRadioButton::clicked, this, [this]() {
+    userSetting->setProjection(true);
+    renderWindow->repaint();
+  });
+
+  // connect(sceneInfoButton, &QPushButton::clicked, propsObjectsInfo,
+  //         &QLabel::show);
 }
 
 void MainWindow::resetCoords() {
@@ -84,12 +92,6 @@ void MainWindow::resetCoords() {
   scaleSlidersBox->resetCoords();
   locationSlidersBox->resetCoords();
   rotateSlidersBox->resetCoords();
-
-  renderWindow->update();
-}
-
-void MainWindow::slotProjectionType(const bool isParallel) {
-  userSetting->setProjection(isParallel);
 
   renderWindow->update();
 }
@@ -174,11 +176,12 @@ void MainWindow::setupUI() {
 
   // Central 3D viewport
   renderWindow = new Viewport3D(userSetting, this);
-  setCentralWidget(renderWindow);
+  centralWindow = new CentralWindow(renderWindow);
+  setCentralWidget(centralWindow);
 
   // UI components
   createDockWidgets();
-  createMenuAndToolbars();
+  createStatusBar();
 
   // Apply dark theme
   setStyleSheet(R"(
@@ -209,53 +212,27 @@ void MainWindow::setupUI() {
 
 void MainWindow::createDockWidgets() {
   // Left dock (Tools)
-  toolsDock = new QDockWidget("Tools", this);
+  toolsDock = new QDockWidget(this);
   toolsDock->setObjectName("toolsDock");
   toolsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   addDockWidget(Qt::LeftDockWidgetArea, toolsDock);
-
-  fillToolsDockWidget();
-
-  propsDock = new QDockWidget("Properties", this);
-  propsDock->setObjectName("propsDock");
-  propsDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  propsDock->setWidget(new QWidget);
-  addDockWidget(Qt::RightDockWidgetArea, propsDock);
-
-  fillPropsDockWidget();
-
-  // Enable docking features
-  setDockOptions(QMainWindow::AllowNestedDocks | QMainWindow::AllowTabbedDocks);
-}
-
-void MainWindow::fillPropsDockWidget() {
-  // TODO отдельной кнопкой с открытием окна информации?
-  QWidget *propBox = new QWidget();
-  propBox->setLayout(new QVBoxLayout);
-
-  propsFileInfo = new QLabel();
-  propsObjectsInfo = new QLabel();
-
-  QGroupBox *fileNameBox = new QGroupBox("File name:");
-  fileNameBox->setLayout(new QHBoxLayout);
-  fileNameBox->layout()->addWidget(propsFileInfo);
-
-  QGroupBox *infoBox = new QGroupBox("Objects info:");
-  infoBox->setLayout(new QHBoxLayout);
-  infoBox->layout()->addWidget(propsObjectsInfo);
-
-  propBox->layout()->addWidget(fileNameBox);
-  propBox->layout()->addWidget(infoBox);
-  propsDock->setWidget(propBox);
-}
-
-void MainWindow::fillToolsDockWidget() {
+  // Create sliders
   locationSlidersBox =
       new SlidersBox("Location", std::pair<int, int>{-100, 100}, 3, this);
   rotateSlidersBox =
       new SlidersBox("Rotate", std::pair<int, int>{-180, 180}, 3, this);
   scaleSlidersBox =
       new SlidersBox("Scale", std::pair<int, int>{1, 200}, 1, this);
+
+  // Create projection choose
+  QGroupBox *projBox = new QGroupBox("Projection", this);
+  centralProj = new QRadioButton("Central", this);
+  perspectiveProj = new QRadioButton("Perspective", this);
+  QVBoxLayout *projLayout = new QVBoxLayout();
+  projLayout->addWidget(centralProj);
+  projLayout->addWidget(perspectiveProj);
+  projBox->setLayout(projLayout);
+  perspectiveProj->setChecked(true);
 
   // Create verticesBox
   QStringList verticesLst;
@@ -290,6 +267,7 @@ void MainWindow::fillToolsDockWidget() {
   toolBox->layout()->addWidget(rotateSlidersBox);
   toolBox->layout()->addWidget(scaleSlidersBox);
   toolBox->layout()->addWidget(resetCoordsButton);
+  toolBox->layout()->addWidget(projBox);
   toolBox->layout()->addWidget(verticesBox);
   toolBox->layout()->addWidget(edgesBox);
   toolBox->layout()->addWidget(backBox);
@@ -298,30 +276,35 @@ void MainWindow::fillToolsDockWidget() {
   toolBox->layout()->addWidget(resetElemsButton);
 
   toolsDock->setWidget(toolBox);
+
+  // block close
+  toolsDock->setFeatures(QDockWidget::DockWidgetMovable |
+                         QDockWidget::DockWidgetFloatable);
 }
 
-void MainWindow::createMenuAndToolbars() {
-  // Menu bar
-  menuBar = new QMenuBar(this);
-  QMenu *fileMenu = menuBar->addMenu("File");
-  fileMenu->addAction("Open", this, &MainWindow::openFile);
-  fileMenu->addAction("Save image..", this, &MainWindow::saveImage);
-  fileMenu->addAction("Custom gif", this, &MainWindow::saveCustomGif);
-  fileMenu->addAction("Cycled gif", this, &MainWindow::saveCycledGif);
-  fileMenu->addSeparator();
-  fileMenu->addAction("Exit", this, &MainWindow::appExit);
-  //! QIcon(tr("path/name.smth")) - иконки
+void MainWindow::createStatusBar() {
+  QStatusBar *propBox = new QStatusBar(this);
 
-  QMenu *settingMenu = menuBar->addMenu("Setting");
-  settingMenu->addAction("Restore layout", this, &MainWindow::restoreLayout);
-  settingMenu->addSeparator();
-  settingMenu->addAction("Save render settings", this,
-                         &MainWindow::saveUserSettings);
-  settingMenu->addAction("Restore render settings", this,
-                         &MainWindow::restoreUserSettings);
-  settingMenu->addAction("Reset render settings", this,
-                         &MainWindow::resetUserSettings);
-  setMenuBar(menuBar);
+  propsFileInfo = new QLabel(propBox);
+  propsFileInfo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  propsFileInfo->setWordWrap(true);
+  propsFileInfo->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
+  sceneInfoButton = new QPushButton("Scene Info", propBox);
+  sceneInfoButton->setFixedSize(80, 30);
+
+  QLabel *fileNameLabel = new QLabel("File:", propBox);
+  fileNameLabel->adjustSize();
+
+  warningInfo = new QLabel("REZERVED", propBox);
+
+  propBox->addWidget(warningInfo);
+  propBox->addPermanentWidget(fileNameLabel);
+  propBox->addPermanentWidget(propsFileInfo);
+  propBox->addPermanentWidget(sceneInfoButton);
+
+  setStatusBar(propBox);
+  statusBar()->setSizeGripEnabled(false);
 }
 
 void MainWindow::appExit() {
@@ -347,7 +330,7 @@ void MainWindow::openFile() {
   // if (!isSaved)
 
   propsFileInfo->setText(fileName);
-  propsObjectsInfo->setText(QString::fromStdString(scene->info));
+  // propsObjectsInfo->setText(QString::fromStdString(scene->info));
 }
 
 void MainWindow::getFileName(const char *options) {
