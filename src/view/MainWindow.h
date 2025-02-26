@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QRadioButton>
 #include <QSettings>
 #include <QSlider>
 #include <QStatusBar>
@@ -18,6 +19,7 @@
 
 #include "../controller/controller.h"
 #include "BackgroundBox.h"
+#include "CentralWindow.h"
 #include "ElemBox.h"
 #include "ProjectionButton.h"
 #include "SlidersBox.h"
@@ -55,21 +57,19 @@ class MainWindow : public QMainWindow {
 
   void slotBackgroundColor(const QColor &color);
 
-  void slotProjectionType(const bool isParallel);
-
  private:
   // UI elements
   QDockWidget *toolsDock, *propsDock;
-  QLabel *propsFileInfo, *propsObjectsInfo;
+  QLabel *propsFileInfo, *propsObjectsInfo, *warningInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
   QMenuBar *menuBar;
+  CentralWindow *centralWindow;
   Viewport3D *renderWindow;
-  QPushButton *resetCoordsButton;
-  QPushButton *resetElemsButton;
-  QPushButton *saveElemsButton;
-  QPushButton *restoreElemsButton;
+  QPushButton *resetCoordsButton, *resetElemsButton, *saveElemsButton,
+      *restoreElemsButton, *sceneInfoButton;
+  QRadioButton *centralProj, *perspectiveProj;
 
   // Controller
   std::shared_ptr<s21::Controller> controller;
@@ -84,7 +84,6 @@ class MainWindow : public QMainWindow {
 
   void setupUI();
   void createDockWidgets();
-  void createMenuAndToolbars();
   void saveLayout();
   void restoreLayout();
   void saveUserSettings();
@@ -99,8 +98,7 @@ class MainWindow : public QMainWindow {
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
   void resetCoords();
-  void fillToolsDockWidget();
-  void fillPropsDockWidget();
+  void createStatusBar();
   void grabScene();
   void createGifFile();
 };

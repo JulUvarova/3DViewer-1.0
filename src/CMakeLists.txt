@@ -21,11 +21,12 @@ set(PROJECT_SOURCES
         
         view/MainWindow.cpp
         view/MainWindow.h
+        view/CentralWindow.h
         view/Viewport3D.h
         view/SlidersBox.h
         view/ElemBox.h
         view/BackgroundBox.h
-        view/ProjectionButton.h
+    
         
         model/facade.h
         model/facade.cc

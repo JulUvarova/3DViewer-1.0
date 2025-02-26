@@ -16,23 +16,12 @@ class Controller {
   Controller(const Controller &other) = delete;
   Controller(Controller &&other) = delete;
   void operator=(const Controller &other) = delete;
-  ~Controller() {
-    LogInfo << "Delete controller" << std::endl;
-  };
+  ~Controller() = default;
 
-  static std::shared_ptr<Controller> GetInstance()
-  {
+  static std::shared_ptr<Controller> GetInstance() {
     static auto instance = std::shared_ptr<Controller>(new Controller);
     return instance;
   }
-
-  // static std::shared_ptr<Controller> GetInstance() {
-  //   std::call_once(initFlag_, []() {
-  //     instance_.reset(new Controller());
-  //     LogInfoOnce << "Create controller" << std::endl;
-  //   });
-  //   return instance_;
-  // }
 
   // Set callback for scene updates
   inline void SetSceneUpdateCallback(
@@ -86,14 +75,12 @@ class Controller {
 
   inline std::tuple<float, float, float, float, float, float, float, float,
                     float>
-      GetSceneParameters() {
+  GetSceneParameters() {
     return facade_->GetSceneParameters();
   }
 
-      private : std::shared_ptr<Facade>
-                    facade_;
-  std::shared_ptr<Controller> instance_;
-  // static std::once_flag initFlag_;
+ private:
+  std::shared_ptr<Facade> facade_;
 
   const float kScaleCorrection = 100.0;
   const float kRotationCorrection = 1.0;
