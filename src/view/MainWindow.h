@@ -21,7 +21,6 @@
 #include "BackgroundBox.h"
 #include "ControlWindow.h"
 #include "ElemBox.h"
-#include "ProjectionButton.h"
 #include "SlidersBox.h"
 #include "UserSetting.h"
 #include "Viewport3D.h"
