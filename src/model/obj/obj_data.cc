@@ -64,7 +64,7 @@ void OBJData::Parse(const std::string& filename) {
   size_t size = lseek(fd, 0, SEEK_END);
   char* buffer =
       static_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_PRIVATE, fd, 0));
-      if (buffer == MAP_FAILED) {
+  if (buffer == MAP_FAILED) {
     close(fd);
     LogError << "Failed to map file: " << filename << std::endl;
     throw MeshLoadException("Failed to map file: " + filename);
@@ -96,7 +96,6 @@ void OBJData::Parse(const std::string& filename) {
   LogInfo << "Normals: " << normals.size() << std::endl;
   LogInfo << "Texcoords: " << texcoords.size() << std::endl;
   LogInfo << "Objects: " << objects.size() << std::endl;
-  
 }
 
 void OBJData::ProcessLine(std::string_view line) {

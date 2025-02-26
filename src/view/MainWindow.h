@@ -88,7 +88,7 @@ class MainWindow : public QMainWindow {
   void saveUserSettings();
   void resetUserSettings();
   void restoreUserSettings();
-  void loadScene(const char* filename);
+  void loadScene(const char *filename);
   void saveImage(const char *filename);
   void saveCustomGif(const char *filename);
   void saveCycledGif(const char *filename);

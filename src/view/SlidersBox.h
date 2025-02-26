@@ -119,7 +119,7 @@ class SlidersBox : public QWidget {
     for (int i = 0; i < kSlidersCount; ++i) sliders[i]->setValue(kMiddle);
   }
 
-   void setCoords(std::pair<int, int> coordsXY) {
+  void setCoords(std::pair<int, int> coordsXY) {
     if (coordsXY.first) {
       sliders[0]->setValue(sliders[0]->value() + coordsXY.first);
       values[0]->setText(QString::number(sliders[0]->value()));
@@ -140,9 +140,7 @@ class SlidersBox : public QWidget {
   }
 
  private:
-  void resetSlider(Slider *slider) {
-    slider->setValue(kMiddle);
-  }
+  void resetSlider(Slider *slider) { slider->setValue(kMiddle); }
 
   void labelChangeX() {
     sliders[0]->setValue(values[0]->text().toInt());

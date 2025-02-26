@@ -23,9 +23,7 @@ class UserSetting {
   QByteArray layoutState;
 
  public:
-  UserSetting() {
-    readRenderSettings();
-  }
+  UserSetting() { readRenderSettings(); }
 
   ~UserSetting() = default;
 
@@ -78,7 +76,7 @@ class UserSetting {
     settings.remove("render");
   }
 
-   void saveLayoutSettings() {
+  void saveLayoutSettings() {
     QSettings settings(fileMemory, QSettings::NativeFormat);
 
     settings.beginGroup("layout");
@@ -101,9 +99,7 @@ class UserSetting {
 
   inline QByteArray getLayoutState() const { return layoutState; }
 
-  inline void setLayoutState(QByteArray state) {
-    this->layoutState = state;
-  }
+  inline void setLayoutState(QByteArray state) { this->layoutState = state; }
 
   inline bool isParallelProjectrion() const { return isParallelProjection; }
 

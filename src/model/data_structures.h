@@ -11,7 +11,7 @@ struct Vec2f {
   float x{0.0f}, y{0.0f};
 
   Vec2f() = default;
-  Vec2f(float x, float y) : x(x), y(y) {};
+  Vec2f(float x, float y) : x(x), y(y){};
   Vec2f(const Vec2f&) = default;
   Vec2f& operator=(const Vec2f&) = default;
   Vec2f(Vec2f&&) = default;
@@ -33,7 +33,7 @@ struct Vec3f {
   float x{0.0f}, y{0.0f}, z{0.0f};
 
   Vec3f() = default;
-  Vec3f(float x, float y, float z) : x(x), y(y), z(z) {};
+  Vec3f(float x, float y, float z) : x(x), y(y), z(z){};
   Vec3f(const Vec3f&) {}
   Vec3f& operator=(const Vec3f&) = default;
   Vec3f(Vec3f&&) = default;
@@ -62,7 +62,7 @@ struct Vec4f {
   float x{}, y{}, z{}, w{};
 
   Vec4f() = default;
-  Vec4f(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
+  Vec4f(float x, float y, float z, float w) : x(x), y(y), z(z), w(w){};
   Vec4f(const Vec3f& other) {
     x = other.x;
     y = other.y;

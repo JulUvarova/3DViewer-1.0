@@ -12,7 +12,7 @@ std::shared_ptr<DrawSceneData> Scene::LoadSceneMeshData(OBJData obj_data) {
   // Flatten vertices into x,y,z components
   for (const auto& [x, y, z, w] : mesh_vertexes_) {
     draw_scene_data_->vertices.insert(draw_scene_data_->vertices.end(),
-                                     {x, y, z});
+                                      {x, y, z});
   }
 
   // Process mesh faces and edges using range-based iteration

@@ -17,4 +17,4 @@ class RenderException : public ViewerException {
  public:
   explicit RenderException(const std::string &msg) : ViewerException(msg) {}
 };
-};  // namespace s21    
+};  // namespace s21

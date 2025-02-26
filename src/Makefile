@@ -15,9 +15,15 @@ TRANSFORM_TEST_BIN = test_transform
 
 # Build directory
 BUILD_DIR = build
+INSTALL_DIR = bin
+DIST_DIR = dist
+DIST_NAME = 3DViewer.tar.gz
 
 .PHONY: all clean test gcov_report
 
+#########################################
+#------- Build and run 3DViewr ---------#
+#########################################
 all: 
 	mkdir -p $(BUILD_DIR) && \
 	cd $(BUILD_DIR) && \
@@ -26,7 +32,10 @@ all:
 	# valgrind -q -s --leak-check=full --trace-children=yes --track-origins=yes  --log-file=./VALGRIND ./build/3DViewer
 	./$(BUILD_DIR)/3DViewer
 
-# Use pattern rules for tests
+
+#########################################
+#--------- Build and run Tests ---------#
+#########################################
 test: test_obj_data test_transform
 
 test_obj_data: $(OBJ_DATA_TEST) $(OBJ_DATA_SRC)
@@ -37,6 +46,9 @@ test_transform: $(TRANSFORM_TEST)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 	./$@
 
+#########################################
+#----------- Test coverage -------------#
+#########################################
 gcov_report: clean_coverage
 	# Build and run obj_data test with coverage
 	$(CXX) $(GCOV_FLAGS) $(CXXFLAGS) $(OBJ_DATA_TEST) $(OBJ_DATA_SRC) -o $(OBJ_DATA_TEST_BIN) $(LDFLAGS)
@@ -55,8 +67,69 @@ gcov_report: clean_coverage
 	lcov -a ./$(OBJ_DATA_TEST_BIN)_filtered.info -a ./$(TRANSFORM_TEST_BIN)_filtered.info -o merged_coverage.info
 	genhtml -o report merged_coverage.info
 
+#########################################
+#----------- Installation --------------#
+#########################################
+.PHONY: install uninstall
+install: clean all
+	 cd ../ && mkdir -p $(INSTALL_DIR)
+	 cd ../ && cp -rf src/$(BUILD_DIR)/3DViewer $(INSTALL_DIR)/
+     # copy sample .obj models ???
+uninstall:
+	cd ../ && rm -rf $(INSTALL_DIR)
+
+#########################################
+#----- Create distributive archive -----#
+#########################################
+.PHONY: dist clean_dist
+dist: clean_dist
+	cd ../ && mkdir -p ${DIST_DIR}
+	cd ../ && cp -rf src/controller ${DIST_DIR}/controller
+	cd ../ && cp -rf src/include ${DIST_DIR}/include
+	cd ../ && cp -rf src/model ${DIST_DIR}/model
+	cd ../ && cp -rf src/view ${DIST_DIR}/view
+	cd ../ && cp -rf src/*.cc ${DIST_DIR}/
+	cd ../ && cp -rf src/CMakeLists.txt ${DIST_DIR}/
+	cd ../ && cp -rf src/Makefile ${DIST_DIR}/
+	cd ../ && cp -rf src/Doxyfile ${DIST_DIR}/
+	cd ../ && tar -czvf $(DIST_NAME) ${DIST_DIR}
+	cd ../ && rm -rf ${DIST_DIR}
+
+clean_dist:
+	cd ../ && rm -rf $(DIST_NAME)
+	
+#########################################
+#----------- Documentation -------------#
+#########################################
+dvi: 
+	doxygen
+	open docs/html/index.html
+
+clean_dvi:
+	rm -rf ./docs
+
+#########################################
+#---------------- Checks ---------------#
+#########################################
+.PHONY: check
+check:
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print  -exec clang-format -style='{BasedOnStyle: Google}' -n {} \;
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print  -exec clang-format -style='{BasedOnStyle: Google}' -n {} \;
+
+.PHONY: check_fix
+check_fix:
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
+
 clean:
 	rm -rf $(BUILD_DIR) $(OBJ_DATA_TEST_BIN) $(TRANSFORM_TEST_BIN) report *.info
 
 clean_coverage:
+	rm -rf coverage*
 	rm -f *.gcda *.gcno *.info test_obj_data test_transform
+
+clean_all: clean clean_coverage clean_dist clean_dvi

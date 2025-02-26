@@ -4,8 +4,8 @@
 #include <fstream>
 #include <string>
 
-#include "obj_data.h"
 #include "exceptions.h"
+#include "obj_data.h"
 
 // Helper function to create a temporary OBJ file with given content
 std::string CreateTempObjFile(const std::string& content) {
@@ -79,8 +79,7 @@ TEST(OBJDataParserTest, NormalizeVertices) {
   // Invoke normalization on the parsed vertices.
   objData.Normalize();
 
-  for(const auto& vertex : objData.vertices)
-  {
+  for (const auto& vertex : objData.vertices) {
     EXPECT_GE(vertex.x, -1.0);
     EXPECT_LE(vertex.x, 1.0);
     EXPECT_GE(vertex.y, -1.0);
