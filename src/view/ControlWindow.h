@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QFileDialog>
 #include <QGraphicsDropShadowEffect>  //!
 #include <QHBoxLayout>
 #include <QMenu>
@@ -14,16 +15,17 @@ enum class MouseAction {
   kMiddleButton,
 };
 
-class CentralWindow : public QWidget {
+class ControlWindow : public QWidget {
   Q_OBJECT
 
  public:
-  CentralWindow(QOpenGLWidget* renderWindow, QWidget* parent = nullptr)
+  ControlWindow(QOpenGLWidget* renderWindow, QWidget* parent = nullptr)
       : QWidget(parent) {
     // Основной layout
     QGridLayout* mainLayout = new QGridLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
+    // для отрисовки, но напрямую тут не используем
     mainLayout->addWidget(renderWindow);
 
     // контейнер для кнопок
@@ -34,7 +36,6 @@ class CentralWindow : public QWidget {
     buttonsLayout->setSpacing(10);
 
     openButton = new QPushButton("Open", this);
-    saveButton = new QPushButton("Setings", this);
     jpegButton = new QPushButton("jpeg", this);
     bmpButton = new QPushButton("bmp", this);
     customGifButton = new QPushButton("gif1", this);
@@ -58,14 +59,12 @@ class CentralWindow : public QWidget {
         "}";
     openButton->setStyleSheet(buttonStyle);
     // openButton->setIconSize(QSize(30, 30));
-    saveButton->setStyleSheet(buttonStyle);
     jpegButton->setStyleSheet(buttonStyle);
     bmpButton->setStyleSheet(buttonStyle);
     customGifButton->setStyleSheet(buttonStyle);
     cycledGifButton->setStyleSheet(buttonStyle);
 
     buttonsLayout->addWidget(openButton);
-    buttonsLayout->addWidget(saveButton);
     buttonsLayout->addWidget(jpegButton);
     buttonsLayout->addWidget(bmpButton);
     buttonsLayout->addWidget(customGifButton);
@@ -77,7 +76,7 @@ class CentralWindow : public QWidget {
     // отступы от краев
     buttonsLayout->setContentsMargins(0, 10, 10, 0);
 
-    //! shadow
+    //! shadow for buttons
     // buttonContainer->setStyleSheet(
     //     "QWidget {"
     //     "  background-color: rgba(240,240,240,100);"
@@ -85,39 +84,15 @@ class CentralWindow : public QWidget {
     //     "}");
     // buttonContainer->setGraphicsEffect(new QGraphicsDropShadowEffect(this));
 
-    // для настроек
-    settingMenu = new QMenu(saveButton);
-    settingMenu->setStyleSheet(
-        "QMenu {"
-        "  background-color: #404040;"
-        "  border-radius: 8px;"
-        "  padding: 5px;"
-        "}"
-        "QMenu::item {"
-        "  padding: 8px 25px;"
-        "  border-radius: 4px;"
-        "}"
-        "QMenu::item:selected {"
-        "  background-color: gray;"
-        "}"
-        "QMenu::separator {"
-        "  height: 1px;"
-        "  background: background-color: #323232;"
-        "}");
-    QAction* saveAction = settingMenu->addAction("Save");
-    QAction* restoreAction = settingMenu->addAction("Restore");
-    QAction* resetAction = settingMenu->addAction("Reset");
-
-    connect(saveButton, &QPushButton::clicked, [this] {
-      QPoint pos = saveButton->mapToGlobal(QPoint(0, saveButton->height()));
-      settingMenu->exec(pos);
-    });
-
-    connect(saveAction, &QAction::triggered, this, &CentralWindow::handleSave);
-    connect(restoreAction, &QAction::triggered, this,
-            &CentralWindow::handleRestore);
-    connect(resetAction, &QAction::triggered, this,
-            &CentralWindow::handleReset);
+    connect(openButton, &QPushButton::clicked, this, &ControlWindow::openFile);
+    connect(bmpButton, &QPushButton::clicked, this,
+            [this]() { saveFile(".bmp", 0); });
+    connect(jpegButton, &QPushButton::clicked, this,
+            [this]() { saveFile(".jpeg", 0); });
+    connect(customGifButton, &QPushButton::clicked, this,
+            [this]() { saveFile(".gif", 1); });
+    connect(cycledGifButton, &QPushButton::clicked, this,
+            [this]() { saveFile(".gif", 2); });
   }
 
  Q_SIGNALS:
@@ -125,15 +100,42 @@ class CentralWindow : public QWidget {
   void signalChangeMoveCoords(std::pair<int, int> coordXY);
   void signalChangeScaleCoords(std::pair<int, int> coordXY);
   void signalChangeRotateCoords(std::pair<int, int> coordXY);
+  void signalOpenFile(const char* filename);
+  void signalSaveFile(const char* filename);
+  void signalStartCustomGif(const char* filename);
+  void signalStartCycledGif(const char* filename);
 
  private:
-  QPushButton *openButton, *saveButton, *jpegButton, *bmpButton,
-      *customGifButton, *cycledGifButton;
+  QPushButton *openButton, *jpegButton, *bmpButton, *customGifButton,
+      *cycledGifButton;
   QMenu* settingMenu;
 
   // catch mouse press and mouse release
   MouseAction mouseAction = MouseAction::kNone;
   QPoint mousePos;
+
+  void openFile() {
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
+                                                    tr("Images (*.obj)"));
+    if (!filename.isEmpty())
+      Q_EMIT signalOpenFile(filename.toUtf8().constData());
+  }
+
+  void saveFile(const char* options, int gif) {
+    QString selectedFilter;
+    QString filename = QFileDialog::getSaveFileName(
+        this, tr("Choose folder"), "./", tr(options), &selectedFilter);
+    if (!filename.isEmpty()) {
+      filename.append(selectedFilter.remove("*"));
+      if (filename.endsWith("gif") && gif == 1) {  // TODO как-то поумнее
+        Q_EMIT signalStartCustomGif(filename.toUtf8().constData());
+      } else if (filename.endsWith("gif") && gif == 2) {
+        Q_EMIT signalStartCycledGif(filename.toUtf8().constData());
+      } else if (filename.endsWith("bmp") || filename.endsWith("jpeg")) {
+        Q_EMIT signalSaveFile(filename.toUtf8().constData());
+      }
+    }
+  }
 
   void mousePressEvent(QMouseEvent* event) override {
     if (event->button() == Qt::LeftButton)
@@ -181,8 +183,4 @@ class CentralWindow : public QWidget {
     Q_EMIT signalChangeScaleCoords(
         std::pair<int, int>{event->angleDelta().y() / 24, 0});  // 5 ед
   }
-
-  void handleSave() { qDebug() << "Save triggered"; }
-  void handleRestore() { qDebug() << "Restore triggered"; }
-  void handleReset() { qDebug() << "Reset triggered"; }
 };

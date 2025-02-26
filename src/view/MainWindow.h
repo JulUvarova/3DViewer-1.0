@@ -19,7 +19,7 @@
 
 #include "../controller/controller.h"
 #include "BackgroundBox.h"
-#include "CentralWindow.h"
+#include "ControlWindow.h"
 #include "ElemBox.h"
 #include "ProjectionButton.h"
 #include "SlidersBox.h"
@@ -65,7 +65,7 @@ class MainWindow : public QMainWindow {
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
   QMenuBar *menuBar;
-  CentralWindow *centralWindow;
+  ControlWindow *controlWindow;
   Viewport3D *renderWindow;
   QPushButton *resetCoordsButton, *resetElemsButton, *saveElemsButton,
       *restoreElemsButton, *sceneInfoButton;
@@ -89,11 +89,10 @@ class MainWindow : public QMainWindow {
   void saveUserSettings();
   void resetUserSettings();
   void restoreUserSettings();
-  void openFile();
-  void getFileName(const char *options);
-  void saveImage();
-  void saveCustomGif();
-  void saveCycledGif();
+  void loadScene(const char* filename);
+  void saveImage(const char *filename);
+  void saveCustomGif(const char *filename);
+  void saveCycledGif(const char *filename);
   void appExit();
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
