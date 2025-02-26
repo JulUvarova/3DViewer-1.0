@@ -28,9 +28,15 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     update();  // Request a repaint
   }
 
-  //! убирают кнопку проекции для скрина
-  void beforeGrab() { updateGif(); }
-  void afterGrab() { updateProjectionMatrix(); }
+  //! для взятия экрана 4:3 и обратно
+  void beforeGrab() {
+    updateGif();
+    update();
+  }
+  void afterGrab() {
+    updateProjectionMatrix();
+    update();
+  }
 
   void UpdateModelMatrix() {
     modelMatrix.setToIdentity();

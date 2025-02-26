@@ -31,14 +31,14 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
   connect(
       locationSlidersBox, &SlidersBox::signalChangeZ, this,
       [this](int value) { slotTransform(TransformType::LocationZ, value); });
-  connect(centralWindow, &CentralWindow::signalChangeMoveCoords, locationSlidersBox,
-          &SlidersBox::setCoords);
+  connect(controlWindow, &ControlWindow::signalChangeMoveCoords,
+          locationSlidersBox, &SlidersBox::setCoords);
 
   // scale coordinates
   connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
           [this](int value) { slotTransform(TransformType::Scale, value); });
-  connect(centralWindow, &CentralWindow::signalChangeScaleCoords, scaleSlidersBox,
-          &SlidersBox::setCoords);
+  connect(controlWindow, &ControlWindow::signalChangeScaleCoords,
+          scaleSlidersBox, &SlidersBox::setCoords);
 
   // rotate coordinates
 
@@ -51,8 +51,8 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
   connect(
       rotateSlidersBox, &SlidersBox::signalChangeZ, this,
       [this](int value) { slotTransform(TransformType::RotationZ, value); });
-  connect(centralWindow, &CentralWindow::signalChangeRotateCoords, rotateSlidersBox,
-          &SlidersBox::setCoords);
+  connect(controlWindow, &ControlWindow::signalChangeRotateCoords,
+          rotateSlidersBox, &SlidersBox::setCoords);
 
   // vertex prop
   connect(verticesBox, &ElemBox::signalChangeType, this,
@@ -84,6 +84,16 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
 
   // connect(sceneInfoButton, &QPushButton::clicked, propsObjectsInfo,
   //         &QLabel::show);
+
+  // Work with file
+  connect(controlWindow, &ControlWindow::signalOpenFile, this,
+          &MainWindow::loadScene);
+  connect(controlWindow, &ControlWindow::signalSaveFile, this,
+          &MainWindow::saveImage);
+  connect(controlWindow, &ControlWindow::signalStartCycledGif, this,
+          &MainWindow::saveCycledGif);
+  connect(controlWindow, &ControlWindow::signalStartCustomGif, this,
+          &MainWindow::saveCustomGif);
 }
 
 void MainWindow::resetCoords() {
@@ -176,8 +186,8 @@ void MainWindow::setupUI() {
 
   // Central 3D viewport
   renderWindow = new Viewport3D(userSetting, this);
-  centralWindow = new CentralWindow(renderWindow);
-  setCentralWidget(centralWindow);
+  controlWindow = new ControlWindow(renderWindow, this);
+  setCentralWidget(controlWindow);
 
   // UI components
   createDockWidgets();
@@ -312,86 +322,55 @@ void MainWindow::appExit() {
   close();
 }
 
-void MainWindow::openFile() {
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
-                                                  tr("Images (*.obj)"));
-  //! if cancel
-  if (fileName.isEmpty()) return;
+void MainWindow::loadScene(const char *filename) {
+  qDebug() << filename;
+  if (!strlen(filename)) return;
 
-  QByteArray byteArray = fileName.toUtf8();
-  const char *cstr = byteArray.constData();
-  // QMessageBox::information(this, tr("Unable to open file"),
-  //                          "File is not opened =(");
   resetCoords();
-  auto scene = controller->LoadScene(cstr);
-  renderWindow->setScene(scene);
-
-  //! check canOpen
-  // if (!isSaved)
-
-  propsFileInfo->setText(fileName);
-  // propsObjectsInfo->setText(QString::fromStdString(scene->info));
+  try {
+    qDebug() << "open";
+    auto scene = controller->LoadScene(filename);
+    renderWindow->setScene(scene);
+    renderWindow->repaint();
+    // TODO Окно Информации
+    propsFileInfo->setText(filename);
+    // propsObjectsInfo->setText(QString::fromStdString(scene->info));
+  } catch (const s21::MeshLoadException &e) {
+    QMessageBox::information(this, tr("Unable to open file"), e.what());
+  }
 }
 
-void MainWindow::getFileName(const char *options) {
-  QString selectedFilter;
-  fileName = QFileDialog::getSaveFileName(this, tr("Choose folder"), "./",
-                                          tr(options), &selectedFilter);
-  if (fileName.isEmpty()) return;
+void MainWindow::saveImage(const char *filename) {
+  if (!strlen(filename)) return;
 
-  if (selectedFilter == "*.bmp")
-    fileName.append(".bmp");
-  else if (selectedFilter == "*.jpeg")
-    fileName.append(".jpeg");
-  else if (selectedFilter == "*.gif")
-    fileName.append(".gif");
-  else
-    QMessageBox::information(this, tr("Wrong file name"),
-                             "Filename isn't correct");
+  try {
+    bool isSaved = renderWindow->grab().save(filename);
+    QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  } catch (const std::exception &e) {
+    QMessageBox::information(this, tr("Unable to save file"), e.what());
+  }
 }
 
-void MainWindow::saveImage() {
-  getFileName("*.jpeg;;*.bmp");
-  if (fileName.isEmpty()) return;
-
-  renderWindow->beforeGrab();
-  bool isSaved = renderWindow->grab().save(fileName);
-  if (!isSaved)
-    QMessageBox::information(this, tr("Unable to save file"),
-                             "File is not saved =(");
-  else
-    //! отладка
-    QMessageBox::information(this, tr("File saved"), "GIF is saved! =)");
-
-  renderWindow->afterGrab();
-}
-
-void MainWindow::saveCustomGif() {
-  getFileName("*.gif");
-  if (fileName.isEmpty()) return;
+void MainWindow::saveCustomGif(const char *filename) {
+  fileName = filename;
+  if (fileName == "") return;
 
   timer->start();
 }
 
 void MainWindow::grabScene() {
-  renderWindow->beforeGrab();
+  renderWindow->beforeGrab();  //!
   screens.push_back(renderWindow->grab());
-  renderWindow->afterGrab();
+  renderWindow->afterGrab();  //!
 
   if (screens.size() == 50) {
     timer->stop();
-
     createGifFile();
-
-    screens.clear();
-    //! отладка
-    QMessageBox::information(this, tr("File saved"), "File is saved! =)");
   }
 }
 
-void MainWindow::saveCycledGif() {
-  getFileName("*.gif");
-  if (fileName.isEmpty()) return;
+void MainWindow::saveCycledGif(const char *filename) {
+  fileName = filename;
 
   std::array<int, 3> coords;
 
@@ -411,9 +390,9 @@ void MainWindow::saveCycledGif() {
   screens.resize(50);
 
   controller->ResetScene();
-  renderWindow->beforeGrab();
+  renderWindow->beforeGrab();  //!
   screens[0] = renderWindow->grab();
-  renderWindow->afterGrab();
+  renderWindow->afterGrab();  //!
 
   for (int i = 1; i <= 25; ++i) {
     controller->SetScaleX(scaleX.first += scaleX.second);
@@ -428,22 +407,20 @@ void MainWindow::saveCycledGif() {
 
     renderWindow->update();
 
-    renderWindow->beforeGrab();
+    renderWindow->beforeGrab();  //!
     screens[i] = renderWindow->grab();
     screens[50 - i] = renderWindow->grab();
-    renderWindow->afterGrab();
+    renderWindow->afterGrab();  //!
   }
   createGifFile();
-  screens.clear();
-  //! отладка
-  QMessageBox::information(this, tr("File saved"), "File is saved! =)");
 }
 
 void MainWindow::createGifFile() {
-  QByteArray byteArray = fileName.toUtf8();
+  QByteArray byteArray = fileName.toUtf8();  // TODO Не нужно
   const char *cstr = byteArray.constData();
-
   GifWriter gif;
+  // try {
+  // TODO try-catch ломает гиф
   GifBegin(&gif, cstr, 640, 480, 10);
   for (const auto &screen : screens) {
     // pixmap->QImage->scale 640x480->colors
@@ -453,6 +430,12 @@ void MainWindow::createGifFile() {
     GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 0);
   }
   GifEnd(&gif);
+
+  QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  // } catch (const std::exception &e) {
+  //   QMessageBox::information(this, tr("Unable to save file"), e.what());
+  // }
+  screens.clear();
 }
 
 void MainWindow::saveLayout() {

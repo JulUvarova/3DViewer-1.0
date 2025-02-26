@@ -21,7 +21,7 @@ set(PROJECT_SOURCES
         
         view/MainWindow.cpp
         view/MainWindow.h
-        view/CentralWindow.h
+        view/ControlWindow.h
         view/Viewport3D.h
         view/SlidersBox.h
         view/ElemBox.h
