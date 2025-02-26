@@ -22,7 +22,6 @@ class Controller {
 
   static std::shared_ptr<Controller> GetInstance()
   {
-    std::cout << "controller::GetInstance()" << std::endl;
     static auto instance = std::shared_ptr<Controller>(new Controller);
     return instance;
   }

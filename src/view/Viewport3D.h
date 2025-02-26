@@ -8,9 +8,9 @@
 #include <memory>
 
 #include "../model/scene.h"
+#include "Logger.h"
 #include "ProjectionButton.h"
 #include "UserSetting.h"
-#include "Logger.h"
 
 enum class MouseAction {
   kNone = 0,
@@ -54,6 +54,24 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   void afterGrab() {
     projectionButton->setVisible(true);
     updateProjectionMatrix();
+  }
+  void UpdateModelMatrix() {
+    modelMatrix.setToIdentity();
+    auto [tx, ty, tz, rx, ry, rz, sx, sy, sz] =
+        s21::Controller::GetInstance()->GetSceneParameters();
+    // Apply scaling
+    modelMatrix.scale(sx, sy, sz);
+
+    // Apply rotation
+    modelMatrix.rotate(qRadiansToDegrees(rx), 1.0f, 0.0f,
+                       0.0f);  // Rotate around X-axis
+    modelMatrix.rotate(qRadiansToDegrees(ry), 0.0f, 1.0f,
+                       0.0f);  // Rotate around Y-axis
+    modelMatrix.rotate(qRadiansToDegrees(rz), 0.0f, 0.0f,
+                       1.0f);  // Rotate around Z-axis
+
+    // Apply translation
+    modelMatrix.translate(tx, ty, tz);
   }
 
  protected:
@@ -415,28 +433,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     // Set model matrix (identity by default)
     UpdateModelMatrix();
-  }
-
-  void UpdateModelMatrix() {
-    modelMatrix.setToIdentity();
-    auto [tx, ty, tz, rx, ry, rz, sx, sy, sz] =
-        s21::Controller::GetInstance()->GetSceneParameters();
-    LogDebug << "tx: " << tx << " ty: " << ty << " tz: " << tz << " rx: " << rx
-             << " ry: " << ry << " rz: " << rz << " sx: " << sx << " sy: " << sy
-             << " sz: " << sz << std::endl;
-    // Apply scaling
-    modelMatrix.scale(sx, sy, sz);
-
-    // Apply rotation
-    modelMatrix.rotate(qRadiansToDegrees(rx), 1.0f, 0.0f,
-                       0.0f);  // Rotate around X-axis
-    modelMatrix.rotate(qRadiansToDegrees(ry), 0.0f, 1.0f,
-                       0.0f);  // Rotate around Y-axis
-    modelMatrix.rotate(qRadiansToDegrees(rz), 0.0f, 0.0f,
-                       1.0f);  // Rotate around Z-axis
-
-    // Apply translation
-    modelMatrix.translate(tx, ty, tz);
   }
 
   // Update projection matrix

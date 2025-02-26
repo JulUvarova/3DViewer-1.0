@@ -129,41 +129,41 @@ void MainWindow::slotEdgesSize(const int value) {
 
 void MainWindow::slotLocationCoordX(int coordX) {
   controller->SetLocationX(coordX);
-
+  renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
 void MainWindow::slotLocationCoordY(int coordY) {
   controller->SetLocationY(coordY);
-
+  renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
 
 void MainWindow::slotLocationCoordZ(int coordZ) {
   controller->SetLocationZ(coordZ);
-
+  renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
 
 void MainWindow::slotScaleCoordX(int coordX) {
   controller->SetScaleX(coordX);
-
+  renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordX(int coordX) {
   controller->SetRotationX(coordX);
-
+  renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
 void MainWindow::slotRotateCoordY(int coordY) {
   controller->SetRotationY(coordY);
-
+  renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
 
 void MainWindow::slotRotateCoordZ(int coordZ) {
   controller->SetRotationZ(coordZ);
-
+  renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
 
