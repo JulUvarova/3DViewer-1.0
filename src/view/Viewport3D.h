@@ -59,6 +59,10 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     modelMatrix.setToIdentity();
     auto [tx, ty, tz, rx, ry, rz, sx, sy, sz] =
         s21::Controller::GetInstance()->GetSceneParameters();
+
+
+    // Apply translation
+    modelMatrix.translate(tx, ty, tz);
     // Apply scaling
     modelMatrix.scale(sx, sy, sz);
 
@@ -70,8 +74,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     modelMatrix.rotate(qRadiansToDegrees(rz), 0.0f, 0.0f,
                        1.0f);  // Rotate around Z-axis
 
-    // Apply translation
-    modelMatrix.translate(tx, ty, tz);
   }
 
  protected:
