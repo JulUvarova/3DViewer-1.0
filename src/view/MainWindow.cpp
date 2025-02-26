@@ -431,7 +431,7 @@ void MainWindow::createGifFile() {
   }
   GifEnd(&gif);
 
-  QMessageBox::information(this, tr("File saved"), "File is saved! =)");
+  // QMessageBox::information(this, tr("File saved"), "File is saved! =)");
   // } catch (const std::exception &e) {
   //   QMessageBox::information(this, tr("Unable to save file"), e.what());
   // }
