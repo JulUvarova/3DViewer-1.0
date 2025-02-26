@@ -893,8 +893,9 @@ INPUT_ENCODING         = UTF-8
 # *.py, *.pyw, *.f90, *.f95, *.f03, *.f08, *.f18, *.f, *.for, *.vhd, *.vhdl,
 # *.ucf, *.qsf and *.ice.
 
-FILE_PATTERNS          = *snake*.c \
-                         *snake**.cc \
+FILE_PATTERNS          = 
+                         *.cc \
+                         *.h \
                          *.cxx \
                          *.cpp \
                          *.c++ \
@@ -907,7 +908,6 @@ FILE_PATTERNS          = *snake*.c \
                          *.idl \
                          *.ddl \
                          *.odl \
-                         *snake*.h \
                          *.hh \
                          *.hxx \
                          *.hpp \

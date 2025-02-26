@@ -113,15 +113,15 @@ clean_dvi:
 #########################################
 .PHONY: check
 check:
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print  -exec clang-format -style='{BasedOnStyle: Google}' -n {} \;
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print  -exec clang-format -style='{BasedOnStyle: Google}' -n {} \;
 
 .PHONY: check_fix
 check_fix:
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
 

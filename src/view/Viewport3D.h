@@ -6,9 +6,10 @@
 #include <QOpenGLWidget>
 #include <memory>
 
-#include "scene.h"
 #include "Logger.h"
 #include "UserSetting.h"
+#include "controller.h"
+#include "scene.h"
 
 class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   Q_OBJECT

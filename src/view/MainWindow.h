@@ -17,13 +17,13 @@
 #include <QToolBar>  //!
 #include <QWidget>
 
-#include "controller.h"
 #include "BackgroundBox.h"
 #include "ControlWindow.h"
 #include "ElemBox.h"
 #include "SlidersBox.h"
 #include "UserSetting.h"
 #include "Viewport3D.h"
+#include "controller.h"
 #include "gif/gif.h"
 
 enum class TransformType {
