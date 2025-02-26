@@ -85,8 +85,14 @@ class Controller {
     facade_->RotateZ(value / kRotationCorrection);
   }
 
- private:
-  std::shared_ptr<Facade> facade_;
+  inline std::tuple<float, float, float, float, float, float, float, float,
+                    float>
+      GetSceneParameters() {
+    return facade_->GetSceneParameters();
+  }
+
+      private : std::shared_ptr<Facade>
+                    facade_;
   std::shared_ptr<Controller> instance_;
   // static std::once_flag initFlag_;
 
