@@ -100,18 +100,29 @@ void s21::Facade::RotateZ(const float value) {
   TransformScene();
 }
 
-void s21::Facade::TransformScene() {
-  Mat4f move_mat = TransformMatrixBuilder::CreateMoveMatrix(
+std::tuple<float, float, float, float, float, float, float, float, float>
+s21::Facade::GetSceneParameters() {
+  if (!scene_) return std::make_tuple(0, 0, 0, 0, 0, 0, 0, 0, 0);
+  return std::make_tuple(
       sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-      sceneParam_->GetLocationZ());
-  Mat4f rotate_mat = TransformMatrixBuilder::CreateRotationMatrix(
-      sceneParam_->GetRotationX(), sceneParam_->GetRotationY(),
-      sceneParam_->GetRotationZ());
-  Mat4f scale_mat = TransformMatrixBuilder::CreateScaleMatrix(
+      sceneParam_->GetLocationZ(), sceneParam_->GetRotationX(),
+      sceneParam_->GetRotationY(), sceneParam_->GetRotationZ(),
       sceneParam_->GetScaleX(), sceneParam_->GetScaleY(),
       sceneParam_->GetScaleZ());
-  Mat4f transform_mat = scale_mat * move_mat * rotate_mat;
-  scene_->TransformSceneMeshData(transform_mat);
+}
+
+void s21::Facade::TransformScene() {
+  // Mat4f move_mat = TransformMatrixBuilder::CreateMoveMatrix(
+  //     sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
+  //     sceneParam_->GetLocationZ());
+  // Mat4f rotate_mat = TransformMatrixBuilder::CreateRotationMatrix(
+  //     sceneParam_->GetRotationX(), sceneParam_->GetRotationY(),
+  //     sceneParam_->GetRotationZ());
+  // Mat4f scale_mat = TransformMatrixBuilder::CreateScaleMatrix(
+  //     sceneParam_->GetScaleX(), sceneParam_->GetScaleY(),
+  //     sceneParam_->GetScaleZ());
+  // Mat4f transform_mat = scale_mat * move_mat * rotate_mat;
+  // scene_->TransformSceneMeshData(transform_mat);
 
   // Notify about the update if callback is set
   if (sceneUpdateCallback_ && currentSceneData_) {

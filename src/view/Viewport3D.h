@@ -10,6 +10,7 @@
 #include "../model/scene.h"
 #include "ProjectionButton.h"
 #include "UserSetting.h"
+#include "Logger.h"
 
 enum class MouseAction {
   kNone = 0,
@@ -46,10 +47,14 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   // убирают кнопку проекции для скрина
-  void beforeGrab() { projectionButton->setVisible(false);
-  updateGif(); }
-  void afterGrab() { projectionButton->setVisible(true); 
-  updateProjectionMatrix();}
+  void beforeGrab() {
+    projectionButton->setVisible(false);
+    updateGif();
+  }
+  void afterGrab() {
+    projectionButton->setVisible(true);
+    updateProjectionMatrix();
+  }
 
  protected:
   void setBackColor() {
@@ -258,48 +263,48 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   //   glTranslatef(0.0, 0.0, -5.0);
   // }
 
-  void drawEdges() {
-    if (renderSetting->getEdgesType() == "dashed") {
-      glEnable(GL_LINE_STIPPLE);
-      glLineStipple(1, 0x00FF);
-    } else
-      glDisable(GL_LINE_STIPPLE);
+  // void drawEdges() {
+  //   if (renderSetting->getEdgesType() == "dashed") {
+  //     glEnable(GL_LINE_STIPPLE);
+  //     glLineStipple(1, 0x00FF);
+  //   } else
+  //     glDisable(GL_LINE_STIPPLE);
 
-    glLineWidth(renderSetting->getEdgesSize());
+  //   glLineWidth(renderSetting->getEdgesSize());
 
-    glColor3f(renderSetting->getEdgesColor().red() / 255.0,
-              renderSetting->getEdgesColor().green() / 255.0,
-              renderSetting->getEdgesColor().blue() / 255.0);
+  //   glColor3f(renderSetting->getEdgesColor().red() / 255.0,
+  //             renderSetting->getEdgesColor().green() / 255.0,
+  //             renderSetting->getEdgesColor().blue() / 255.0);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
+  //   glEnableClientState(GL_VERTEX_ARRAY);
 
-    glDrawElements(GL_LINES, scene->vertex_indices.size(), GL_UNSIGNED_INT,
-                   scene->vertex_indices.data());
-    glDisableClientState(GL_VERTEX_ARRAY);
-  }
+  //   glDrawElements(GL_LINES, scene->vertex_indices.size(), GL_UNSIGNED_INT,
+  //                  scene->vertex_indices.data());
+  //   glDisableClientState(GL_VERTEX_ARRAY);
+  // }
 
-  void drawVertices() {
-    if (renderSetting->getVerticesType() == "circle") {
-      glEnable(GL_POINT_SMOOTH);
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-    }  // без этих настроек точки будут квадратными
+  // void drawVertices() {
+  //   if (renderSetting->getVerticesType() == "circle") {
+  //     glEnable(GL_POINT_SMOOTH);
+  //     glEnable(GL_BLEND);
+  //     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  //     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+  //   }  // без этих настроек точки будут квадратными
 
-    glPointSize(renderSetting->getVerticesSize());
-    glColor3f(renderSetting->getVerticesColor().red() / 255.0,
-              renderSetting->getVerticesColor().green() / 255.0,
-              renderSetting->getVerticesColor().blue() / 255.0);
+  //   glPointSize(renderSetting->getVerticesSize());
+  //   glColor3f(renderSetting->getVerticesColor().red() / 255.0,
+  //             renderSetting->getVerticesColor().green() / 255.0,
+  //             renderSetting->getVerticesColor().blue() / 255.0);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glDrawArrays(GL_POINTS, 0, scene->vertices.size() / 3);
-    glDisableClientState(GL_VERTEX_ARRAY);
+  //   glEnableClientState(GL_VERTEX_ARRAY);
+  //   glDrawArrays(GL_POINTS, 0, scene->vertices.size() / 3);
+  //   glDisableClientState(GL_VERTEX_ARRAY);
 
-    if (renderSetting->getVerticesType() == "circle") {
-      glDisable(GL_BLEND);
-      glDisable(GL_POINT_SMOOTH);
-    }
-  }
+  //   if (renderSetting->getVerticesType() == "circle") {
+  //     glDisable(GL_BLEND);
+  //     glDisable(GL_POINT_SMOOTH);
+  //   }
+  // }
 
   void repaint() {
     updateProjectionMatrix();
@@ -389,11 +394,10 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
     vao.release();
   }
 
-void updateGif() {
+  void updateGif() {
     projectionMatrix.setToIdentity();
 
     float aspect = static_cast<float>(width()) / (width() * 3 / 4);
-
 
     if (projectionButton->isParallelProjection()) {
       // Orthographic projection
@@ -410,7 +414,29 @@ void updateGif() {
     viewMatrix.translate(0.0f, 0.0f, -5.0f);
 
     // Set model matrix (identity by default)
+    UpdateModelMatrix();
+  }
+
+  void UpdateModelMatrix() {
     modelMatrix.setToIdentity();
+    auto [tx, ty, tz, rx, ry, rz, sx, sy, sz] =
+        s21::Controller::GetInstance()->GetSceneParameters();
+    LogDebug << "tx: " << tx << " ty: " << ty << " tz: " << tz << " rx: " << rx
+             << " ry: " << ry << " rz: " << rz << " sx: " << sx << " sy: " << sy
+             << " sz: " << sz << std::endl;
+    // Apply scaling
+    modelMatrix.scale(sx, sy, sz);
+
+    // Apply rotation
+    modelMatrix.rotate(qRadiansToDegrees(rx), 1.0f, 0.0f,
+                       0.0f);  // Rotate around X-axis
+    modelMatrix.rotate(qRadiansToDegrees(ry), 0.0f, 1.0f,
+                       0.0f);  // Rotate around Y-axis
+    modelMatrix.rotate(qRadiansToDegrees(rz), 0.0f, 0.0f,
+                       1.0f);  // Rotate around Z-axis
+
+    // Apply translation
+    modelMatrix.translate(tx, ty, tz);
   }
 
   // Update projection matrix
@@ -418,9 +444,8 @@ void updateGif() {
     projectionMatrix.setToIdentity();
 
     float aspect = static_cast<float>(width()) / height();
-    //! режим гиф 
+    //! режим гиф
     // float aspect = static_cast<float>(width()) / (width() * 3 / 4);
-
 
     if (projectionButton->isParallelProjection()) {
       // Orthographic projection
@@ -437,7 +462,9 @@ void updateGif() {
     viewMatrix.translate(0.0f, 0.0f, -5.0f);
 
     // Set model matrix (identity by default)
-    modelMatrix.setToIdentity();
+
+    // Reset the model matrix to identity
+    UpdateModelMatrix();
   }
 
   // Frustum culling

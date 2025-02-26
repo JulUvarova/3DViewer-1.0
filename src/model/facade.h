@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <tuple>
 
 #include "filereader.h"
 #include "scene.h"
@@ -63,6 +64,8 @@ class Facade {
   void RotateY(const float value);
 
   void RotateZ(const float value);
+
+  std::tuple<float,float,float,float,float,float,float,float,float> GetSceneParameters();
 
  private:
   std::unique_ptr<FileReader> fileReader_;
