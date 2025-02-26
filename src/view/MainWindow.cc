@@ -73,11 +73,11 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
           &MainWindow::slotBackgroundColor);
 
   // perspective
-  connect(centralProj, &QRadioButton::clicked, this, [this]() {
+  connect(perspectiveProj, &QRadioButton::clicked, this, [this]() {
     userSetting->setProjection(false);
     renderWindow->repaint();
   });
-  connect(perspectiveProj, &QRadioButton::clicked, this, [this]() {
+  connect(parallelProj, &QRadioButton::clicked, this, [this]() {
     userSetting->setProjection(true);
     renderWindow->repaint();
   });
@@ -236,13 +236,13 @@ void MainWindow::createDockWidgets() {
 
   // Create projection choose
   QGroupBox *projBox = new QGroupBox("Projection", this);
-  centralProj = new QRadioButton("Central", this);
   perspectiveProj = new QRadioButton("Perspective", this);
+  parallelProj = new QRadioButton("Parallel", this);
   QVBoxLayout *projLayout = new QVBoxLayout();
-  projLayout->addWidget(centralProj);
   projLayout->addWidget(perspectiveProj);
+  projLayout->addWidget(parallelProj);
   projBox->setLayout(projLayout);
-  perspectiveProj->setChecked(true);
+  parallelProj->setChecked(true);
 
   // Create verticesBox
   QStringList verticesLst;

@@ -6,7 +6,7 @@
 #include <QOpenGLWidget>
 #include <memory>
 
-#include "../model/scene.h"
+#include "scene.h"
 #include "Logger.h"
 #include "UserSetting.h"
 
@@ -188,75 +188,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   int vertexCount = 0;
   int indexCount = 0;
 
-  // Frustum culling
-  QVector4D frustumPlanes[6];  // Left, Right, Bottom, Top, Near, Far
-
-  // void chooseProjection() {
-  //   GLdouble nearPlane = 1.0;  // ближняя плоскость отсечения
-  //   GLdouble farPlane = 100.0;  // дальняя плоскость отсечения
-
-  //   //! Учет пропорции окна
-  //   GLdouble aspect = (GLdouble)width() / (GLdouble)height();
-
-  //   if (projectionButton->isParallelProjection()) {
-  //     glOrtho(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0, nearPlane, farPlane);
-  //   } else {
-  //     // Вычисляем границы усечённой пирамиды
-  //     GLdouble fov = 45.0;  // поле зрения в градусах
-
-  //     // Вычисляем границы усечённой пирамиды
-  //     GLdouble top = nearPlane * tan(fov * M_PI / 360.0);  // fov/2 в
-  //     радианах GLdouble bottom = -top; GLdouble right = top * aspect;
-  //     GLdouble left = -right;
-
-  //     glFrustum(left, right, bottom, top, nearPlane, farPlane);
-  //   }
-  //   glTranslatef(0.0, 0.0, -5.0);
-  // }
-
-  // void drawEdges() {
-  //   if (renderSetting->getEdgesType() == "dashed") {
-  //     glEnable(GL_LINE_STIPPLE);
-  //     glLineStipple(1, 0x00FF);
-  //   } else
-  //     glDisable(GL_LINE_STIPPLE);
-
-  //   glLineWidth(renderSetting->getEdgesSize());
-
-  //   glColor3f(renderSetting->getEdgesColor().red() / 255.0,
-  //             renderSetting->getEdgesColor().green() / 255.0,
-  //             renderSetting->getEdgesColor().blue() / 255.0);
-
-  //   glEnableClientState(GL_VERTEX_ARRAY);
-
-  //   glDrawElements(GL_LINES, scene->vertex_indices.size(), GL_UNSIGNED_INT,
-  //                  scene->vertex_indices.data());
-  //   glDisableClientState(GL_VERTEX_ARRAY);
-  // }
-
-  // void drawVertices() {
-  //   if (renderSetting->getVerticesType() == "circle") {
-  //     glEnable(GL_POINT_SMOOTH);
-  //     glEnable(GL_BLEND);
-  //     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  //     glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-  //   }  // без этих настроек точки будут квадратными
-
-  //   glPointSize(renderSetting->getVerticesSize());
-  //   glColor3f(renderSetting->getVerticesColor().red() / 255.0,
-  //             renderSetting->getVerticesColor().green() / 255.0,
-  //             renderSetting->getVerticesColor().blue() / 255.0);
-
-  //   glEnableClientState(GL_VERTEX_ARRAY);
-  //   glDrawArrays(GL_POINTS, 0, scene->vertices.size() / 3);
-  //   glDisableClientState(GL_VERTEX_ARRAY);
-
-  //   if (renderSetting->getVerticesType() == "circle") {
-  //     glDisable(GL_BLEND);
-  //     glDisable(GL_POINT_SMOOTH);
-  //   }
-  // }
-
   // Modern OpenGL
   // Initialize shaders
   void initShaders() {
@@ -357,7 +288,7 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     // Set view matrix (camera position)
     viewMatrix.setToIdentity();
-    viewMatrix.translate(0.0f, 0.0f, -5.0f);
+    viewMatrix.translate(0.0f, 0.0f, -2.0f);
 
     // Set model matrix (identity by default)
     UpdateModelMatrix();
@@ -381,71 +312,9 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
 
     // Set view matrix (camera position)
     viewMatrix.setToIdentity();
-    viewMatrix.translate(0.0f, 0.0f, -5.0f);
-
-    // Set model matrix (identity by default)
+    viewMatrix.translate(0.0f, 0.0f, -2.0f);
 
     // Reset the model matrix to identity
     UpdateModelMatrix();
-  }
-
-  // Frustum culling
-  bool isVisible(const QVector3D &point, float radius = 0.0f) {
-    // Simple sphere-frustum test
-    for (int i = 0; i < 6; i++) {
-      if (frustumPlanes[i].x() * point.x() + frustumPlanes[i].y() * point.y() +
-              frustumPlanes[i].z() * point.z() + frustumPlanes[i].w() <
-          -radius)
-        return false;
-    }
-    return true;
-  }
-
-  void updateFrustumPlanes() {
-    // Calculate frustum planes from projection and view matrices
-    QMatrix4x4 clipMatrix = projectionMatrix * viewMatrix;
-
-    // Extract frustum planes
-    // Left plane
-    frustumPlanes[0] = QVector4D(clipMatrix(0, 3) + clipMatrix(0, 0),
-                                 clipMatrix(1, 3) + clipMatrix(1, 0),
-                                 clipMatrix(2, 3) + clipMatrix(2, 0),
-                                 clipMatrix(3, 3) + clipMatrix(3, 0))
-                           .normalized();
-
-    // Right plane
-    frustumPlanes[1] = QVector4D(clipMatrix(0, 3) - clipMatrix(0, 0),
-                                 clipMatrix(1, 3) - clipMatrix(1, 0),
-                                 clipMatrix(2, 3) - clipMatrix(2, 0),
-                                 clipMatrix(3, 3) - clipMatrix(3, 0))
-                           .normalized();
-
-    // Bottom plane
-    frustumPlanes[2] = QVector4D(clipMatrix(0, 3) + clipMatrix(0, 1),
-                                 clipMatrix(1, 3) + clipMatrix(1, 1),
-                                 clipMatrix(2, 3) + clipMatrix(2, 1),
-                                 clipMatrix(3, 3) + clipMatrix(3, 1))
-                           .normalized();
-
-    // Top plane
-    frustumPlanes[3] = QVector4D(clipMatrix(0, 3) - clipMatrix(0, 1),
-                                 clipMatrix(1, 3) - clipMatrix(1, 1),
-                                 clipMatrix(2, 3) - clipMatrix(2, 1),
-                                 clipMatrix(3, 3) - clipMatrix(3, 1))
-                           .normalized();
-
-    // Near plane
-    frustumPlanes[4] = QVector4D(clipMatrix(0, 3) + clipMatrix(0, 2),
-                                 clipMatrix(1, 3) + clipMatrix(1, 2),
-                                 clipMatrix(2, 3) + clipMatrix(2, 2),
-                                 clipMatrix(3, 3) + clipMatrix(3, 2))
-                           .normalized();
-
-    // Far plane
-    frustumPlanes[5] = QVector4D(clipMatrix(0, 3) - clipMatrix(0, 2),
-                                 clipMatrix(1, 3) - clipMatrix(1, 2),
-                                 clipMatrix(2, 3) - clipMatrix(2, 2),
-                                 clipMatrix(3, 3) - clipMatrix(3, 2))
-                           .normalized();
   }
 };

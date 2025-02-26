@@ -17,7 +17,7 @@
 #include <QToolBar>  //!
 #include <QWidget>
 
-#include "../controller/controller.h"
+#include "controller.h"
 #include "BackgroundBox.h"
 #include "ControlWindow.h"
 #include "ElemBox.h"
@@ -68,7 +68,7 @@ class MainWindow : public QMainWindow {
   Viewport3D *renderWindow;
   QPushButton *resetCoordsButton, *resetElemsButton, *saveElemsButton,
       *restoreElemsButton, *sceneInfoButton;
-  QRadioButton *centralProj, *perspectiveProj;
+  QRadioButton *perspectiveProj, *parallelProj;
 
   // Controller
   std::shared_ptr<s21::Controller> controller;

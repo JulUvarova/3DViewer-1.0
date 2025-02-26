@@ -65,6 +65,9 @@ else()
 endif()
 
 target_include_directories(3DViewer PRIVATE "${CMAKE_SOURCE_DIR}/include/")
+target_include_directories(3DViewer PRIVATE "${CMAKE_SOURCE_DIR}/controller/")
+target_include_directories(3DViewer PRIVATE "${CMAKE_SOURCE_DIR}/model/")
+target_include_directories(3DViewer PRIVATE "${CMAKE_SOURCE_DIR}/view/")
 
 # Settings for logger
 add_definitions( -D LOGGER_MAX_LOG_LEVEL_PRINTED=6 )

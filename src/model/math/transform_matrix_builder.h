@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../data_structures.h"
+#include "data_structures.h"
 
 namespace s21 {
 

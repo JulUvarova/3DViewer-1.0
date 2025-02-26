@@ -1,13 +1,11 @@
 #pragma once
 
-#include <functional>
 #include <iostream>
 #include <memory>
-#include <mutex>
 
-#include "../model/facade.h"
-#include "../model/scene.h"
-#include "../model/scene_parameters.h"
+#include "facade.h"
+#include "scene.h"
+#include "scene_parameters.h"
 
 namespace s21 {
 
