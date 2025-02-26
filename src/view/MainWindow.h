@@ -25,6 +25,16 @@
 #include "Viewport3D.h"
 #include "gif/gif.h"
 
+enum class TransformType {
+  LocationX,
+  LocationY,
+  LocationZ,
+  RotationX,
+  RotationY,
+  RotationZ,
+  Scale
+};
+
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
@@ -33,15 +43,7 @@ class MainWindow : public QMainWindow {
              QWidget *parent = nullptr);
 
  public Q_SLOTS:
-  void slotLocationCoordX(int coordX);
-  void slotLocationCoordY(int coordY);
-  void slotLocationCoordZ(int coordZ);
-
-  void slotRotateCoordX(int coordX);
-  void slotRotateCoordY(int coordY);
-  void slotRotateCoordZ(int coordZ);
-
-  void slotScaleCoordX(int coordX);
+  void slotTransform(TransformType type, int value);
 
   void slotVerticesType(const QString &text);
   void slotVerticesSize(const int value);
