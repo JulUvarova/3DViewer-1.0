@@ -25,28 +25,37 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
           &MainWindow::saveUserSettings);
 
   // Location coordinates
-  connect(locationSlidersBox, &SlidersBox::signalChangeX, this,
-          &MainWindow::slotLocationCoordX);
-  connect(locationSlidersBox, &SlidersBox::signalChangeY, this,
-          &MainWindow::slotLocationCoordY);
-  connect(locationSlidersBox, &SlidersBox::signalChangeZ, this,
-          &MainWindow::slotLocationCoordZ);
+  connect(
+      locationSlidersBox, &SlidersBox::signalChangeX, this,
+      [this](int value) { slotTransform(TransformType::LocationX, value); });
+  connect(
+      locationSlidersBox, &SlidersBox::signalChangeY, this,
+      [this](int value) { slotTransform(TransformType::LocationY, value); });
+  connect(
+      locationSlidersBox, &SlidersBox::signalChangeZ, this,
+      [this](int value) { slotTransform(TransformType::LocationZ, value); });
   connect(renderWindow, &Viewport3D::signalChangeMoveCoords, locationSlidersBox,
           &SlidersBox::setCoords);
 
   // scale coordinates
   connect(scaleSlidersBox, &SlidersBox::signalChangeX, this,
-          &MainWindow::slotScaleCoordX);
+          [this](int value) { slotTransform(TransformType::Scale, value); });
   connect(renderWindow, &Viewport3D::signalChangeScaleCoords, scaleSlidersBox,
           &SlidersBox::setCoords);
 
   // rotate coordinates
-  connect(rotateSlidersBox, &SlidersBox::signalChangeX, this,
-          &MainWindow::slotRotateCoordX);
-  connect(rotateSlidersBox, &SlidersBox::signalChangeY, this,
-          &MainWindow::slotRotateCoordY);
-  connect(rotateSlidersBox, &SlidersBox::signalChangeZ, this,
-          &MainWindow::slotRotateCoordZ);
+
+  connect(
+      rotateSlidersBox, &SlidersBox::signalChangeX, this,
+      [this](int value) { slotTransform(TransformType::RotationX, value); });
+
+  connect(
+      rotateSlidersBox, &SlidersBox::signalChangeY, this,
+      [this](int value) { slotTransform(TransformType::RotationY, value); });
+
+  connect(
+      rotateSlidersBox, &SlidersBox::signalChangeZ, this,
+      [this](int value) { slotTransform(TransformType::RotationZ, value); });
   connect(renderWindow, &Viewport3D::signalChangeRotateCoords, rotateSlidersBox,
           &SlidersBox::setCoords);
 
@@ -127,42 +136,30 @@ void MainWindow::slotEdgesSize(const int value) {
   renderWindow->update();
 }
 
-void MainWindow::slotLocationCoordX(int coordX) {
-  controller->SetLocationX(coordX);
-  renderWindow->UpdateModelMatrix();
-  renderWindow->update();
-}
-void MainWindow::slotLocationCoordY(int coordY) {
-  controller->SetLocationY(coordY);
-  renderWindow->UpdateModelMatrix();
-  renderWindow->update();
-}
-
-void MainWindow::slotLocationCoordZ(int coordZ) {
-  controller->SetLocationZ(coordZ);
-  renderWindow->UpdateModelMatrix();
-  renderWindow->update();
-}
-
-void MainWindow::slotScaleCoordX(int coordX) {
-  controller->SetScaleX(coordX);
-  renderWindow->UpdateModelMatrix();
-  renderWindow->update();
-}
-
-void MainWindow::slotRotateCoordX(int coordX) {
-  controller->SetRotationX(coordX);
-  renderWindow->UpdateModelMatrix();
-  renderWindow->update();
-}
-void MainWindow::slotRotateCoordY(int coordY) {
-  controller->SetRotationY(coordY);
-  renderWindow->UpdateModelMatrix();
-  renderWindow->update();
-}
-
-void MainWindow::slotRotateCoordZ(int coordZ) {
-  controller->SetRotationZ(coordZ);
+void MainWindow::slotTransform(TransformType type, int value) {
+  switch (type) {
+    case TransformType::LocationX:
+      controller->SetLocationX(value);
+      break;
+    case TransformType::LocationY:
+      controller->SetLocationY(value);
+      break;
+    case TransformType::LocationZ:
+      controller->SetLocationZ(value);
+      break;
+    case TransformType::RotationX:
+      controller->SetRotationX(value);
+      break;
+    case TransformType::RotationY:
+      controller->SetRotationY(value);
+      break;
+    case TransformType::RotationZ:
+      controller->SetRotationZ(value);
+      break;
+    case TransformType::Scale:
+      controller->SetScaleX(value);
+      break;
+  }
   renderWindow->UpdateModelMatrix();
   renderWindow->update();
 }
