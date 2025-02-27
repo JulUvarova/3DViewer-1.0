@@ -165,9 +165,9 @@ class ControlWindow : public QWidget {
       // middle will rotate object
       if (mouseAction == MouseAction::kMiddleButton) {
         int shiftX = ((pos.x() * 360 / width() - 180) -
-                       (mousePos.x() * 360 / width() - 180));
+                      (mousePos.x() * 360 / width() - 180));
         int shiftY = ((pos.y() * 360 / height() - 180) -
-                       (mousePos.y() * 360 / height() - 180));
+                      (mousePos.y() * 360 / height() - 180));
 
         Q_EMIT signalChangeRotateCoords(std::pair<int, int>{shiftY, shiftX});
       }
