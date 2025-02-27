@@ -79,7 +79,7 @@ class MainWindow : public QMainWindow {
 
   // for saving
   std::vector<QPixmap> screens;
-  const char *fileName;
+  std::string fileName;
   QTimer *timer;
 
   void setupUI();

@@ -375,9 +375,9 @@ void MainWindow::saveImage(const char *filename) {
   }
 }
 
-void MainWindow::saveCustomGif(const char *filename) {
-  if (!strlen(filename)) return;
-  fileName = filename;
+void MainWindow::saveCustomGif(const char *filename_) {
+  if (!strlen(filename_)) return;
+  fileName = std::string(filename_);
 
   timer->start();
 }
@@ -399,10 +399,9 @@ void MainWindow::grabScene() {
   }
 }
 
-void MainWindow::saveCycledGif(const char *filename) {
-  if (!strlen(filename)) return;
-  fileName = filename;
-
+void MainWindow::saveCycledGif(const char *filename_) {
+  if (!strlen(filename_)) return;
+  fileName = std::string(filename_);
   std::array<int, 3> coords;
 
   coords = locationSlidersBox->getCoords();
@@ -454,7 +453,8 @@ void MainWindow::saveCycledGif(const char *filename) {
 
 void MainWindow::createGifFile() {
   GifWriter gif;
-  GifBegin(&gif, fileName, 640, 480, 10);
+  LogAlert << "Creating gif file" << fileName << std::endl;
+  GifBegin(&gif, fileName.c_str(), 640, 480, 10);
   for (const auto &screen : screens) {
     // pixmap->QImage->scale 640x480->colors
     QImage scaledImage = screen.toImage()
