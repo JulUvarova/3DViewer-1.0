@@ -55,24 +55,15 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   /**
-   * @brief Prepares the viewport before grabbing the screen.
+   * @brief Change projection matrix before and after grabbing the screen.
    *
    * Adjusts the projection matrix for a 4:3 aspect ratio, useful for capturing
    * a screenshot.
+   * @param ifGif Change condition for count aspect ration.
    */
-  void beforeGrab() {
-    updateGif();
-    update();
-  }
-
-  /**
-   * @brief Resets the projection matrix after grabbing the screen.
-   *
-   * Restores the projection matrix and requests a repaint.
-   */
-  void afterGrab() {
-    updateProjectionMatrix();
-    update();
+  void changeAspectRatio(bool isGif) {
+    isGifRatio = isGif;
+    repaint();
   }
 
   /**
@@ -272,6 +263,8 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   int vertexCount = 0;
   /// Number of indices in the current scene
   int indexCount = 0;
+  /// Condition to make projection matrix for a 4:3 aspect ratio
+  bool isGifRatio = false;
 
   /**
    * @brief Initializes the shader program.
@@ -369,28 +362,29 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
    *
    * This function is used when capturing the viewport (e.g., for a GIF).
    */
-  void updateGif() {
-    projectionMatrix.setToIdentity();
+  // void updateGif() {
+  //   projectionMatrix.setToIdentity();
 
-    float aspect = static_cast<float>(width()) / (width() * 3 / 4);
+  //   float aspect = static_cast<float>(width()) / (width() * 3 / 4);
 
-    if (renderSetting->isParallelProjectrion()) {
-      // Orthographic projection parameters
-      float size = 1.0f;
-      projectionMatrix.ortho(-size * aspect, size * aspect, -size, size, 1.0f,
-                             100.0f);
-    } else {
-      // Perspective projection parameters
-      projectionMatrix.perspective(45.0f, aspect, 1.0f, 100.0f);
-    }
+  //   if (renderSetting->isParallelProjectrion()) {
+  //     // Orthographic projection parameters
+  //     float size = 1.0f;
+  //     projectionMatrix.ortho(-size * aspect, size * aspect, -size,
+  //     size, 1.0f,
+  //                            100.0f);
+  //   } else {
+  //     // Perspective projection parameters
+  //     projectionMatrix.perspective(45.0f, aspect, 1.0f, 100.0f);
+  //   }
 
-    // Set the view matrix (camera transformation)
-    viewMatrix.setToIdentity();
-    viewMatrix.translate(0.0f, 0.0f, -2.0f);
+  //   // Set the view matrix (camera transformation)
+  //   viewMatrix.setToIdentity();
+  //   viewMatrix.translate(0.0f, 0.0f, -2.0f);
 
-    // Update the model matrix
-    UpdateModelMatrix();
-  }
+  //   // Update the model matrix
+  //   UpdateModelMatrix();
+  // }
 
   /**
    * @brief Updates the projection matrix based on the current widget
@@ -402,7 +396,8 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   void updateProjectionMatrix() {
     projectionMatrix.setToIdentity();
 
-    float aspect = static_cast<float>(width()) / height();
+    float aspect = static_cast<float>(width()) /
+                   (isGifRatio ? (width() * 3 / 4) : height());
 
     if (renderSetting->isParallelProjectrion()) {
       // Orthographic projection parameters

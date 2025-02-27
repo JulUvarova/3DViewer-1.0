@@ -20,8 +20,6 @@ class UserSetting {
 
   bool isParallelProjection;
 
-  QByteArray layoutState;
-
  public:
   UserSetting() { readRenderSettings(); }
 
@@ -75,31 +73,6 @@ class UserSetting {
     QSettings settings(fileMemory, QSettings::NativeFormat);
     settings.remove("render");
   }
-
-  void saveLayoutSettings() {
-    QSettings settings(fileMemory, QSettings::NativeFormat);
-
-    settings.beginGroup("layout");
-    settings.setValue("layoutState", layoutState);
-    settings.endGroup();
-  }
-
-  void readLayoutSettings() {
-    QSettings settings(fileMemory, QSettings::NativeFormat);
-
-    settings.beginGroup("layout");
-    layoutState = settings.value("layoutState", "").toByteArray();
-    settings.endGroup();
-  }
-
-  void removeLayoutSettings() {
-    QSettings settings(fileMemory, QSettings::NativeFormat);
-    settings.remove("layout");
-  }
-
-  inline QByteArray getLayoutState() const { return layoutState; }
-
-  inline void setLayoutState(QByteArray state) { this->layoutState = state; }
 
   inline bool isParallelProjectrion() const { return isParallelProjection; }
 

@@ -4,8 +4,6 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
     : QMainWindow(parent), controller(ctrl) {
   setupUI();
 
-  saveLayout();
-
   // timer for gif animation
   timer = new QTimer(this);
   timer->setInterval(100);  // 1000ms = 1 sec (100 -> 10 fps)
@@ -185,9 +183,15 @@ void MainWindow::setupUI() {
   resize(1280, 720);
 
   // Central 3D viewport
+  QGridLayout *mainLayout = new QGridLayout(this);
+  mainLayout->setContentsMargins(0, 0, 0, 0);
   renderWindow = new Viewport3D(userSetting, this);
-  controlWindow = new ControlWindow(renderWindow, this);
-  setCentralWidget(controlWindow);
+  controlWindow = new ControlWindow(this);
+  mainLayout->addWidget(renderWindow);
+  mainLayout->addWidget(controlWindow, 0, 0);
+  QWidget *mainWidget = new QWidget(this);
+  mainWidget->setLayout(mainLayout);
+  setCentralWidget(mainWidget);
 
   // UI components
   createDockWidgets();
@@ -317,11 +321,6 @@ void MainWindow::createStatusBar() {
   statusBar()->setSizeGripEnabled(false);
 }
 
-void MainWindow::appExit() {
-  userSetting->saveRenderSettings();
-  close();
-}
-
 void MainWindow::loadScene(const char *filename) {
   qDebug() << filename;
   if (!strlen(filename)) return;
@@ -336,7 +335,7 @@ void MainWindow::loadScene(const char *filename) {
     propsFileInfo->setText(filename);
     // propsObjectsInfo->setText(QString::fromStdString(scene->info));
   } catch (const s21::MeshLoadException &e) {
-    QMessageBox::information(this, tr("Unable to open file"), e.what());
+    QMessageBox::warning(this, tr("Unable to open file"), e.what());
   }
 }
 
@@ -347,29 +346,36 @@ void MainWindow::saveImage(const char *filename) {
     bool isSaved = renderWindow->grab().save(filename);
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
   } catch (const std::exception &e) {
-    QMessageBox::information(this, tr("Unable to save file"), e.what());
+    QMessageBox::warning(this, tr("Unable to save file"), e.what());
   }
 }
 
 void MainWindow::saveCustomGif(const char *filename) {
+  if (!strlen(filename)) return;
   fileName = filename;
-  if (fileName == "") return;
 
   timer->start();
 }
 
 void MainWindow::grabScene() {
-  renderWindow->beforeGrab();  //!
+  renderWindow->changeAspectRatio(true);
   screens.push_back(renderWindow->grab());
-  renderWindow->afterGrab();  //!
+  renderWindow->changeAspectRatio(false);
 
   if (screens.size() == 50) {
     timer->stop();
-    createGifFile();
+    try {
+      createGifFile();
+      QMessageBox::information(this, tr("File saved"), "Gif is saved");
+    } catch (const std::exception &e) {
+      QMessageBox::warning(this, tr("Unable to save file"), e.what());
+    }
+    screens.clear();
   }
 }
 
 void MainWindow::saveCycledGif(const char *filename) {
+  if (!strlen(filename)) return;
   fileName = filename;
 
   std::array<int, 3> coords;
@@ -390,9 +396,9 @@ void MainWindow::saveCycledGif(const char *filename) {
   screens.resize(50);
 
   controller->ResetScene();
-  renderWindow->beforeGrab();  //!
+  renderWindow->changeAspectRatio(true);
   screens[0] = renderWindow->grab();
-  renderWindow->afterGrab();  //!
+  renderWindow->changeAspectRatio(false);
 
   for (int i = 1; i <= 25; ++i) {
     controller->SetScaleX(scaleX.first += scaleX.second);
@@ -407,21 +413,23 @@ void MainWindow::saveCycledGif(const char *filename) {
 
     renderWindow->update();
 
-    renderWindow->beforeGrab();  //!
+    renderWindow->changeAspectRatio(true);
     screens[i] = renderWindow->grab();
     screens[50 - i] = renderWindow->grab();
-    renderWindow->afterGrab();  //!
+    renderWindow->changeAspectRatio(false);
   }
-  createGifFile();
+  try {
+    createGifFile();
+    QMessageBox::information(this, tr("File saved"), "Gif is saved");
+  } catch (const std::exception &e) {
+    QMessageBox::warning(this, tr("Unable to save file"), e.what());
+  }
+  screens.clear();
 }
 
 void MainWindow::createGifFile() {
-  QByteArray byteArray = fileName.toUtf8();  // TODO Не нужно
-  const char *cstr = byteArray.constData();
   GifWriter gif;
-  // try {
-  // TODO try-catch ломает гиф
-  GifBegin(&gif, cstr, 640, 480, 10);
+  GifBegin(&gif, fileName, 640, 480, 10);
   for (const auto &screen : screens) {
     // pixmap->QImage->scale 640x480->colors
     QImage scaledImage = screen.toImage()
@@ -430,22 +438,6 @@ void MainWindow::createGifFile() {
     GifWriteFrame(&gif, scaledImage.bits(), 640, 480, 0);
   }
   GifEnd(&gif);
-
-  // QMessageBox::information(this, tr("File saved"), "File is saved! =)");
-  // } catch (const std::exception &e) {
-  //   QMessageBox::information(this, tr("Unable to save file"), e.what());
-  // }
-  screens.clear();
-}
-
-void MainWindow::saveLayout() {
-  userSetting->setLayoutState(saveState());
-  userSetting->saveLayoutSettings();
-}
-
-void MainWindow::restoreLayout() {
-  userSetting->readLayoutSettings();
-  restoreState(userSetting->getLayoutState());
 }
 
 void MainWindow::resetUserSettings() {
@@ -465,7 +457,6 @@ void MainWindow::saveUserSettings() { userSetting->saveRenderSettings(); }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
   userSetting->saveRenderSettings();
-  userSetting->removeLayoutSettings();
   QMainWindow::closeEvent(event);
 }
 

@@ -14,7 +14,6 @@
 #include <QStatusBar>
 #include <QString>
 #include <QTimer>
-#include <QToolBar>  //!
 #include <QWidget>
 
 #include "BackgroundBox.h"
@@ -78,13 +77,11 @@ class MainWindow : public QMainWindow {
 
   // for saving
   std::vector<QPixmap> screens;
-  QString fileName;
+  const char *fileName;
   QTimer *timer;
 
   void setupUI();
   void createDockWidgets();
-  void saveLayout();
-  void restoreLayout();
   void saveUserSettings();
   void resetUserSettings();
   void restoreUserSettings();
@@ -92,7 +89,6 @@ class MainWindow : public QMainWindow {
   void saveImage(const char *filename);
   void saveCustomGif(const char *filename);
   void saveCycledGif(const char *filename);
-  void appExit();
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
   void resetCoords();

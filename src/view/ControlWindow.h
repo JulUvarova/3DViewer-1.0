@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QFileDialog>
-#include <QGraphicsDropShadowEffect>  //!
+#include <QGraphicsDropShadowEffect>  
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QMouseEvent>
@@ -19,14 +19,11 @@ class ControlWindow : public QWidget {
   Q_OBJECT
 
  public:
-  ControlWindow(QOpenGLWidget* renderWindow, QWidget* parent = nullptr)
+  ControlWindow(QWidget* parent = nullptr)
       : QWidget(parent) {
     // Основной layout
     QGridLayout* mainLayout = new QGridLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
-
-    // для отрисовки, но напрямую тут не используем
-    mainLayout->addWidget(renderWindow);
 
     // контейнер для кнопок
     QWidget* buttonContainer = new QWidget(this);
@@ -76,13 +73,13 @@ class ControlWindow : public QWidget {
     // отступы от краев
     buttonsLayout->setContentsMargins(0, 10, 10, 0);
 
-    //! shadow for buttons
-    // buttonContainer->setStyleSheet(
-    //     "QWidget {"
-    //     "  background-color: rgba(240,240,240,100);"
-    //     "  border-radius: 6px;"
-    //     "}");
-    // buttonContainer->setGraphicsEffect(new QGraphicsDropShadowEffect(this));
+    // shadow for buttons
+    buttonContainer->setStyleSheet(
+        "QWidget {"
+        "  background-color: rgba(100,100,100,100);"
+        "  border-radius: 6px;"
+        "}");
+    buttonContainer->setGraphicsEffect(new QGraphicsDropShadowEffect(this));
 
     connect(openButton, &QPushButton::clicked, this, &ControlWindow::openFile);
     connect(bmpButton, &QPushButton::clicked, this,
