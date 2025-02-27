@@ -241,7 +241,7 @@ int OBJData::ParseIndex(const std::string_view& part, size_t current_count) {
 inline float OBJData::ParseFloat(std::string_view sv) {
   float value;
   auto result = std::from_chars(sv.data(), sv.data() + sv.size(), value);
-  if (result.ec != std::errc()) throw std::invalid_argument("Bad float");
+  if (result.ec != std::errc()) throw MeshLoadException("Invalid file format");
   return value;
 }
 

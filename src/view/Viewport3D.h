@@ -358,35 +358,6 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
   }
 
   /**
-   * @brief Updates the projection matrix for a 4:3 aspect ratio.
-   *
-   * This function is used when capturing the viewport (e.g., for a GIF).
-   */
-  // void updateGif() {
-  //   projectionMatrix.setToIdentity();
-
-  //   float aspect = static_cast<float>(width()) / (width() * 3 / 4);
-
-  //   if (renderSetting->isParallelProjectrion()) {
-  //     // Orthographic projection parameters
-  //     float size = 1.0f;
-  //     projectionMatrix.ortho(-size * aspect, size * aspect, -size,
-  //     size, 1.0f,
-  //                            100.0f);
-  //   } else {
-  //     // Perspective projection parameters
-  //     projectionMatrix.perspective(45.0f, aspect, 1.0f, 100.0f);
-  //   }
-
-  //   // Set the view matrix (camera transformation)
-  //   viewMatrix.setToIdentity();
-  //   viewMatrix.translate(0.0f, 0.0f, -2.0f);
-
-  //   // Update the model matrix
-  //   UpdateModelMatrix();
-  // }
-
-  /**
    * @brief Updates the projection matrix based on the current widget
    * dimensions.
    *
