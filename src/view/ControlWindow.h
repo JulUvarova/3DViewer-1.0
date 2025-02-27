@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QMenu>
 #include <QMouseEvent>
 #include <QOpenGLWidget>
@@ -20,22 +21,20 @@ class ControlWindow : public QWidget {
 
  public:
   ControlWindow(QWidget* parent = nullptr) : QWidget(parent) {
-    // Основной layout
     QGridLayout* mainLayout = new QGridLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
 
-    // контейнер для кнопок
     QWidget* buttonContainer = new QWidget(this);
     buttonContainer->setAttribute(Qt::WA_TranslucentBackground);
 
     QVBoxLayout* buttonsLayout = new QVBoxLayout(buttonContainer);
     buttonsLayout->setSpacing(10);
 
-    openButton = new QPushButton("Open", this);
-    jpegButton = new QPushButton("jpeg", this);
-    bmpButton = new QPushButton("bmp", this);
-    customGifButton = new QPushButton("gif1", this);
-    cycledGifButton = new QPushButton("gif2", this);
+    openButton = new QPushButton(this);
+    jpegButton = new QPushButton(this);
+    bmpButton = new QPushButton(this);
+    customGifButton = new QPushButton(this);
+    cycledGifButton = new QPushButton(this);
 
     QString buttonStyle =
         "QPushButton {"
@@ -45,7 +44,6 @@ class ControlWindow : public QWidget {
         "  max-width: 50px;"
         "  min-height: 50px;"
         "  max-height: 50px;"
-        "  font-size: 18px;"  //! шрифт - убрать
         "}"
         "QPushButton:hover {"
         "  background-color: grey;"
@@ -54,11 +52,20 @@ class ControlWindow : public QWidget {
         "  background-color: lightgrey;"
         "}";
     openButton->setStyleSheet(buttonStyle);
-    // openButton->setIconSize(QSize(30, 30));
+    openButton->setIcon(QIcon("view/resources/open_64_negate.png"));
+    openButton->setIconSize(QSize(30, 30));
     jpegButton->setStyleSheet(buttonStyle);
+    jpegButton->setIcon(QIcon("view/resources/jpg_64_negate.png"));
+    jpegButton->setIconSize(QSize(30, 30));
     bmpButton->setStyleSheet(buttonStyle);
+    bmpButton->setIcon(QIcon("view/resources/bmp_64_negate.png"));
+    bmpButton->setIconSize(QSize(30, 30));
     customGifButton->setStyleSheet(buttonStyle);
+    customGifButton->setIcon(QIcon("view/resources/gif_64_negate.png"));
+    customGifButton->setIconSize(QSize(30, 30));
     cycledGifButton->setStyleSheet(buttonStyle);
+    cycledGifButton->setIcon(QIcon("view/resources/cgif_64_negate.png"));
+    cycledGifButton->setIconSize(QSize(30, 30));
 
     buttonsLayout->addWidget(openButton);
     buttonsLayout->addWidget(jpegButton);
