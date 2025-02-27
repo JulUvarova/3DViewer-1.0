@@ -19,6 +19,7 @@
 #include "BackgroundBox.h"
 #include "ControlWindow.h"
 #include "ElemBox.h"
+#include "InfoWindow.h"
 #include "SlidersBox.h"
 #include "UserSetting.h"
 #include "Viewport3D.h"
@@ -57,8 +58,8 @@ class MainWindow : public QMainWindow {
 
  private:
   // UI elements
-  QDockWidget *toolsDock, *propsDock;
-  QLabel *propsFileInfo, *propsObjectsInfo, *warningInfo;
+  QDockWidget *toolsDock;
+  QLabel *propsFileInfo, *warningInfo;
   SlidersBox *locationSlidersBox, *rotateSlidersBox, *scaleSlidersBox;
   ElemBox *verticesBox, *edgesBox;
   BackgroundBox *backBox;
@@ -68,6 +69,7 @@ class MainWindow : public QMainWindow {
   QPushButton *resetCoordsButton, *resetElemsButton, *saveElemsButton,
       *restoreElemsButton, *sceneInfoButton;
   QRadioButton *perspectiveProj, *parallelProj;
+  InfoWindow *sceneInfoWindow;
 
   // Controller
   std::shared_ptr<s21::Controller> controller;
@@ -95,4 +97,9 @@ class MainWindow : public QMainWindow {
   void createStatusBar();
   void grabScene();
   void createGifFile();
+  void moveInfoWindow();
+
+ protected:
+  void resizeEvent(QResizeEvent *event) override;
+  void moveEvent(QMoveEvent *event) override;
 };

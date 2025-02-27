@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QFileDialog>
-#include <QGraphicsDropShadowEffect>  
+#include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QMouseEvent>
@@ -19,8 +19,7 @@ class ControlWindow : public QWidget {
   Q_OBJECT
 
  public:
-  ControlWindow(QWidget* parent = nullptr)
-      : QWidget(parent) {
+  ControlWindow(QWidget* parent = nullptr) : QWidget(parent) {
     // Основной layout
     QGridLayout* mainLayout = new QGridLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);

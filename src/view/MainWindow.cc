@@ -80,9 +80,6 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
     renderWindow->repaint();
   });
 
-  // connect(sceneInfoButton, &QPushButton::clicked, propsObjectsInfo,
-  //         &QLabel::show);
-
   // Work with file
   connect(controlWindow, &ControlWindow::signalOpenFile, this,
           &MainWindow::loadScene);
@@ -92,6 +89,34 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
           &MainWindow::saveCycledGif);
   connect(controlWindow, &ControlWindow::signalStartCustomGif, this,
           &MainWindow::saveCustomGif);
+  connect(sceneInfoButton, &QPushButton::clicked, this, [this]() {
+    moveInfoWindow();
+    sceneInfoWindow->show();
+  });
+
+  connect(toolsDock, &QDockWidget::dockLocationChanged, this,
+          &MainWindow::moveInfoWindow);
+}
+
+void MainWindow::moveInfoWindow() {
+  int wShift = 0;
+  if (Qt::RightDockWidgetArea == dockWidgetArea(toolsDock) &&
+      !toolsDock->isFloating())
+    wShift = toolsDock->width();
+  sceneInfoWindow->move(
+      geometry().bottomRight() -
+      QPoint(sceneInfoWindow->width() + wShift,
+             sceneInfoWindow->height() + statusBar()->height()));
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+  QMainWindow::resizeEvent(event);
+  moveInfoWindow();
+}
+
+void MainWindow::moveEvent(QMoveEvent *event) {
+  QMainWindow::moveEvent(event);
+  moveInfoWindow();
 }
 
 void MainWindow::resetCoords() {
@@ -294,6 +319,7 @@ void MainWindow::createDockWidgets() {
   // block close
   toolsDock->setFeatures(QDockWidget::DockWidgetMovable |
                          QDockWidget::DockWidgetFloatable);
+  toolsDock->setFixedWidth(toolsDock->width() * 2);
 }
 
 void MainWindow::createStatusBar() {
@@ -312,6 +338,8 @@ void MainWindow::createStatusBar() {
 
   warningInfo = new QLabel("REZERVED", propBox);
 
+  sceneInfoWindow = new InfoWindow(this);
+
   propBox->addWidget(warningInfo);
   propBox->addPermanentWidget(fileNameLabel);
   propBox->addPermanentWidget(propsFileInfo);
@@ -322,18 +350,15 @@ void MainWindow::createStatusBar() {
 }
 
 void MainWindow::loadScene(const char *filename) {
-  qDebug() << filename;
   if (!strlen(filename)) return;
 
   resetCoords();
   try {
-    qDebug() << "open";
     auto scene = controller->LoadScene(filename);
     renderWindow->setScene(scene);
     renderWindow->repaint();
-    // TODO Окно Информации
     propsFileInfo->setText(filename);
-    // propsObjectsInfo->setText(QString::fromStdString(scene->info));
+    sceneInfoWindow->setText(QString::fromStdString(scene->info));
   } catch (const s21::MeshLoadException &e) {
     QMessageBox::warning(this, tr("Unable to open file"), e.what());
   }
