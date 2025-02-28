@@ -46,13 +46,12 @@ class SlidersBox : public QWidget {
   QHBoxLayout *xLayout, *yLayout, *zLayout;
   QVBoxLayout *layout;
 
-  std::array<QLabel *, 3> labels{new QLabel{" X "}, new QLabel{" Y "},
-                                 new QLabel{" Z "}};
-  std::array<Slider *, 3> sliders{new Slider(), new Slider(), new Slider()};
-  std::array<QLineEdit *, 3> values{new QLineEdit(), new QLineEdit(),
-                                    new QLineEdit()};
-  std::array<QHBoxLayout *, 3> layouts{new QHBoxLayout(), new QHBoxLayout(),
-                                       new QHBoxLayout()};
+  std::array<QLabel *, 3> labels{new QLabel{" X ", this}, new QLabel{" Y ", this},
+                                 new QLabel{" Z ", this}};
+  std::array<Slider *, 3> sliders{new Slider(this), new Slider(this), new Slider(this)};
+  std::array<QLineEdit *, 3> values{new QLineEdit(this), new QLineEdit(this),
+                                    new QLineEdit(this)};
+  std::array<QHBoxLayout *, 3> layouts;
 
  Q_SIGNALS:
   void signalChangeX(int coordX);

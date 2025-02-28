@@ -79,7 +79,7 @@ class MainWindow : public QMainWindow {
 
   // for saving
   std::vector<QPixmap> screens;
-  std::string fileName;
+  QString filename;
   QTimer *timer;
 
   void setupUI();
@@ -87,10 +87,10 @@ class MainWindow : public QMainWindow {
   void saveUserSettings();
   void resetUserSettings();
   void restoreUserSettings();
-  void loadScene(const char *filename);
-  void saveImage(const char *filename);
-  void saveCustomGif(const char *filename);
-  void saveCycledGif(const char *filename);
+  void loadScene(QString& fname);
+  void saveImage(QString& fname);
+  void saveCustomGif(QString& fname);
+  void saveCycledGif(QString& fname);
   void closeEvent(QCloseEvent *event) override;
   void setVisualParameters();
   void resetCoords();

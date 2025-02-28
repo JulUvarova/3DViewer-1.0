@@ -103,10 +103,10 @@ class ControlWindow : public QWidget {
   void signalChangeMoveCoords(std::pair<int, int> coordXY);
   void signalChangeScaleCoords(std::pair<int, int> coordXY);
   void signalChangeRotateCoords(std::pair<int, int> coordXY);
-  void signalOpenFile(const char* filename);
-  void signalSaveFile(const char* filename);
-  void signalStartCustomGif(const char* filename);
-  void signalStartCycledGif(const char* filename);
+  void signalOpenFile(QString& fname);
+  void signalSaveFile(QString& fname);
+  void signalStartCustomGif(QString& fname);
+  void signalStartCycledGif(QString& fname);
 
  private:
   QPushButton *openButton, *jpegButton, *bmpButton, *customGifButton,
@@ -121,7 +121,7 @@ class ControlWindow : public QWidget {
     QString filename = QFileDialog::getOpenFileName(this, tr("Open file"), "./",
                                                     tr("Images (*.obj)"));
     if (!filename.isEmpty())
-      Q_EMIT signalOpenFile(filename.toUtf8().constData());
+      Q_EMIT signalOpenFile(filename);
   }
 
   void saveFile(const char* options, int gif) {
@@ -131,11 +131,11 @@ class ControlWindow : public QWidget {
     if (!filename.isEmpty()) {
       filename.append(selectedFilter.remove("*"));
       if (filename.endsWith("gif") && gif == 1) {  // TODO как-то поумнее
-        Q_EMIT signalStartCustomGif(filename.toUtf8().constData());
+        Q_EMIT signalStartCustomGif(filename);
       } else if (filename.endsWith("gif") && gif == 2) {
-        Q_EMIT signalStartCycledGif(filename.toUtf8().constData());
+        Q_EMIT signalStartCycledGif(filename);
       } else if (filename.endsWith("bmp") || filename.endsWith("jpeg")) {
-        Q_EMIT signalSaveFile(filename.toUtf8().constData());
+        Q_EMIT signalSaveFile(filename);
       }
     }
   }

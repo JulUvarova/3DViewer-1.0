@@ -349,35 +349,35 @@ void MainWindow::createStatusBar() {
   statusBar()->setSizeGripEnabled(false);
 }
 
-void MainWindow::loadScene(const char *filename) {
-  if (!strlen(filename)) return;
+void MainWindow::loadScene(QString& fname) {
+  if (fname.isEmpty()) return;
 
   resetCoords();
   try {
-    auto scene = controller->LoadScene(filename);
+    auto scene = controller->LoadScene(fname.toUtf8().data());
     renderWindow->setScene(scene);
     renderWindow->repaint();
-    propsFileInfo->setText(filename);
+    propsFileInfo->setText(fname);
     sceneInfoWindow->setText(QString::fromStdString(scene->info));
   } catch (const s21::MeshLoadException &e) {
     QMessageBox::warning(this, tr("Unable to open file"), e.what());
   }
 }
 
-void MainWindow::saveImage(const char *filename) {
-  if (!strlen(filename)) return;
+void MainWindow::saveImage(QString& fname) {
+  if (fname.isEmpty()) return;
 
   try {
-    bool isSaved = renderWindow->grab().save(filename);
+    bool isSaved = renderWindow->grab().save(fname);
     QMessageBox::information(this, tr("File saved"), "File is saved! =)");
   } catch (const std::exception &e) {
     QMessageBox::warning(this, tr("Unable to save file"), e.what());
   }
 }
 
-void MainWindow::saveCustomGif(const char *filename_) {
-  if (!strlen(filename_)) return;
-  fileName = std::string(filename_);
+void MainWindow::saveCustomGif(QString& fname) {
+  if (fname.isEmpty()) return;
+  filename = fname;
 
   timer->start();
 }
@@ -399,9 +399,10 @@ void MainWindow::grabScene() {
   }
 }
 
-void MainWindow::saveCycledGif(const char *filename_) {
-  if (!strlen(filename_)) return;
-  fileName = std::string(filename_);
+void MainWindow::saveCycledGif(QString& fname) {
+  if (fname.isEmpty()) return;
+  filename = fname;
+
   std::array<int, 3> coords;
 
   coords = locationSlidersBox->getCoords();
@@ -453,8 +454,8 @@ void MainWindow::saveCycledGif(const char *filename_) {
 
 void MainWindow::createGifFile() {
   GifWriter gif;
-  LogAlert << "Creating gif file" << fileName << std::endl;
-  GifBegin(&gif, fileName.c_str(), 640, 480, 10);
+  // LogAlert << "Creating gif file" << filename << std::endl;
+  GifBegin(&gif, filename.toUtf8().data(), 640, 480, 10);
   for (const auto &screen : screens) {
     // pixmap->QImage->scale 640x480->colors
     QImage scaledImage = screen.toImage()
