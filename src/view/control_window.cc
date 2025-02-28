@@ -84,15 +84,15 @@ void ControlWindow::OpenFile() {
   if (!filename.isEmpty()) Q_EMIT signalOpenFile(filename);
 }
 
-void ControlWindow::SaveFile(const char* options, int gif) {
+void ControlWindow::SaveFile(const char* options, int type) {
   QString selectedFilter;
   QString filename = QFileDialog::getSaveFileName(
       this, tr("Choose folder"), "./", tr(options), &selectedFilter);
   if (!filename.isEmpty()) {
     filename.append(selectedFilter.remove("*"));
-    if (filename.endsWith("gif") && gif == 1) {  // TODO как-то поумнее
+    if (filename.endsWith("gif") && type == 1) {  // TODO enum
       Q_EMIT signalStartCustomGif(filename);
-    } else if (filename.endsWith("gif") && gif == 2) {
+    } else if (filename.endsWith("gif") && type == 2) {
       Q_EMIT signalStartCycledGif(filename);
     } else if (filename.endsWith("bmp") || filename.endsWith("jpeg")) {
       Q_EMIT signalSaveFile(filename);

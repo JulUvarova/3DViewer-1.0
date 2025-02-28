@@ -19,14 +19,22 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS OpenGLWidgets)
 set(PROJECT_SOURCES
         main.cc
         
-        view/MainWindow.cc
-        view/MainWindow.h
-        view/ControlWindow.h
-        view/Viewport3D.h
-        view/SlidersBox.h
-        view/ElemBox.h
-        view/BackgroundBox.h
-    
+        view/main_window.h
+        view/main_window.cc
+        view/info_window.h
+        view/info_window.cc
+        view/control_window.h
+        view/control_window.cc 
+        view/viewport3D.h
+        view/viewport3D.cc
+        view/background_box.h
+        view/background_box.cc 
+        view/elem_box.h
+        view/elem_box.cc 
+        view/sliders_box.h
+        view/sliders_box.cc 
+        view/user_setting.h
+        view/user_setting.cc     
         
         model/facade.h
         model/facade.cc

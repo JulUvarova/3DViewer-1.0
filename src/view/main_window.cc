@@ -10,7 +10,7 @@ MainWindow::MainWindow(std::shared_ptr<s21::Controller> ctrl, QWidget *parent)
   connect(timer_, &QTimer::timeout, this, &MainWindow::GrabScene);
 
   // Settings
-  connect(ResetCoordsButton_, &QPushButton::clicked, this,
+  connect(resetCoordsButton_, &QPushButton::clicked, this,
           &MainWindow::ResetCoords);
   connect(resetElemsButton_, &QPushButton::clicked, this,
           &MainWindow::ResetUserSettings);
@@ -294,7 +294,7 @@ void MainWindow::CreateDockWidgets() {
       new BackgroundBox("Background", userSetting_->GetBackgroundColor(), this);
 
   // reset buttons
-  ResetCoordsButton_ = new QPushButton("Reset coords");
+  resetCoordsButton_ = new QPushButton("Reset coords");
   resetElemsButton_ = new QPushButton("Reset settings");
   restoreElemsButton_ = new QPushButton("Restore settings");
   saveElemsButton_ = new QPushButton("Save settings");
@@ -305,7 +305,7 @@ void MainWindow::CreateDockWidgets() {
   toolBox->layout()->addWidget(locationSlidersBox_);
   toolBox->layout()->addWidget(rotateSlidersBox_);
   toolBox->layout()->addWidget(scaleSlidersBox_);
-  toolBox->layout()->addWidget(ResetCoordsButton_);
+  toolBox->layout()->addWidget(resetCoordsButton_);
   toolBox->layout()->addWidget(projBox);
   toolBox->layout()->addWidget(verticesBox_);
   toolBox->layout()->addWidget(edgesBox_);
@@ -336,11 +336,8 @@ void MainWindow::CreateStatusBar() {
   QLabel *fileNameLabel = new QLabel("File:", propBox);
   fileNameLabel->adjustSize();
 
-  warningInfo_ = new QLabel("REZERVED", propBox);  //!
-
   sceneInfoWindow_ = new InfoWindow(this);
 
-  propBox->addWidget(warningInfo_);
   propBox->addPermanentWidget(fileNameLabel);
   propBox->addPermanentWidget(filenameInfo_);
   propBox->addPermanentWidget(sceneInfoButton_);
