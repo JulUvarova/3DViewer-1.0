@@ -31,57 +31,57 @@ class SceneParameters {
    * @return The scale factor along the X-axis, which is in the range
    * [0.0, 2.0].
    */
-  float GetScaleX() const { return scale_x_; }
+  inline float GetScaleX() const { return scale_x_; }
 
   /**
    * @brief Returns the scale factor along the Y-axis.
    * @return The scale factor along the Y-axis, which is in the range
    * [0.0, 2.0].
    */
-  float GetScaleY() const { return scale_y_; }
+  inline float GetScaleY() const { return scale_y_; }
 
   /**
    * @brief Returns the scale factor along the Z-axis.
    * @return The scale factor along the Z-axis, which is in the range
    * [0.0, 2.0].
    */
-  float GetScaleZ() const { return scale_z_; }
+  inline float GetScaleZ() const { return scale_z_; }
 
   /**
    * @brief Returns the rotation angle around the X-axis.
    * @return The rotation angle in radians.
    */
-  float GetRotationX() const { return rotation_x_; }
+  inline float GetRotationX() const { return rotation_x_; }
 
   /**
    * @brief Returns the rotation angle around the Y-axis.
    * @return The rotation angle in radians.
    */
-  float GetRotationY() const { return rotation_y_; }
+  inline float GetRotationY() const { return rotation_y_; }
 
   /**
    * @brief Returns the rotation angle around the Z-axis.
    * @return The rotation angle in radians.
    */
-  float GetRotationZ() const { return rotation_z_; }
+  inline float GetRotationZ() const { return rotation_z_; }
 
   /**
    * @brief Returns the location along the X-axis.
    * @return The location along the X-axis, which is in the range [-1.0, 1.0].
    */
-  float GetLocationX() const { return location_x_; }
+  inline float GetLocationX() const { return location_x_; }
 
   /**
    * @brief Returns the location along the Y-axis.
    * @return The location along the Y-axis, which is in the range [-1.0, 1.0].
    */
-  float GetLocationY() const { return location_y_; }
+  inline float GetLocationY() const { return location_y_; }
 
   /**
    * @brief Returns the location along the Z-axis.
    * @return The location along the Z-axis, which is in the range [-1.0, 1.0].
    */
-  float GetLocationZ() const { return location_z_; }
+  inline float GetLocationZ() const { return location_z_; }
 
   // Setters with constraints
 
@@ -90,63 +90,81 @@ class SceneParameters {
    * @param value The desired scale factor. It will be clamped to the range
    * [0.0, 2.0].
    */
-  void SetScaleX(float value) { scale_x_ = std::clamp(value, 0.0f, 2.0f); }
+  inline void SetScaleX(float value) {
+    scale_x_ = std::clamp(value, 0.0f, 2.0f);
+  }
 
   /**
    * @brief Sets the scale factor along the Y-axis.
    * @param value The desired scale factor. It will be clamped to the range
    * [0.0, 2.0].
    */
-  void SetScaleY(float value) { scale_y_ = std::clamp(value, 0.0f, 2.0f); }
+  inline void SetScaleY(float value) {
+    scale_y_ = std::clamp(value, 0.0f, 2.0f);
+  }
 
   /**
    * @brief Sets the scale factor along the Z-axis.
    * @param value The desired scale factor. It will be clamped to the range
    * [0.0, 2.0].
    */
-  void SetScaleZ(float value) { scale_z_ = std::clamp(value, 0.0f, 2.0f); }
+  inline void SetScaleZ(float value) {
+    scale_z_ = std::clamp(value, 0.0f, 2.0f);
+  }
 
   /**
    * @brief Sets the rotation angle around the X-axis.
    * @param degrees The rotation angle in degrees. It will be converted to
    * radians internally.
    */
-  void SetRotationX(float degrees) { rotation_x_ = DegreesToRadians(degrees); }
+  inline void SetRotationX(float degrees) {
+    rotation_x_ = DegreesToRadians(degrees);
+  }
 
   /**
    * @brief Sets the rotation angle around the Y-axis.
    * @param degrees The rotation angle in degrees. It will be converted to
    * radians internally.
    */
-  void SetRotationY(float degrees) { rotation_y_ = DegreesToRadians(degrees); }
+  inline void SetRotationY(float degrees) {
+    rotation_y_ = DegreesToRadians(degrees);
+  }
 
   /**
    * @brief Sets the rotation angle around the Z-axis.
    * @param degrees The rotation angle in degrees. It will be converted to
    * radians internally.
    */
-  void SetRotationZ(float degrees) { rotation_z_ = DegreesToRadians(degrees); }
+  inline void SetRotationZ(float degrees) {
+    rotation_z_ = DegreesToRadians(degrees);
+  }
 
   /**
    * @brief Sets the location along the X-axis.
    * @param value The desired location. It will be clamped to the range
    * [-1.0, 1.0].
    */
-  void SetLocationX(float value) { location_x_ = Clamp(value, -1.0f, 1.0f); }
+  inline void SetLocationX(float value) {
+    location_x_ = Clamp(value, -1.0f, 1.0f);
+  }
 
   /**
    * @brief Sets the location along the Y-axis.
    * @param value The desired location. It will be clamped to the range
    * [-1.0, 1.0].
    */
-  void SetLocationY(float value) { location_y_ = Clamp(value, -1.0f, 1.0f); }
+  inline void SetLocationY(float value) {
+    location_y_ = Clamp(value, -1.0f, 1.0f);
+  }
 
   /**
    * @brief Sets the location along the Z-axis.
    * @param value The desired location. It will be clamped to the range
    * [-1.0, 1.0].
    */
-  void SetLocationZ(float value) { location_z_ = Clamp(value, -1.0f, 1.0f); }
+  inline void SetLocationZ(float value) {
+    location_z_ = Clamp(value, -1.0f, 1.0f);
+  }
 
  private:
   /// The scale factor along the X-axis, initialized to 1.0.
