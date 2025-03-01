@@ -73,9 +73,9 @@ void OBJData::Parse(const std::string& filename) {
   close(fd);
 
   // Batch reserves
-  vertices.reserve(size / 100);
-  normals.reserve(size / 200);
-  texcoords.reserve(size / 200);
+  vertices.reserve(size / 10);
+  normals.reserve(size / 20);
+  texcoords.reserve(size / 20);
   objects.reserve(10);
 
   // Process buffer
@@ -187,31 +187,33 @@ void OBJData::HandleFace(const std::vector<std::string_view>& tokens,
   }
 
   Face face;
-
+  face.vertices.reserve(tokens.size() - 1);
   for (size_t i = 1; i < tokens.size(); ++i) {
     std::string_view part = tokens[i];
-    VertexIndices vi;
-
     size_t delim1 = part.find('/');
     size_t delim2 = part.find('/', delim1 + 1);
 
+    // Prepare indices with default values (assuming 0 is a safe default)
+    int v = 0, vt = 0, vn = 0;
+
     // Parse vertex index (v)
     if (delim1 != 0) {  // Check for leading '/' (e.g., "//vn")
-      vi.v = ParseIndex(part.substr(0, delim1), vertices.size());
+      v = ParseIndex(part.substr(0, delim1), vertices.size());
     }
 
     // Parse texture coordinate (vt)
     if (delim1 != std::string_view::npos && delim2 > delim1 + 1) {
-      vi.vt = ParseIndex(part.substr(delim1 + 1, delim2 - delim1 - 1),
-                         texcoords.size());
+      vt = ParseIndex(part.substr(delim1 + 1, delim2 - delim1 - 1),
+                      texcoords.size());
     }
 
     // Parse normal (vn)
     if (delim2 != std::string_view::npos) {
-      vi.vn = ParseIndex(part.substr(delim2 + 1), normals.size());
+      vn = ParseIndex(part.substr(delim2 + 1), normals.size());
     }
 
-    face.vertices.push_back(vi);
+    // Construct VertexIndices in place
+    face.vertices.emplace_back(v, vt, vn);
   }
   current_mesh->faces.push_back(face);
 }

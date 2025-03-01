@@ -40,6 +40,8 @@ struct VertexIndices {
   int v{-1};   ///< Index of the vertex, -1 if not specified.
   int vt{-1};  ///< Index of the texture coordinate, -1 if not specified.
   int vn{-1};  ///< Index of the normal, -1 if not specified.
+  // add ctor
+  VertexIndices(int v, int vt = -1, int vn = -1) : v(v), vt(vt), vn(vn) {}
 };
 
 /**
