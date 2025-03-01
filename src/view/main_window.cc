@@ -494,5 +494,5 @@ void MainWindow::SetVisualParameters() {
                           userSetting_->GetVerticesSize()};
   verticesBox_->SetSetting(verticesSetting);
 
-  backgroundBox_->SetSetting(userSetting_->GetBackgroundColor());
+  backgroundBox_->SetColorButton(userSetting_->GetBackgroundColor());
 }

@@ -14,19 +14,19 @@
 /**
  * @struct Setting
  * @brief Structure to hold settings for an element.
- * 
+ *
  * This structure contains the type, color, and size of an element.
  */
 struct Setting {
-  QString type; ///< The type of the element.
-  QColor color; ///< The color of the element.
-  int size; ///< The size of the element.
+  QString type;  ///< The type of the element.
+  QColor color;  ///< The color of the element.
+  int size;      ///< The size of the element.
 };
 
 /**
  * @class ElemBox
  * @brief A class for configuring an element's settings.
- * 
+ *
  * This class provides a user interface for selecting the type, size, and color
  * of an element. It emits signals when these settings change.
  */
@@ -36,7 +36,7 @@ class ElemBox : public QWidget {
  public:
   /**
    * @brief Constructor for the ElemBox class.
-   * 
+   *
    * @param name The name of the group box.
    * @param lst A list of types to populate the combo box.
    * @param setting The initial settings for the element.
@@ -47,7 +47,7 @@ class ElemBox : public QWidget {
 
   /**
    * @brief Sets the settings for the element.
-   * 
+   *
    * @param setting The new settings to apply.
    */
   void SetSetting(Setting &setting);
@@ -55,44 +55,43 @@ class ElemBox : public QWidget {
  Q_SIGNALS:
   /**
    * @brief Signal emitted when the type changes.
-   * 
+   *
    * @param text The new type of the element.
    */
   void signalChangeType(const QString &text);
 
   /**
    * @brief Signal emitted when the size changes.
-   * 
+   *
    * @param size The new size of the element.
    */
   void signalChangeSize(const int size);
 
   /**
    * @brief Signal emitted when the color changes.
-   * 
+   *
    * @param color The new color of the element.
    */
   void signalChangeColor(const QColor &color);
 
  private:
-  QLabel *typeLabel_; ///< Label for the type selection.
-  QLabel *sizeLabel_; ///< Label for the size selection.
-  QLabel *colorLabel_; ///< Label for the color selection.
-  QSpinBox *size_; ///< Spin box for selecting the size.
-  QColor color_; ///< Current color of the element.
-  QPushButton *colorButton_; ///< Button to display and select the color.
-  QComboBox *type_; ///< Combo box for selecting the type.
+  QLabel *typeLabel_;         ///< Label for the type selection.
+  QLabel *sizeLabel_;         ///< Label for the size selection.
+  QLabel *colorLabel_;        ///< Label for the color selection.
+  QSpinBox *size_;            ///< Spin box for selecting the size.
+  QPushButton *colorButton_;  ///< Button to display and select the color.
+  QComboBox *type_;           ///< Combo box for selecting the type.
 
   /**
    * @brief Emits the signalChangeType signal with the new type.
-   * 
+   *
    * @param text The new type of the element.
    */
   inline void TypeChange(const QString &text) { Q_EMIT signalChangeType(text); }
 
   /**
    * @brief Emits the signalChangeSize signal with the new size of the element.
-   * 
+   *
    * @param value The new size of the element.
    */
   inline void SizeChange(const int value) { Q_EMIT signalChangeSize(value); }
@@ -104,6 +103,7 @@ class ElemBox : public QWidget {
 
   /**
    * @brief Updates the color button to reflect the current color.
+   * @param color The new color of the element.
    */
-  void SetColorButton();
+  void SetColorButton(const QColor &color);
 };

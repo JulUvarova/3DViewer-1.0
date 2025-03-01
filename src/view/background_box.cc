@@ -1,12 +1,11 @@
 #include "background_box.h"
 
-BackgroundBox::BackgroundBox(const char *name, QColor clr, QWidget *parent)
+BackgroundBox::BackgroundBox(const char *name, QColor color, QWidget *parent)
     : QWidget(parent) {
   // color
   colorLabel_ = new QLabel("Color:", this);
   colorButton_ = new QPushButton(" ", this);
-  color_ = clr;
-  SetColorButton();
+  SetColorButton(color);
 
   // boxing
   QHBoxLayout *colorLayout = new QHBoxLayout();
@@ -29,22 +28,14 @@ BackgroundBox::BackgroundBox(const char *name, QColor clr, QWidget *parent)
 
 void BackgroundBox::ColorChange() {
   QColorDialog *colorDialog = new QColorDialog(this);
-  colorDialog->setCurrentColor(color_);
   if (colorDialog->exec() == QDialog::Accepted) {
-    color_ = colorDialog->currentColor();
-    SetColorButton();
-    Q_EMIT signalChangeColor(color_);
+    QColor newColor = colorDialog->currentColor();
+    SetColorButton(newColor);
+    Q_EMIT signalChangeColor(newColor);
   }
 }
 
-void BackgroundBox::SetColorButton() {
-  colorButton_->setStyleSheet("border: none; background-color: rgb(" +
-                              QString::number(color_.red()) + ", " +
-                              QString::number(color_.green()) + ", " +
-                              QString::number(color_.blue()) + ")");
-}
-
-void BackgroundBox::SetSetting(QColor clr) {
-  color_ = clr;
-  SetColorButton();
+void BackgroundBox::SetColorButton(const QColor &color) {
+  colorButton_->setStyleSheet(
+      "border: none; background-color: " + color.name() + ";");
 }

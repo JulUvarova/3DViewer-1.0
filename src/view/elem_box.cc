@@ -25,8 +25,7 @@ ElemBox::ElemBox(const char *name, QStringList &lst, Setting &setting,
   // color
   colorLabel_ = new QLabel("Color:");
   colorButton_ = new QPushButton(" ");
-  color_ = setting.color;
-  SetColorButton();
+  SetColorButton(setting.color);
 
   // boxing
   QHBoxLayout *colorLayout = new QHBoxLayout();
@@ -53,23 +52,19 @@ ElemBox::ElemBox(const char *name, QStringList &lst, Setting &setting,
 void ElemBox::SetSetting(Setting &setting) {
   type_->setCurrentText(setting.type);
   size_->setValue(setting.size);
-  color_ = setting.color;
-  SetColorButton();
+  SetColorButton(setting.color);
 }
 
 void ElemBox::ColorChange() {
   QColorDialog *colorDialog = new QColorDialog(this);
-  colorDialog->setCurrentColor(color_);
   if (colorDialog->exec() == QDialog::Accepted) {
-    color_ = colorDialog->currentColor();
-    SetColorButton();
-    Q_EMIT signalChangeColor(color_);
+    QColor newColor = colorDialog->currentColor();
+    SetColorButton(newColor);
+    Q_EMIT signalChangeColor(newColor);
   }
 }
 
-void ElemBox::SetColorButton() {
-  colorButton_->setStyleSheet("border: none; background-color: rgb(" +
-                              QString::number(color_.red()) + ", " +
-                              QString::number(color_.green()) + ", " +
-                              QString::number(color_.blue()) + ")");
+void ElemBox::SetColorButton(const QColor &color) {
+  colorButton_->setStyleSheet(
+      "border: none; background-color: " + color.name() + ";");
 }

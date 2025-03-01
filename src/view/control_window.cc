@@ -69,13 +69,13 @@ ControlWindow::ControlWindow(QWidget* parent) : QWidget(parent) {
 
   connect(openButton_, &QPushButton::clicked, this, &ControlWindow::OpenFile);
   connect(bmpButton_, &QPushButton::clicked, this,
-          [this]() { SaveFile(".bmp", 0); });
+          [this]() { SaveFile(".bmp", SaveType::Image); });
   connect(jpegButton_, &QPushButton::clicked, this,
-          [this]() { SaveFile(".jpeg", 0); });
+          [this]() { SaveFile(".jpeg", SaveType::Image); });
   connect(customGifButton_, &QPushButton::clicked, this,
-          [this]() { SaveFile(".gif", 1); });
+          [this]() { SaveFile(".gif", SaveType::CustomGif); });
   connect(cycledGifButton_, &QPushButton::clicked, this,
-          [this]() { SaveFile(".gif", 2); });
+          [this]() { SaveFile(".gif", SaveType::CycledGif); });
 }
 
 void ControlWindow::OpenFile() {
@@ -84,18 +84,22 @@ void ControlWindow::OpenFile() {
   if (!filename.isEmpty()) Q_EMIT signalOpenFile(filename);
 }
 
-void ControlWindow::SaveFile(const char* options, int type) {
+void ControlWindow::SaveFile(const char* options, SaveType type) {
   QString selectedFilter;
   QString filename = QFileDialog::getSaveFileName(
       this, tr("Choose folder"), "./", tr(options), &selectedFilter);
   if (!filename.isEmpty()) {
     filename.append(selectedFilter.remove("*"));
-    if (filename.endsWith("gif") && type == 1) {  // TODO enum
-      Q_EMIT signalStartCustomGif(filename);
-    } else if (filename.endsWith("gif") && type == 2) {
-      Q_EMIT signalStartCycledGif(filename);
-    } else if (filename.endsWith("bmp") || filename.endsWith("jpeg")) {
-      Q_EMIT signalSaveFile(filename);
+    switch (type) {
+      case SaveType::CustomGif:
+        Q_EMIT signalStartCustomGif(filename);
+        break;
+      case SaveType::CycledGif:
+        Q_EMIT signalStartCycledGif(filename);
+        break;
+      case SaveType::Image:
+        Q_EMIT signalSaveFile(filename);
+        break;
     }
   }
 }

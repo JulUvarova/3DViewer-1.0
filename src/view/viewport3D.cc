@@ -1,7 +1,6 @@
 #include "viewport3D.h"
 
-Viewport3D::Viewport3D(std::shared_ptr<UserSetting> setting,
-                       QWidget *parent)
+Viewport3D::Viewport3D(std::shared_ptr<UserSetting> setting, QWidget *parent)
     : QOpenGLWidget(parent) {
   renderSetting_ = setting;
 }
@@ -59,7 +58,7 @@ void Viewport3D::initializeGL() {
   if (!ebo_.isCreated()) ebo_.create();
 }
 
-void Viewport3D::resizeGL(int w, int h)  {
+void Viewport3D::resizeGL(int w, int h) {
   glViewport(0, 0, w, h);
   UpdateProjectionMatrix();
 }
