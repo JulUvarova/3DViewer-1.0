@@ -15,22 +15,40 @@ void Viewport3D::ChangeAspectRatio(bool isGif) {
 }
 
 void Viewport3D::UpdateModelMatrix() {
-  modelMatrix_.setToIdentity();
+  static float last_tx = 0, last_ty = 0, last_tz = 0;
+  static float last_rx = 0, last_ry = 0, last_rz = 0;
+  static float last_sx = 1, last_sy = 1, last_sz = 1;
+
   auto [tx, ty, tz, rx, ry, rz, sx, sy, sz] =
       s21::Controller::GetInstance()->GetSceneParameters();
 
-  // Apply translation
-  modelMatrix_.translate(tx, ty, tz);
-  // Apply scaling
-  modelMatrix_.scale(sx, sy, sz);
+  // Only update the matrix if any parameter has changed
+  if (tx != last_tx || ty != last_ty || tz != last_tz || rx != last_rx ||
+      ry != last_ry || rz != last_rz || sx != last_sx || sy != last_sy ||
+      sz != last_sz) {
+    // Save current parameters for next comparison
+    last_tx = tx;
+    last_ty = ty;
+    last_tz = tz;
+    last_rx = rx;
+    last_ry = ry;
+    last_rz = rz;
+    last_sx = sx;
+    last_sy = sy;
+    last_sz = sz;
 
-  // Apply rotation (converted from radians to degrees)
-  modelMatrix_.rotate(qRadiansToDegrees(rx), 1.0f, 0.0f,
-                      0.0f);  // Rotate around X-axis
-  modelMatrix_.rotate(qRadiansToDegrees(ry), 0.0f, 1.0f,
-                      0.0f);  // Rotate around Y-axis
-  modelMatrix_.rotate(qRadiansToDegrees(rz), 0.0f, 0.0f,
-                      1.0f);  // Rotate around Z-axis
+    modelMatrix_.setToIdentity();
+
+    // Apply translation
+    modelMatrix_.translate(tx, ty, tz);
+    // Apply scaling
+    modelMatrix_.scale(sx, sy, sz);
+
+    // Apply rotation (converted from radians to degrees)
+    modelMatrix_.rotate(qRadiansToDegrees(rx), 1.0f, 0.0f, 0.0f);
+    modelMatrix_.rotate(qRadiansToDegrees(ry), 0.0f, 1.0f, 0.0f);
+    modelMatrix_.rotate(qRadiansToDegrees(rz), 0.0f, 0.0f, 1.0f);
+  }
 }
 
 void Viewport3D::Repaint() {
@@ -74,39 +92,31 @@ void Viewport3D::paintGL() {
     needBufferUpdate_ = false;
   }
 
-  // Enable depth testing
+  // Enable depth testing once
   glEnable(GL_DEPTH_TEST);
 
-  // Bind shader program
+  // Bind shader program once
   shaderProgram_->bind();
 
-  // Set transformation uniforms
+  // Set transformation uniforms - these are the same for both rendering passes
   shaderProgram_->setUniformValue("projectionMatrix", projectionMatrix_);
   shaderProgram_->setUniformValue("viewMatrix", viewMatrix_);
   shaderProgram_->setUniformValue("modelMatrix", modelMatrix_);
 
-  // Set color uniforms based on user settings
-  QColor edgeColor = renderSetting_->GetEdgesColor();
-  shaderProgram_->setUniformValue("edgeColor", edgeColor.redF(),
-                                  edgeColor.greenF(), edgeColor.blueF(), 1.0f);
-
-  QColor vertexColor = renderSetting_->GetVerticesColor();
-  shaderProgram_->setUniformValue("vertexColor", vertexColor.redF(),
-                                  vertexColor.greenF(), vertexColor.blueF(),
-                                  1.0f);
-
-  // Bind VAO
+  // Bind VAO once
   vao_.bind();
 
   // Draw edges if enabled
   if (renderSetting_->GetEdgesType() != "none" && indexCount_ > 0) {
     shaderProgram_->setUniformValue("renderMode", 0);  // Edges mode
+    QColor edgeColor = renderSetting_->GetEdgesColor();
+    shaderProgram_->setUniformValue("edgeColor", edgeColor.redF(),
+                                    edgeColor.greenF(), edgeColor.blueF(),
+                                    1.0f);
 
     if (renderSetting_->GetEdgesType() == "dashed") {
       glEnable(GL_LINE_STIPPLE);
       glLineStipple(1, 0x00FF);
-    } else {
-      glDisable(GL_LINE_STIPPLE);
     }
 
     glLineWidth(renderSetting_->GetEdgesSize());
@@ -115,23 +125,32 @@ void Viewport3D::paintGL() {
     ebo_.bind();
     glDrawElements(GL_LINES, indexCount_, GL_UNSIGNED_INT, nullptr);
     ebo_.release();
+
+    // Disable stippling if it was enabled
+    if (renderSetting_->GetEdgesType() == "dashed") {
+      glDisable(GL_LINE_STIPPLE);
+    }
   }
 
   // Draw vertices if enabled
   if (renderSetting_->GetVerticesType() != "none" && vertexCount_ > 0) {
     shaderProgram_->setUniformValue("renderMode", 1);  // Vertices mode
+    QColor vertexColor = renderSetting_->GetVerticesColor();
+    shaderProgram_->setUniformValue("vertexColor", vertexColor.redF(),
+                                    vertexColor.greenF(), vertexColor.blueF(),
+                                    1.0f);
 
-    if (renderSetting_->GetVerticesType() == "circle") {
+    bool usePointSmooth = renderSetting_->GetVerticesType() == "circle";
+    if (usePointSmooth) {
       glEnable(GL_POINT_SMOOTH);
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
     }
 
     glPointSize(renderSetting_->GetVerticesSize());
     glDrawArrays(GL_POINTS, 0, vertexCount_);
 
-    if (renderSetting_->GetVerticesType() == "circle") {
+    if (usePointSmooth) {
       glDisable(GL_BLEND);
       glDisable(GL_POINT_SMOOTH);
     }
@@ -146,6 +165,15 @@ void Viewport3D::paintGL() {
 }
 
 void Viewport3D::InitShaders() {
+  // Only initialize shaders if they don't exist
+  if (shaderProgram_ && shaderProgram_->isLinked()) {
+    return;
+  }
+
+  if (shaderProgram_) {
+    delete shaderProgram_;
+  }
+
   shaderProgram_ = new QOpenGLShaderProgram(this);
 
   // Vertex shader source code
@@ -180,11 +208,14 @@ void Viewport3D::InitShaders() {
       }
     )";
 
-  shaderProgram_->addShaderFromSourceCode(QOpenGLShader::Vertex,
-                                          vertexShaderSource);
-  shaderProgram_->addShaderFromSourceCode(QOpenGLShader::Fragment,
-                                          fragmentShaderSource);
-  shaderProgram_->link();
+  if (!shaderProgram_->addShaderFromSourceCode(QOpenGLShader::Vertex,
+                                               vertexShaderSource) ||
+      !shaderProgram_->addShaderFromSourceCode(QOpenGLShader::Fragment,
+                                               fragmentShaderSource) ||
+      !shaderProgram_->link()) {
+    qDebug() << "Shader program failed to compile or link:";
+    qDebug() << shaderProgram_->log();
+  }
 }
 
 void Viewport3D::UpdateBuffers() {
@@ -203,21 +234,39 @@ void Viewport3D::UpdateBuffers() {
   // Bind VAO to store buffer configuration
   vao_.bind();
 
-  // Update vertex buffer
-  vbo_.bind();
-  vbo_.allocate(scene_->vertices.data(),
-                scene_->vertices.size() * sizeof(float));
+  // Update vertex buffer - only reallocate if size changed
+  static size_t lastVertexSize = 0;
+  const size_t currentVertexSize = scene_->vertices.size() * sizeof(float);
 
-  // Set vertex attribute pointer for position (location = 0)
-  shaderProgram_->enableAttributeArray(0);
-  shaderProgram_->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
+  vbo_.bind();
+  if (currentVertexSize != lastVertexSize) {
+    vbo_.allocate(scene_->vertices.data(), currentVertexSize);
+    lastVertexSize = currentVertexSize;
+
+    // Set vertex attribute pointer for position (location = 0)
+    shaderProgram_->enableAttributeArray(0);
+    shaderProgram_->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
+  } else {
+    // Just update the data without reallocating
+    vbo_.write(0, scene_->vertices.data(), currentVertexSize);
+  }
   vbo_.release();
 
-  // Update index buffer if indices are available
+  // Update index buffer if indices are available - only reallocate if size
+  // changed
   if (indexCount_ > 0) {
+    static size_t lastIndexSize = 0;
+    const size_t currentIndexSize =
+        scene_->vertex_indices.size() * sizeof(unsigned int);
+
     ebo_.bind();
-    ebo_.allocate(scene_->vertex_indices.data(),
-                  scene_->vertex_indices.size() * sizeof(unsigned int));
+    if (currentIndexSize != lastIndexSize) {
+      ebo_.allocate(scene_->vertex_indices.data(), currentIndexSize);
+      lastIndexSize = currentIndexSize;
+    } else {
+      // Just update the data without reallocating
+      ebo_.write(0, scene_->vertex_indices.data(), currentIndexSize);
+    }
     ebo_.release();
   }
 
