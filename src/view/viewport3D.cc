@@ -1,7 +1,17 @@
 #include "viewport3D.h"
 
+#include <QElapsedTimer>
+#include <QTimer>
+
 Viewport3D::Viewport3D(std::shared_ptr<UserSetting> setting, QWidget *parent)
-    : QOpenGLWidget(parent), renderSetting_(setting) {}
+    : QOpenGLWidget(parent), renderSetting_(setting) {
+  // Create a timer for automatic updates
+  QTimer *timer = new QTimer(this);
+  // Connect the timer's timeout signal to the update slot of this widget
+  connect(timer, &QTimer::timeout, this, QOverload<>::of(&Viewport3D::update));
+  // Set the timer to trigger every 33 ms (roughly 30 fps)
+  timer->start(33);
+}
 
 void Viewport3D::SetScene(std::shared_ptr<s21::DrawSceneData> sc) {
   scene_ = std::move(sc);
@@ -80,6 +90,7 @@ void Viewport3D::resizeGL(int w, int h) {
 }
 
 void Viewport3D::paintGL() {
+  // Set background and clear buffers
   SetBackColor();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -95,15 +106,23 @@ void Viewport3D::paintGL() {
   // Enable depth testing once
   glEnable(GL_DEPTH_TEST);
 
-  // Bind shader program once
+  // Bind shader program
   shaderProgram_->bind();
 
-  // Set transformation uniforms - these are the same for both rendering passes
+  // Update transformation uniforms
   shaderProgram_->setUniformValue("projectionMatrix", projectionMatrix_);
   shaderProgram_->setUniformValue("viewMatrix", viewMatrix_);
   shaderProgram_->setUniformValue("modelMatrix", modelMatrix_);
 
-  // Bind VAO once
+  // Update the time uniform for pulsing glow effect
+  static QElapsedTimer timer;
+  if (!timer.isValid()) {
+    timer.start();
+  }
+  float t = timer.elapsed() / 1000.0f;  // time in seconds
+  shaderProgram_->setUniformValue("time", t);
+
+  // Bind VAO
   vao_.bind();
 
   // Draw edges if enabled
@@ -120,19 +139,16 @@ void Viewport3D::paintGL() {
     }
 
     glLineWidth(renderSetting_->GetEdgesSize());
-
-    // Bind index buffer and draw elements
     ebo_.bind();
     glDrawElements(GL_LINES, indexCount_, GL_UNSIGNED_INT, nullptr);
     ebo_.release();
 
-    // Disable stippling if it was enabled
     if (renderSetting_->GetEdgesType() == "dashed") {
       glDisable(GL_LINE_STIPPLE);
     }
   }
 
-  // Draw vertices if enabled
+  // Draw vertices if enabled (with pulsing glow)
   if (renderSetting_->GetVerticesType() != "none" && vertexCount_ > 0) {
     shaderProgram_->setUniformValue("renderMode", 1);  // Vertices mode
     QColor vertexColor = renderSetting_->GetVerticesColor();
@@ -165,7 +181,7 @@ void Viewport3D::paintGL() {
 }
 
 void Viewport3D::InitShaders() {
-  // Only initialize shaders if they don't exist
+  // Only initialize shaders if they don't exist or are not linked
   if (shaderProgram_ && shaderProgram_->isLinked()) {
     return;
   }
@@ -176,7 +192,7 @@ void Viewport3D::InitShaders() {
 
   shaderProgram_ = new QOpenGLShaderProgram(this);
 
-  // Vertex shader source code
+  // Vertex shader remains unchanged
   const char *vertexShaderSource = R"(
       #version 330 core
       layout (location = 0) in vec3 aPos;
@@ -190,7 +206,7 @@ void Viewport3D::InitShaders() {
       }
     )";
 
-  // Fragment shader source code
+  // Updated fragment shader with pulsing white glow for vertices
   const char *fragmentShaderSource = R"(
       #version 330 core
       out vec4 FragColor;
@@ -198,16 +214,21 @@ void Viewport3D::InitShaders() {
       uniform int renderMode; // 0 for edges, 1 for vertices
       uniform vec4 edgeColor;
       uniform vec4 vertexColor;
+      uniform float time;  // New uniform for time
       
       void main() {
           if (renderMode == 0) {
               FragColor = edgeColor;
           } else {
-              FragColor = vertexColor;
+              // Compute a pulsing factor between 0.0 and 1.0 using sine
+              float pulse = 0.5 + 0.5 * sin(time * 2.0); // Adjust frequency with multiplier (2.0)
+              // Blend the vertex color with white based on the pulsing factor
+              FragColor = mix(vertexColor, vec4(1.0, 1.0, 1.0, 1.0), pulse);
           }
       }
     )";
 
+  // Compile and link shaders
   if (!shaderProgram_->addShaderFromSourceCode(QOpenGLShader::Vertex,
                                                vertexShaderSource) ||
       !shaderProgram_->addShaderFromSourceCode(QOpenGLShader::Fragment,
