@@ -49,6 +49,7 @@ void OBJData::Normalize() {
     vertex.y = (vertex.y - mid_y) / scale_factor;
     vertex.z = (vertex.z - mid_z) / scale_factor;
   });
+
   LogInfo << "Normalization complete." << std::endl;
 }
 
@@ -256,18 +257,6 @@ inline std::string_view OBJData::TrimView(std::string_view sv) {
   return sv.substr(start, end - start + 1);
 }
 
-inline std::vector<std::string_view> OBJData::SplitView(std::string_view str,
-                                                        char delimiter) {
-  using namespace ranges;
-
-  auto parts_view =
-      views::split(str, delimiter) |
-      views::transform([](auto&& subrange) -> std::string_view {
-        return std::string_view(&*subrange.begin(), ranges::distance(subrange));
-      });
-
-  return parts_view | to<std::vector<std::string_view>>();
-}
 inline std::vector<std::string_view> OBJData::Tokenize(std::string_view line) {
   std::vector<std::string_view> tokens;
   tokens.reserve(6);

@@ -44,7 +44,7 @@ class ControlWindow : public QWidget {
    *
    * @param parent Pointer to the parent widget (default is nullptr).
    */
-  ControlWindow(QWidget* parent = nullptr);
+  explicit ControlWindow(QWidget* parent = nullptr);
 
  Q_SIGNALS:
   /**

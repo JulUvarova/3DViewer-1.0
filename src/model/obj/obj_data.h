@@ -216,15 +216,6 @@ class OBJData {
   inline std::string_view TrimView(std::string_view sv);
 
   /**
-   * @brief Splits a string view into substrings based on a delimiter.
-   * @param str The string view to split.
-   * @param delimiter The character to split on.
-   * @return A vector of string views representing the split parts.
-   */
-  inline std::vector<std::string_view> SplitView(std::string_view str,
-                                                 char delimiter);
-
-  /**
    * @brief Tokenizes a line into words, ignoring comments and trimming
    * whitespace.
    * @param line The line to tokenize.

@@ -37,7 +37,8 @@ class Viewport3D : public QOpenGLWidget, protected QOpenGLFunctions {
    * @param setting Shared pointer to the user settings for rendering.
    * @param parent Pointer to the parent widget, default is nullptr.
    */
-  Viewport3D(std::shared_ptr<UserSetting> setting, QWidget *parent = nullptr);
+  explicit Viewport3D(std::shared_ptr<UserSetting> setting,
+                      QWidget *parent = nullptr);
 
   /**
    * @brief Sets the scene to be rendered.

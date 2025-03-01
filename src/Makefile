@@ -1,19 +1,20 @@
-# Dependencies: qt6-base-dev, gtest, lcov
+# Dependencies: qt6-base-dev, gtest, lcov, doxygen
 
-# Define common compiler flags
 CXX = g++
 CXXFLAGS = -std=c++17 -I./model -I./include -DLOGGER_MAX_LOG_LEVEL_PRINTED=0
 LDFLAGS = -lgtest -lgtest_main -pthread
 GCOV_FLAGS = --coverage -lsubunit -lgcov
+CPPCHECK_FLAGS = --enable=all --suppress=missingIncludeSystem --language=c++ \
+				 --quiet --suppress=unusedFunction --suppress=unusedStructMember \
+				 --suppress=shadowFunction --suppress=missingInclude --suppress=unknownMacro \
+				 --suppress=unmatchedSuppression --suppress=missingInclude --suppress=checkersReport
 
-# Define source files
 OBJ_DATA_SRC = model/obj/obj_data.cc
 OBJ_DATA_TEST = model/obj/test_obj_data.cc
 OBJ_DATA_TEST_BIN = test_obj_data
 TRANSFORM_TEST = model/math/test_transform.cc
 TRANSFORM_TEST_BIN = test_transform
 
-# Build directory
 BUILD_DIR = build
 INSTALL_DIR = bin
 DIST_DIR = dist
@@ -72,9 +73,9 @@ gcov_report: clean_coverage
 #########################################
 .PHONY: install uninstall
 install: clean all
-	 cd ../ && mkdir -p $(INSTALL_DIR)
+	 cd ../ && mkdir -p $(INSTALL_DIR) && mkdir -p $(INSTALL_DIR)/sample_models
 	 cd ../ && cp -rf src/$(BUILD_DIR)/3DViewer $(INSTALL_DIR)/
-     # copy sample .obj models ???
+	 cd ../ && cp -rf src/view/primitives/*.obj $(INSTALL_DIR)/sample_models/
 uninstall:
 	cd ../ && rm -rf $(INSTALL_DIR)
 
@@ -84,14 +85,14 @@ uninstall:
 .PHONY: dist clean_dist
 dist: clean_dist
 	cd ../ && mkdir -p ${DIST_DIR}
-	cd ../ && cp -rf src/controller ${DIST_DIR}/controller
-	cd ../ && cp -rf src/include ${DIST_DIR}/include
-	cd ../ && cp -rf src/model ${DIST_DIR}/model
-	cd ../ && cp -rf src/view ${DIST_DIR}/view
-	cd ../ && cp -rf src/*.cc ${DIST_DIR}/
-	cd ../ && cp -rf src/CMakeLists.txt ${DIST_DIR}/
-	cd ../ && cp -rf src/Makefile ${DIST_DIR}/
-	cd ../ && cp -rf src/Doxyfile ${DIST_DIR}/
+	cd ../ && cp -rf src/controller ${DIST_DIR}/src/controller
+	cd ../ && cp -rf src/include ${DIST_DIR}/src/include
+	cd ../ && cp -rf src/model ${DIST_DIR}/src/model
+	cd ../ && cp -rf src/view ${DIST_DIR}/src/view
+	cd ../ && cp -rf src/*.cc ${DIST_DIR}/src/
+	cd ../ && cp -rf src/CMakeLists.txt ${DIST_DIR}/src/
+	cd ../ && cp -rf src/Makefile ${DIST_DIR}/src/
+	cd ../ && cp -rf src/Doxyfile ${DIST_DIR}/src/
 	cd ../ && tar -czvf $(DIST_NAME) ${DIST_DIR}
 	cd ../ && rm -rf ${DIST_DIR}
 
@@ -113,15 +114,15 @@ clean_dvi:
 #########################################
 .PHONY: check
 check:
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck $(CPPCHECK_FLAGS)
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck $(CPPCHECK_FLAGS)
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print  -exec clang-format -style='{BasedOnStyle: Google}' -n {} \;
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print  -exec clang-format -style='{BasedOnStyle: Google}' -n {} \;
 
 .PHONY: check_fix
 check_fix:
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
-	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck --enable=all --suppress=missingIncludeSystem --language=c++
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print | xargs cppcheck $(CPPCHECK_FLAGS)
+	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print | xargs cppcheck $(CPPCHECK_FLAGS)
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
 

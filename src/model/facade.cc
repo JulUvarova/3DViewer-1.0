@@ -1,9 +1,8 @@
 #include "facade.h"
 
-s21::Facade::Facade() {
-  fileReader_ = std::make_unique<FileReader>();
-  sceneParam_ = std::make_unique<SceneParameters>();
-}
+s21::Facade::Facade()
+    : fileReader_(std::make_unique<FileReader>()),
+      sceneParam_(std::make_unique<SceneParameters>()) {}
 
 std::shared_ptr<s21::DrawSceneData> s21::Facade::LoadScene(const char *path) {
   scene_.reset();

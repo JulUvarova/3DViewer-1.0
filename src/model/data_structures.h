@@ -40,7 +40,7 @@ struct Vec2f {
   Vec2f(float x, float y) : x(x), y(y) {}
 
   // Default copy and move constructors and assignment operators
-  Vec2f(const Vec2f&) = default;
+  explicit Vec2f(const Vec2f&) = default;
   Vec2f& operator=(const Vec2f&) = default;
   Vec2f(Vec2f&&) = default;
   Vec2f& operator=(Vec2f&&) = default;
@@ -115,7 +115,7 @@ struct Vec3f {
    * @note This implementation is empty, leaving members uninitialized, which is
    * likely a bug. Consider using `= default` or proper initialization.
    */
-  Vec3f(const Vec3f&) {}
+  explicit Vec3f(const Vec3f&) {}
 
   // Default assignment operators
   Vec3f& operator=(const Vec3f&) = default;
@@ -200,7 +200,7 @@ struct Vec4f {
    * @brief Construct a Vec4f from a Vec3f, setting w to 1.0f.
    * @param other The Vec3f to copy components from.
    */
-  Vec4f(const Vec3f& other) {
+  explicit Vec4f(const Vec3f& other) {
     x = other.x;
     y = other.y;
     z = other.z;

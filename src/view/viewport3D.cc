@@ -1,9 +1,7 @@
 #include "viewport3D.h"
 
 Viewport3D::Viewport3D(std::shared_ptr<UserSetting> setting, QWidget *parent)
-    : QOpenGLWidget(parent) {
-  renderSetting_ = setting;
-}
+    : QOpenGLWidget(parent), renderSetting_(setting) {}
 
 void Viewport3D::SetScene(std::shared_ptr<s21::DrawSceneData> sc) {
   scene_ = std::move(sc);

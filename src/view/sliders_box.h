@@ -26,7 +26,7 @@ class Slider : public QSlider {
    *
    * @param parent Pointer to the parent widget (default is nullptr).
    */
-  Slider(QWidget *parent = nullptr);
+  explicit Slider(QWidget *parent = nullptr);
 
  protected:
   /**
