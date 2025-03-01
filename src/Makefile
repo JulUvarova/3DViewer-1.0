@@ -1,4 +1,5 @@
 # Dependencies: qt6-base-dev, gtest, lcov, doxygen
+# Large .obj files: https://disk.yandex.ru/d/WUhyihtAWnTGpA
 
 CXX = g++
 CXXFLAGS = -std=c++17 -I./model -I./include -DLOGGER_MAX_LOG_LEVEL_PRINTED=0
@@ -37,7 +38,7 @@ all:
 #########################################
 #--------- Build and run Tests ---------#
 #########################################
-test: test_obj_data test_transform
+tests: test_obj_data test_transform
 
 test_obj_data: $(OBJ_DATA_TEST) $(OBJ_DATA_SRC)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
@@ -126,11 +127,12 @@ check_fix:
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.cc' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
 	find . \( -path "./build" -o -path "./include" \) -prune -o -type f -regex '.*\.h' -print  -exec clang-format -style='{BasedOnStyle: Google}' -i {} \;
 
-clean:
+.PHONY: clean clean_bin clean_coverage clean_dist clean_dvi
+clean_bin:
 	rm -rf $(BUILD_DIR) $(OBJ_DATA_TEST_BIN) $(TRANSFORM_TEST_BIN) report *.info
 
 clean_coverage:
 	rm -rf coverage*
 	rm -f *.gcda *.gcno *.info test_obj_data test_transform
 
-clean_all: clean clean_coverage clean_dist clean_dvi
+clean: clean_bin clean_coverage clean_dist clean_dvi
