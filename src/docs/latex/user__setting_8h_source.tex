@@ -1,0 +1,83 @@
+\doxysection{user\+\_\+setting.\+h}
+\hypertarget{user__setting_8h_source}{}\label{user__setting_8h_source}\index{view/user\_setting.h@{view/user\_setting.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <QColor>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QSettings>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classUserSetting}{UserSetting}}\ \{}
+\DoxyCodeLine{00016\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \mbox{\hyperlink{classUserSetting_a16658ccbde16a529b734ac646c34d74d}{UserSetting}}();}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00030\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_a3f00298faed5061b647224e7781393a3}{SaveRenderSettings}}();}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00038\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_a37c22cbc946c21489b029c77704819d7}{ReadRenderSettings}}();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00045\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_a3ddcf73331953e3b4c2b4dab244ed750}{ResetRenderSettings}}();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00052\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classUserSetting_a444c4dba00b772003e9aedf77b68019f}{IsParallelProjection}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ isParallelProjection\_;\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00059\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_a370c5e6cceed234296c1076211a25957}{SetProjection}}(\textcolor{keywordtype}{bool}\ isParallel)\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ isParallelProjection\_\ =\ isParallel;}
+\DoxyCodeLine{00061\ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00068\ \ \ \textcolor{keyword}{inline}\ QColor\ \mbox{\hyperlink{classUserSetting_a76c4aa744553aaef8e497598a616ab33}{GetBackgroundColor}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ backgroundColor\_;\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00075\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_ac9c37a266da75f57923426829a168963}{SetBackgroundColor}}(\textcolor{keyword}{const}\ QColor\ \&backgroundColor)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ backgroundColor\_\ =\ backgroundColor;}
+\DoxyCodeLine{00077\ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00084\ \ \ \textcolor{keyword}{inline}\ QString\ \mbox{\hyperlink{classUserSetting_a2eff3c660a7b389560f2566051aa4d29}{GetVerticesType}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ verticesType\_;\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00091\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_aefb402955529b89bc21f80fdad2a70eb}{SetVerticesType}}(\textcolor{keyword}{const}\ QString\ \&verticesType)\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ verticesType\_\ =\ verticesType;}
+\DoxyCodeLine{00093\ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00100\ \ \ \textcolor{keyword}{inline}\ QColor\ \mbox{\hyperlink{classUserSetting_a500700854efa1e35b6a41cdfa16131ee}{GetVerticesColor}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ verticesColor\_;\ \}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00107\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_afbf87ca7b8bc5240b15326c048163e2f}{SetVerticesColor}}(\textcolor{keyword}{const}\ QColor\ \&verticesColor)\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ verticesColor\_\ =\ verticesColor;}
+\DoxyCodeLine{00109\ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00116\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classUserSetting_a45720afc0fa9014646fba7b3d655a1ff}{GetVerticesSize}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ verticesSize\_;\ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00123\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_a4bb4f74160eb80c6c6ef757ee1c76cdc}{SetVerticesSize}}(\textcolor{keywordtype}{int}\ verticesSize)\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ verticesSize\_\ =\ verticesSize;}
+\DoxyCodeLine{00125\ \ \ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00132\ \ \ \textcolor{keyword}{inline}\ QString\ \mbox{\hyperlink{classUserSetting_a18504429c3f9de54965522cb45bbc5d2}{GetEdgesType}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ edgesType\_;\ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00139\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_af1f25bf15a042fee1d4bbad27f80f0fd}{SetEdgesType}}(\textcolor{keyword}{const}\ QString\ \&edgesType)\ \{\ edgesType\_\ =\ edgesType;\ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00146\ \ \ \textcolor{keyword}{inline}\ QColor\ \mbox{\hyperlink{classUserSetting_a287f55d0e2cd4bde59bdd49467de3416}{GetEdgesColor}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ edgesColor\_;\ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00153\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_a213adeac9b9622fa1e608eeb9ef01024}{SetEdgesColor}}(\textcolor{keyword}{const}\ QColor\ \&edgesColor)\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ edgesColor\_\ =\ edgesColor;}
+\DoxyCodeLine{00155\ \ \ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00162\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classUserSetting_a1e6fc65a088b83f0e656ebd6a281cb2f}{GetEdgesSize}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ edgesSize\_;\ \}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00169\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classUserSetting_abf7cee8bde42999b4fb7ad1d29d84433}{SetEdgesSize}}(\textcolor{keywordtype}{int}\ edgesSize)\ \{\ edgesSize\_\ =\ edgesSize;\ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00172\ \ \ \textcolor{keyword}{const}\ QString\ fileMemory\_\{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}view/settings/usersettings.xml"{}}\};\ \ }
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ QString\ verticesType\_;\ \ }
+\DoxyCodeLine{00177\ \ \ QColor\ verticesColor\_;\ \ }
+\DoxyCodeLine{00178\ \ \ \textcolor{keywordtype}{int}\ verticesSize\_;\ \ \ \ \ \ }
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ QString\ edgesType\_;\ \ }
+\DoxyCodeLine{00181\ \ \ QColor\ edgesColor\_;\ \ }
+\DoxyCodeLine{00182\ \ \ \textcolor{keywordtype}{int}\ edgesSize\_;\ \ \ \ \ \ }
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ QColor\ backgroundColor\_;\ \ }
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \textcolor{keywordtype}{bool}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ isParallelProjection\_;\ \ }
+\DoxyCodeLine{00188\ \};}
+
+\end{DoxyCode}

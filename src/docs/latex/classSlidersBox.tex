@@ -1,0 +1,151 @@
+\doxysection{Sliders\+Box Class Reference}
+\hypertarget{classSlidersBox}{}\label{classSlidersBox}\index{SlidersBox@{SlidersBox}}
+
+
+A widget containing multiple sliders for coordinate manipulation.  
+
+
+
+
+{\ttfamily \#include $<$sliders\+\_\+box.\+h$>$}
+
+
+
+Inheritance diagram for Sliders\+Box\+:
+% FIG 0
+
+
+Collaboration diagram for Sliders\+Box\+:
+% FIG 1
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classSlidersBox_a123ccaa3e15b4c4468ac0291aed22739}{signal\+ChangeX}} (int coordX)
+\begin{DoxyCompactList}\small\item\em Signal emitted when the X coordinate changes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSlidersBox_a012dbec4a1141e7e69cbe0645ea66255}{signal\+ChangeY}} (int coordY)
+\begin{DoxyCompactList}\small\item\em Signal emitted when the Y coordinate changes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSlidersBox_a8c577f8ef3a5a71500d0f4a183e3e1c4}{signal\+ChangeZ}} (int coordZ)
+\begin{DoxyCompactList}\small\item\em Signal emitted when the Z coordinate changes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classSlidersBox_a787dcf3b7e5cefeea5234dd6cf4cc6f4}{Sliders\+Box}} (const char \texorpdfstring{$\ast$}{*}name, std\+::pair$<$ int, int $>$ min\+Max, int slider\+Count, QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classSlidersBox}{Sliders\+Box} class. \end{DoxyCompactList}\item 
+\Hypertarget{classSlidersBox_a8aaa7b2502a47b3dddc3bd167cf4b917}\label{classSlidersBox_a8aaa7b2502a47b3dddc3bd167cf4b917} 
+void {\bfseries Reset\+Coords} ()
+\begin{DoxyCompactList}\small\item\em Resets the sliders to their middle position. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSlidersBox_a4cd409f23cd61b5bb08f1ba0aa4dc26b}{Set\+Coords}} (std\+::pair$<$ int, int $>$ coords\+XY)
+\begin{DoxyCompactList}\small\item\em Sets the coordinates of the sliders based on the provided values. \end{DoxyCompactList}\item 
+std\+::array$<$ int, 3 $>$ \mbox{\hyperlink{classSlidersBox_a1cedec5adc962dabd61be354c91299af}{Get\+Coords}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current values of the sliders as an array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A widget containing multiple sliders for coordinate manipulation. 
+
+This class provides a user interface for adjusting X, Y, and Z coordinates using sliders and corresponding line edits for input. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classSlidersBox_a787dcf3b7e5cefeea5234dd6cf4cc6f4}\label{classSlidersBox_a787dcf3b7e5cefeea5234dd6cf4cc6f4} 
+\index{SlidersBox@{SlidersBox}!SlidersBox@{SlidersBox}}
+\index{SlidersBox@{SlidersBox}!SlidersBox@{SlidersBox}}
+\doxysubsubsection{\texorpdfstring{SlidersBox()}{SlidersBox()}}
+{\footnotesize\ttfamily Sliders\+Box\+::\+Sliders\+Box (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{std\+::pair$<$ int, int $>$}]{min\+Max,  }\item[{int}]{slider\+Count,  }\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+Constructor for the \doxylink{classSlidersBox}{Sliders\+Box} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the group box. \\
+\hline
+{\em min\+Max} & A pair representing the minimum and maximum values for the sliders. \\
+\hline
+{\em slider\+Count} & The number of sliders to create. \\
+\hline
+{\em parent} & Pointer to the parent widget (default is nullptr). \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classSlidersBox_a1cedec5adc962dabd61be354c91299af}\label{classSlidersBox_a1cedec5adc962dabd61be354c91299af} 
+\index{SlidersBox@{SlidersBox}!GetCoords@{GetCoords}}
+\index{GetCoords@{GetCoords}!SlidersBox@{SlidersBox}}
+\doxysubsubsection{\texorpdfstring{GetCoords()}{GetCoords()}}
+{\footnotesize\ttfamily std\+::array$<$ int, 3 $>$ Sliders\+Box\+::\+Get\+Coords (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Gets the current values of the sliders as an array. 
+
+\begin{DoxyReturn}{Returns}
+An array containing the current values of the sliders. 
+\end{DoxyReturn}
+\Hypertarget{classSlidersBox_a4cd409f23cd61b5bb08f1ba0aa4dc26b}\label{classSlidersBox_a4cd409f23cd61b5bb08f1ba0aa4dc26b} 
+\index{SlidersBox@{SlidersBox}!SetCoords@{SetCoords}}
+\index{SetCoords@{SetCoords}!SlidersBox@{SlidersBox}}
+\doxysubsubsection{\texorpdfstring{SetCoords()}{SetCoords()}}
+{\footnotesize\ttfamily void Sliders\+Box\+::\+Set\+Coords (\begin{DoxyParamCaption}\item[{std\+::pair$<$ int, int $>$}]{coords\+XY }\end{DoxyParamCaption})}
+
+
+
+Sets the coordinates of the sliders based on the provided values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em coords\+XY} & A pair of integers representing the changes in X and Y coordinates. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classSlidersBox_a123ccaa3e15b4c4468ac0291aed22739}\label{classSlidersBox_a123ccaa3e15b4c4468ac0291aed22739} 
+\index{SlidersBox@{SlidersBox}!signalChangeX@{signalChangeX}}
+\index{signalChangeX@{signalChangeX}!SlidersBox@{SlidersBox}}
+\doxysubsubsection{\texorpdfstring{signalChangeX}{signalChangeX}}
+{\footnotesize\ttfamily void Sliders\+Box\+::signal\+ChangeX (\begin{DoxyParamCaption}\item[{int}]{coordX }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Signal emitted when the X coordinate changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em coordX} & The new value of the X coordinate. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classSlidersBox_a012dbec4a1141e7e69cbe0645ea66255}\label{classSlidersBox_a012dbec4a1141e7e69cbe0645ea66255} 
+\index{SlidersBox@{SlidersBox}!signalChangeY@{signalChangeY}}
+\index{signalChangeY@{signalChangeY}!SlidersBox@{SlidersBox}}
+\doxysubsubsection{\texorpdfstring{signalChangeY}{signalChangeY}}
+{\footnotesize\ttfamily void Sliders\+Box\+::signal\+ChangeY (\begin{DoxyParamCaption}\item[{int}]{coordY }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Signal emitted when the Y coordinate changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em coordY} & The new value of the Y coordinate. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classSlidersBox_a8c577f8ef3a5a71500d0f4a183e3e1c4}\label{classSlidersBox_a8c577f8ef3a5a71500d0f4a183e3e1c4} 
+\index{SlidersBox@{SlidersBox}!signalChangeZ@{signalChangeZ}}
+\index{signalChangeZ@{signalChangeZ}!SlidersBox@{SlidersBox}}
+\doxysubsubsection{\texorpdfstring{signalChangeZ}{signalChangeZ}}
+{\footnotesize\ttfamily void Sliders\+Box\+::signal\+ChangeZ (\begin{DoxyParamCaption}\item[{int}]{coordZ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Signal emitted when the Z coordinate changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em coordZ} & The new value of the Z coordinate. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+view/sliders\+\_\+box.\+h\item 
+view/sliders\+\_\+box.\+cc\end{DoxyCompactItemize}

@@ -1,0 +1,39 @@
+\doxysection{s21\+::Vertex\+Indices Struct Reference}
+\hypertarget{structs21_1_1VertexIndices}{}\label{structs21_1_1VertexIndices}\index{s21::VertexIndices@{s21::VertexIndices}}
+
+
+Represents the indices for a vertex in a face, including vertex, texture coordinate, and normal indices.  
+
+
+
+
+{\ttfamily \#include $<$obj\+\_\+data.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structs21_1_1VertexIndices_a975d82774a6e6467a2596de79d80b1ee}\label{structs21_1_1VertexIndices_a975d82774a6e6467a2596de79d80b1ee} 
+{\bfseries Vertex\+Indices} (int \mbox{\hyperlink{structs21_1_1VertexIndices_a06951b3d627541c1573f72f37ac2bf4e}{v}}, int \mbox{\hyperlink{structs21_1_1VertexIndices_a89db05aaaab8c2aa2345e679ddf858e8}{vt}}=-\/1, int \mbox{\hyperlink{structs21_1_1VertexIndices_aff804ddf3f4ff013a45b28f3f2d924a2}{vn}}=-\/1)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structs21_1_1VertexIndices_a06951b3d627541c1573f72f37ac2bf4e}\label{structs21_1_1VertexIndices_a06951b3d627541c1573f72f37ac2bf4e} 
+int {\bfseries v} \{-\/1\}
+\begin{DoxyCompactList}\small\item\em Index of the vertex, -\/1 if not specified. \end{DoxyCompactList}\item 
+\Hypertarget{structs21_1_1VertexIndices_a89db05aaaab8c2aa2345e679ddf858e8}\label{structs21_1_1VertexIndices_a89db05aaaab8c2aa2345e679ddf858e8} 
+int {\bfseries vt} \{-\/1\}
+\begin{DoxyCompactList}\small\item\em Index of the texture coordinate, -\/1 if not specified. \end{DoxyCompactList}\item 
+\Hypertarget{structs21_1_1VertexIndices_aff804ddf3f4ff013a45b28f3f2d924a2}\label{structs21_1_1VertexIndices_aff804ddf3f4ff013a45b28f3f2d924a2} 
+int {\bfseries vn} \{-\/1\}
+\begin{DoxyCompactList}\small\item\em Index of the normal, -\/1 if not specified. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the indices for a vertex in a face, including vertex, texture coordinate, and normal indices. 
+
+This structure holds the indices referencing the vertices, texture coordinates, and normals defined in the OBJ file. An index of -\/1 indicates that the corresponding data is not present. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+model/obj/obj\+\_\+data.\+h\end{DoxyCompactItemize}

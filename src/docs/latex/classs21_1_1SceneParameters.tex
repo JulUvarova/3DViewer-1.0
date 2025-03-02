@@ -1,0 +1,320 @@
+\doxysection{s21\+::Scene\+Parameters Class Reference}
+\hypertarget{classs21_1_1SceneParameters}{}\label{classs21_1_1SceneParameters}\index{s21::SceneParameters@{s21::SceneParameters}}
+
+
+Manages the parameters that define the scene, including scale, rotation, and location.  
+
+
+
+
+{\ttfamily \#include $<$scene\+\_\+parameters.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_a0bada42d5773db66dcd1c1ddbe2f55c0}{Get\+ScaleX}} () const
+\begin{DoxyCompactList}\small\item\em Returns the scale factor along the X-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_a8d6c0a3a7d86abf5ad5e6a91a6cc8cdd}{Get\+ScaleY}} () const
+\begin{DoxyCompactList}\small\item\em Returns the scale factor along the Y-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_a55d7c4421a10ce67daed562755e1a755}{Get\+ScaleZ}} () const
+\begin{DoxyCompactList}\small\item\em Returns the scale factor along the Z-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_a2dfc4adbba762cf3ad24c5c37da79ceb}{Get\+RotationX}} () const
+\begin{DoxyCompactList}\small\item\em Returns the rotation angle around the X-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_ac17df371fa872697c40b0289159802b0}{Get\+RotationY}} () const
+\begin{DoxyCompactList}\small\item\em Returns the rotation angle around the Y-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_a2be5dbf9265a3a0b581e093f42f99cfc}{Get\+RotationZ}} () const
+\begin{DoxyCompactList}\small\item\em Returns the rotation angle around the Z-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_af1b56db4c5c88981d711653a11e0388d}{Get\+LocationX}} () const
+\begin{DoxyCompactList}\small\item\em Returns the location along the X-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_a064f5b929f746b5b9534ca76f7406893}{Get\+LocationY}} () const
+\begin{DoxyCompactList}\small\item\em Returns the location along the Y-\/axis. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classs21_1_1SceneParameters_a3d8287fa92d3e560acd920572403217b}{Get\+LocationZ}} () const
+\begin{DoxyCompactList}\small\item\em Returns the location along the Z-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_afc85db30e7cddc517d175faa9e9c1517}{Set\+ScaleX}} (float value)
+\begin{DoxyCompactList}\small\item\em Sets the scale factor along the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_a0fd0b5da802c2d83131e4cacbec7237a}{Set\+ScaleY}} (float value)
+\begin{DoxyCompactList}\small\item\em Sets the scale factor along the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_a86212beb6dfa370a5d4989c5d482f963}{Set\+ScaleZ}} (float value)
+\begin{DoxyCompactList}\small\item\em Sets the scale factor along the Z-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_aeca7da04039a5de67c8f1495c4bec5cf}{Set\+RotationX}} (float degrees)
+\begin{DoxyCompactList}\small\item\em Sets the rotation angle around the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_afb246696a00780da854be779945745f0}{Set\+RotationY}} (float degrees)
+\begin{DoxyCompactList}\small\item\em Sets the rotation angle around the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_a902974379c4274bce6581d89c0b8762d}{Set\+RotationZ}} (float degrees)
+\begin{DoxyCompactList}\small\item\em Sets the rotation angle around the Z-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_aaa03d95d86fb566ce1a384380ed3b09d}{Set\+LocationX}} (float value)
+\begin{DoxyCompactList}\small\item\em Sets the location along the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_aebaca2c3f53fa33a407685a5e69f11a2}{Set\+LocationY}} (float value)
+\begin{DoxyCompactList}\small\item\em Sets the location along the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1SceneParameters_a831a04f753473af65dd89e63f1e505fa}{Set\+LocationZ}} (float value)
+\begin{DoxyCompactList}\small\item\em Sets the location along the Z-\/axis. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages the parameters that define the scene, including scale, rotation, and location. 
+
+The \doxylink{classs21_1_1SceneParameters}{Scene\+Parameters} class provides a set of getter and setter methods to access and modify the various parameters that define the scene. These parameters include the scale, rotation, and location of the scene. The setters include clamping logic to ensure the values remain within a valid range.
+
+\begin{DoxyNote}{Note}
+Rotation angles are stored in radians, but the setter methods accept degrees for convenience. 
+\end{DoxyNote}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classs21_1_1SceneParameters_af1b56db4c5c88981d711653a11e0388d}\label{classs21_1_1SceneParameters_af1b56db4c5c88981d711653a11e0388d} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetLocationX@{GetLocationX}}
+\index{GetLocationX@{GetLocationX}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetLocationX()}{GetLocationX()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+LocationX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the location along the X-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The location along the X-\/axis, which is in the range \mbox{[}-\/1.\+0, 1.\+0\mbox{]}. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_a064f5b929f746b5b9534ca76f7406893}\label{classs21_1_1SceneParameters_a064f5b929f746b5b9534ca76f7406893} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetLocationY@{GetLocationY}}
+\index{GetLocationY@{GetLocationY}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetLocationY()}{GetLocationY()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+LocationY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the location along the Y-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The location along the Y-\/axis, which is in the range \mbox{[}-\/1.\+0, 1.\+0\mbox{]}. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_a3d8287fa92d3e560acd920572403217b}\label{classs21_1_1SceneParameters_a3d8287fa92d3e560acd920572403217b} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetLocationZ@{GetLocationZ}}
+\index{GetLocationZ@{GetLocationZ}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetLocationZ()}{GetLocationZ()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+LocationZ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the location along the Z-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The location along the Z-\/axis, which is in the range \mbox{[}-\/1.\+0, 1.\+0\mbox{]}. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_a2dfc4adbba762cf3ad24c5c37da79ceb}\label{classs21_1_1SceneParameters_a2dfc4adbba762cf3ad24c5c37da79ceb} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetRotationX@{GetRotationX}}
+\index{GetRotationX@{GetRotationX}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetRotationX()}{GetRotationX()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+RotationX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the rotation angle around the X-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The rotation angle in radians. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_ac17df371fa872697c40b0289159802b0}\label{classs21_1_1SceneParameters_ac17df371fa872697c40b0289159802b0} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetRotationY@{GetRotationY}}
+\index{GetRotationY@{GetRotationY}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetRotationY()}{GetRotationY()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+RotationY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the rotation angle around the Y-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The rotation angle in radians. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_a2be5dbf9265a3a0b581e093f42f99cfc}\label{classs21_1_1SceneParameters_a2be5dbf9265a3a0b581e093f42f99cfc} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetRotationZ@{GetRotationZ}}
+\index{GetRotationZ@{GetRotationZ}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetRotationZ()}{GetRotationZ()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+RotationZ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the rotation angle around the Z-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The rotation angle in radians. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_a0bada42d5773db66dcd1c1ddbe2f55c0}\label{classs21_1_1SceneParameters_a0bada42d5773db66dcd1c1ddbe2f55c0} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetScaleX@{GetScaleX}}
+\index{GetScaleX@{GetScaleX}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetScaleX()}{GetScaleX()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+ScaleX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the scale factor along the X-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The scale factor along the X-\/axis, which is in the range \mbox{[}0.\+0, 2.\+0\mbox{]}. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_a8d6c0a3a7d86abf5ad5e6a91a6cc8cdd}\label{classs21_1_1SceneParameters_a8d6c0a3a7d86abf5ad5e6a91a6cc8cdd} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetScaleY@{GetScaleY}}
+\index{GetScaleY@{GetScaleY}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetScaleY()}{GetScaleY()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+ScaleY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the scale factor along the Y-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The scale factor along the Y-\/axis, which is in the range \mbox{[}0.\+0, 2.\+0\mbox{]}. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_a55d7c4421a10ce67daed562755e1a755}\label{classs21_1_1SceneParameters_a55d7c4421a10ce67daed562755e1a755} 
+\index{s21::SceneParameters@{s21::SceneParameters}!GetScaleZ@{GetScaleZ}}
+\index{GetScaleZ@{GetScaleZ}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{GetScaleZ()}{GetScaleZ()}}
+{\footnotesize\ttfamily float s21\+::\+Scene\+Parameters\+::\+Get\+ScaleZ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the scale factor along the Z-\/axis. 
+
+\begin{DoxyReturn}{Returns}
+The scale factor along the Z-\/axis, which is in the range \mbox{[}0.\+0, 2.\+0\mbox{]}. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1SceneParameters_aaa03d95d86fb566ce1a384380ed3b09d}\label{classs21_1_1SceneParameters_aaa03d95d86fb566ce1a384380ed3b09d} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetLocationX@{SetLocationX}}
+\index{SetLocationX@{SetLocationX}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetLocationX()}{SetLocationX()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+LocationX (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the location along the X-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The desired location. It will be clamped to the range \mbox{[}-\/1.\+0, 1.\+0\mbox{]}. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_aebaca2c3f53fa33a407685a5e69f11a2}\label{classs21_1_1SceneParameters_aebaca2c3f53fa33a407685a5e69f11a2} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetLocationY@{SetLocationY}}
+\index{SetLocationY@{SetLocationY}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetLocationY()}{SetLocationY()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+LocationY (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the location along the Y-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The desired location. It will be clamped to the range \mbox{[}-\/1.\+0, 1.\+0\mbox{]}. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_a831a04f753473af65dd89e63f1e505fa}\label{classs21_1_1SceneParameters_a831a04f753473af65dd89e63f1e505fa} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetLocationZ@{SetLocationZ}}
+\index{SetLocationZ@{SetLocationZ}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetLocationZ()}{SetLocationZ()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+LocationZ (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the location along the Z-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The desired location. It will be clamped to the range \mbox{[}-\/1.\+0, 1.\+0\mbox{]}. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_aeca7da04039a5de67c8f1495c4bec5cf}\label{classs21_1_1SceneParameters_aeca7da04039a5de67c8f1495c4bec5cf} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetRotationX@{SetRotationX}}
+\index{SetRotationX@{SetRotationX}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetRotationX()}{SetRotationX()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+RotationX (\begin{DoxyParamCaption}\item[{float}]{degrees }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the rotation angle around the X-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em degrees} & The rotation angle in degrees. It will be converted to radians internally. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_afb246696a00780da854be779945745f0}\label{classs21_1_1SceneParameters_afb246696a00780da854be779945745f0} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetRotationY@{SetRotationY}}
+\index{SetRotationY@{SetRotationY}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetRotationY()}{SetRotationY()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+RotationY (\begin{DoxyParamCaption}\item[{float}]{degrees }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the rotation angle around the Y-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em degrees} & The rotation angle in degrees. It will be converted to radians internally. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_a902974379c4274bce6581d89c0b8762d}\label{classs21_1_1SceneParameters_a902974379c4274bce6581d89c0b8762d} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetRotationZ@{SetRotationZ}}
+\index{SetRotationZ@{SetRotationZ}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetRotationZ()}{SetRotationZ()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+RotationZ (\begin{DoxyParamCaption}\item[{float}]{degrees }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the rotation angle around the Z-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em degrees} & The rotation angle in degrees. It will be converted to radians internally. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_afc85db30e7cddc517d175faa9e9c1517}\label{classs21_1_1SceneParameters_afc85db30e7cddc517d175faa9e9c1517} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetScaleX@{SetScaleX}}
+\index{SetScaleX@{SetScaleX}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetScaleX()}{SetScaleX()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+ScaleX (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the scale factor along the X-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The desired scale factor. It will be clamped to the range \mbox{[}0.\+0, 2.\+0\mbox{]}. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_a0fd0b5da802c2d83131e4cacbec7237a}\label{classs21_1_1SceneParameters_a0fd0b5da802c2d83131e4cacbec7237a} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetScaleY@{SetScaleY}}
+\index{SetScaleY@{SetScaleY}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetScaleY()}{SetScaleY()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+ScaleY (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the scale factor along the Y-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The desired scale factor. It will be clamped to the range \mbox{[}0.\+0, 2.\+0\mbox{]}. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1SceneParameters_a86212beb6dfa370a5d4989c5d482f963}\label{classs21_1_1SceneParameters_a86212beb6dfa370a5d4989c5d482f963} 
+\index{s21::SceneParameters@{s21::SceneParameters}!SetScaleZ@{SetScaleZ}}
+\index{SetScaleZ@{SetScaleZ}!s21::SceneParameters@{s21::SceneParameters}}
+\doxysubsubsection{\texorpdfstring{SetScaleZ()}{SetScaleZ()}}
+{\footnotesize\ttfamily void s21\+::\+Scene\+Parameters\+::\+Set\+ScaleZ (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the scale factor along the Z-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The desired scale factor. It will be clamped to the range \mbox{[}0.\+0, 2.\+0\mbox{]}. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+model/scene\+\_\+parameters.\+h\end{DoxyCompactItemize}

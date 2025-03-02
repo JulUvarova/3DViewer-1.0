@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['getbackgroundcolor_0',['GetBackgroundColor',['../classUserSetting.html#a76c4aa744553aaef8e497598a616ab33',1,'UserSetting']]],
+  ['getcoords_1',['GetCoords',['../classSlidersBox.html#a1cedec5adc962dabd61be354c91299af',1,'SlidersBox']]],
+  ['getedgescolor_2',['GetEdgesColor',['../classUserSetting.html#a287f55d0e2cd4bde59bdd49467de3416',1,'UserSetting']]],
+  ['getedgessize_3',['GetEdgesSize',['../classUserSetting.html#a1e6fc65a088b83f0e656ebd6a281cb2f',1,'UserSetting']]],
+  ['getedgestype_4',['GetEdgesType',['../classUserSetting.html#a18504429c3f9de54965522cb45bbc5d2',1,'UserSetting']]],
+  ['getinstance_5',['getinstance',['../classs21_1_1Controller.html#ad50fd61dc1530519ea82584dbc36b3e8',1,'s21::Controller::GetInstance()'],['../classs21_1_1Facade.html#a1657d862f1ac879f2c3dfa3b28aec3ea',1,'s21::Facade::GetInstance()']]],
+  ['getlocationx_6',['GetLocationX',['../classs21_1_1SceneParameters.html#af1b56db4c5c88981d711653a11e0388d',1,'s21::SceneParameters']]],
+  ['getlocationy_7',['GetLocationY',['../classs21_1_1SceneParameters.html#a064f5b929f746b5b9534ca76f7406893',1,'s21::SceneParameters']]],
+  ['getlocationz_8',['GetLocationZ',['../classs21_1_1SceneParameters.html#a3d8287fa92d3e560acd920572403217b',1,'s21::SceneParameters']]],
+  ['getrotationx_9',['GetRotationX',['../classs21_1_1SceneParameters.html#a2dfc4adbba762cf3ad24c5c37da79ceb',1,'s21::SceneParameters']]],
+  ['getrotationy_10',['GetRotationY',['../classs21_1_1SceneParameters.html#ac17df371fa872697c40b0289159802b0',1,'s21::SceneParameters']]],
+  ['getrotationz_11',['GetRotationZ',['../classs21_1_1SceneParameters.html#a2be5dbf9265a3a0b581e093f42f99cfc',1,'s21::SceneParameters']]],
+  ['getscalex_12',['GetScaleX',['../classs21_1_1SceneParameters.html#a0bada42d5773db66dcd1c1ddbe2f55c0',1,'s21::SceneParameters']]],
+  ['getscaley_13',['GetScaleY',['../classs21_1_1SceneParameters.html#a8d6c0a3a7d86abf5ad5e6a91a6cc8cdd',1,'s21::SceneParameters']]],
+  ['getscalez_14',['GetScaleZ',['../classs21_1_1SceneParameters.html#a55d7c4421a10ce67daed562755e1a755',1,'s21::SceneParameters']]],
+  ['getsceneparameters_15',['getsceneparameters',['../classs21_1_1Controller.html#a5790fef3009cbdc14d4091d57a2f8a95',1,'s21::Controller::GetSceneParameters()'],['../classs21_1_1Facade.html#a8be966e60ca21e014803bf3474c5a5ba',1,'s21::Facade::GetSceneParameters()']]],
+  ['getverticescolor_16',['GetVerticesColor',['../classUserSetting.html#a500700854efa1e35b6a41cdfa16131ee',1,'UserSetting']]],
+  ['getverticessize_17',['GetVerticesSize',['../classUserSetting.html#a45720afc0fa9014646fba7b3d655a1ff',1,'UserSetting']]],
+  ['getverticestype_18',['GetVerticesType',['../classUserSetting.html#a2eff3c660a7b389560f2566051aa4d29',1,'UserSetting']]]
+];

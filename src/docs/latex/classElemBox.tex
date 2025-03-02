@@ -1,0 +1,133 @@
+\doxysection{Elem\+Box Class Reference}
+\hypertarget{classElemBox}{}\label{classElemBox}\index{ElemBox@{ElemBox}}
+
+
+A class for configuring an element\textquotesingle{}s settings.  
+
+
+
+
+{\ttfamily \#include $<$elem\+\_\+box.\+h$>$}
+
+
+
+Inheritance diagram for Elem\+Box\+:
+% FIG 0
+
+
+Collaboration diagram for Elem\+Box\+:
+% FIG 1
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classElemBox_ac4d6e98d9ff299b9c02be007d559b3ab}{signal\+Change\+Type}} (const QString \&text)
+\begin{DoxyCompactList}\small\item\em Signal emitted when the type changes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classElemBox_a525a2279ca54bbea768d91bc3f4a9afd}{signal\+Change\+Size}} (const int size)
+\begin{DoxyCompactList}\small\item\em Signal emitted when the size changes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classElemBox_aa31c346623a699e52d67d71cfdb74275}{signal\+Change\+Color}} (const QColor \&color)
+\begin{DoxyCompactList}\small\item\em Signal emitted when the color changes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classElemBox_ac519b2c52bc3433310e918777485c1a6}{Elem\+Box}} (const char \texorpdfstring{$\ast$}{*}name, QString\+List \&lst, \mbox{\hyperlink{structSetting}{Setting}} \&setting, QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classElemBox}{Elem\+Box} class. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classElemBox_afeb1ee8e6bf8bfdc9da1ca6454463ec8}{Set\+Setting}} (\mbox{\hyperlink{structSetting}{Setting}} \&setting)
+\begin{DoxyCompactList}\small\item\em Sets the settings for the element. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class for configuring an element\textquotesingle{}s settings. 
+
+This class provides a user interface for selecting the type, size, and color of an element. It emits signals when these settings change. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classElemBox_ac519b2c52bc3433310e918777485c1a6}\label{classElemBox_ac519b2c52bc3433310e918777485c1a6} 
+\index{ElemBox@{ElemBox}!ElemBox@{ElemBox}}
+\index{ElemBox@{ElemBox}!ElemBox@{ElemBox}}
+\doxysubsubsection{\texorpdfstring{ElemBox()}{ElemBox()}}
+{\footnotesize\ttfamily Elem\+Box\+::\+Elem\+Box (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{name,  }\item[{QString\+List \&}]{lst,  }\item[{\mbox{\hyperlink{structSetting}{Setting}} \&}]{setting,  }\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+
+
+Constructor for the \doxylink{classElemBox}{Elem\+Box} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the group box. \\
+\hline
+{\em lst} & A list of types to populate the combo box. \\
+\hline
+{\em setting} & The initial settings for the element. \\
+\hline
+{\em parent} & Pointer to the parent widget (default is nullptr). \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classElemBox_afeb1ee8e6bf8bfdc9da1ca6454463ec8}\label{classElemBox_afeb1ee8e6bf8bfdc9da1ca6454463ec8} 
+\index{ElemBox@{ElemBox}!SetSetting@{SetSetting}}
+\index{SetSetting@{SetSetting}!ElemBox@{ElemBox}}
+\doxysubsubsection{\texorpdfstring{SetSetting()}{SetSetting()}}
+{\footnotesize\ttfamily void Elem\+Box\+::\+Set\+Setting (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structSetting}{Setting}} \&}]{setting }\end{DoxyParamCaption})}
+
+
+
+Sets the settings for the element. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em setting} & The new settings to apply. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classElemBox_aa31c346623a699e52d67d71cfdb74275}\label{classElemBox_aa31c346623a699e52d67d71cfdb74275} 
+\index{ElemBox@{ElemBox}!signalChangeColor@{signalChangeColor}}
+\index{signalChangeColor@{signalChangeColor}!ElemBox@{ElemBox}}
+\doxysubsubsection{\texorpdfstring{signalChangeColor}{signalChangeColor}}
+{\footnotesize\ttfamily void Elem\+Box\+::signal\+Change\+Color (\begin{DoxyParamCaption}\item[{const QColor \&}]{color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Signal emitted when the color changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & The new color of the element. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classElemBox_a525a2279ca54bbea768d91bc3f4a9afd}\label{classElemBox_a525a2279ca54bbea768d91bc3f4a9afd} 
+\index{ElemBox@{ElemBox}!signalChangeSize@{signalChangeSize}}
+\index{signalChangeSize@{signalChangeSize}!ElemBox@{ElemBox}}
+\doxysubsubsection{\texorpdfstring{signalChangeSize}{signalChangeSize}}
+{\footnotesize\ttfamily void Elem\+Box\+::signal\+Change\+Size (\begin{DoxyParamCaption}\item[{const int}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Signal emitted when the size changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & The new size of the element. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classElemBox_ac4d6e98d9ff299b9c02be007d559b3ab}\label{classElemBox_ac4d6e98d9ff299b9c02be007d559b3ab} 
+\index{ElemBox@{ElemBox}!signalChangeType@{signalChangeType}}
+\index{signalChangeType@{signalChangeType}!ElemBox@{ElemBox}}
+\doxysubsubsection{\texorpdfstring{signalChangeType}{signalChangeType}}
+{\footnotesize\ttfamily void Elem\+Box\+::signal\+Change\+Type (\begin{DoxyParamCaption}\item[{const QString \&}]{text }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Signal emitted when the type changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & The new type of the element. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+view/elem\+\_\+box.\+h\item 
+view/elem\+\_\+box.\+cc\end{DoxyCompactItemize}

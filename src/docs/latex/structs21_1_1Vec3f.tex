@@ -1,0 +1,190 @@
+\doxysection{s21\+::Vec3f Struct Reference}
+\hypertarget{structs21_1_1Vec3f}{}\label{structs21_1_1Vec3f}\index{s21::Vec3f@{s21::Vec3f}}
+
+
+A 3D vector with x, y, and z components.  
+
+
+
+
+{\ttfamily \#include $<$data\+\_\+structures.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structs21_1_1Vec3f_a6a5636c0cb19f911d953f4c0ee62b12c}\label{structs21_1_1Vec3f_a6a5636c0cb19f911d953f4c0ee62b12c} 
+{\bfseries Vec3f} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor, initializes the vector to (0, 0, 0). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structs21_1_1Vec3f_a5454daa61b8febec4e2497f6ce2e7ef0}{Vec3f}} (float \mbox{\hyperlink{structs21_1_1Vec3f_a63bd802eafce4010aaf74f866c7ee4d2}{x}}, float \mbox{\hyperlink{structs21_1_1Vec3f_a88afc56f4bf9f9575b68c9ca38b2bbf2}{y}}, float \mbox{\hyperlink{structs21_1_1Vec3f_af84444d7c160e4c19bedea8f06ce3ce8}{z}})
+\begin{DoxyCompactList}\small\item\em Constructor with specific x, y, and z values. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structs21_1_1Vec3f_af9be4292219ce12c74f79e04c180786f}{Vec3f}} (const \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\Hypertarget{structs21_1_1Vec3f_a7ddc1cc46fa578c984c4164caf5f82fe}\label{structs21_1_1Vec3f_a7ddc1cc46fa578c984c4164caf5f82fe} 
+\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \& {\bfseries operator=} (const \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&)=default
+\item 
+\Hypertarget{structs21_1_1Vec3f_aa8653e227aa9e5cf6925b1d934bd475f}\label{structs21_1_1Vec3f_aa8653e227aa9e5cf6925b1d934bd475f} 
+{\bfseries Vec3f} (\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&\&)=default
+\item 
+\Hypertarget{structs21_1_1Vec3f_aa6b343a1dfbaa2167069cf1f64222a25}\label{structs21_1_1Vec3f_aa6b343a1dfbaa2167069cf1f64222a25} 
+\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \& {\bfseries operator=} (\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&\&)=default
+\item 
+\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \mbox{\hyperlink{structs21_1_1Vec3f_a968765cbbf159c604b4144e8a7567162}{operator+}} (const \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&other) const
+\begin{DoxyCompactList}\small\item\em Add another \doxylink{structs21_1_1Vec3f}{Vec3f} to this vector. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \mbox{\hyperlink{structs21_1_1Vec3f_a34d243dc48e8b6bb0b6de2f24ef13f83}{operator-\/}} (const \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&other) const
+\begin{DoxyCompactList}\small\item\em Subtract another \doxylink{structs21_1_1Vec3f}{Vec3f} from this vector. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \mbox{\hyperlink{structs21_1_1Vec3f_a6aa478dd575ac74aaad21f1e0d618b13}{operator\texorpdfstring{$\ast$}{*}}} (float scalar) const
+\begin{DoxyCompactList}\small\item\em Multiply this vector by a scalar. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{structs21_1_1Vec3f_a42b9e6a6533f63b5d1c2aaf395069329}{length}} () const
+\begin{DoxyCompactList}\small\item\em Calculate the Euclidean length of the vector. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \mbox{\hyperlink{structs21_1_1Vec3f_a972f12ed04085a0fd5c90dde2467b09c}{normalize}} () const
+\begin{DoxyCompactList}\small\item\em Normalize the vector to unit length. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structs21_1_1Vec3f_a63bd802eafce4010aaf74f866c7ee4d2}\label{structs21_1_1Vec3f_a63bd802eafce4010aaf74f866c7ee4d2} 
+float {\bfseries x} \{0.\+0f\}
+\begin{DoxyCompactList}\small\item\em The x-\/component of the vector, initialized to 0.\+0f. \end{DoxyCompactList}\item 
+\Hypertarget{structs21_1_1Vec3f_a88afc56f4bf9f9575b68c9ca38b2bbf2}\label{structs21_1_1Vec3f_a88afc56f4bf9f9575b68c9ca38b2bbf2} 
+float {\bfseries y} \{0.\+0f\}
+\begin{DoxyCompactList}\small\item\em The y-\/component of the vector, initialized to 0.\+0f. \end{DoxyCompactList}\item 
+\Hypertarget{structs21_1_1Vec3f_af84444d7c160e4c19bedea8f06ce3ce8}\label{structs21_1_1Vec3f_af84444d7c160e4c19bedea8f06ce3ce8} 
+float {\bfseries z} \{0.\+0f\}
+\begin{DoxyCompactList}\small\item\em The z-\/component of the vector, initialized to 0.\+0f. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A 3D vector with x, y, and z components. 
+
+This structure represents a 3D vector and provides operations such as addition, subtraction, scalar multiplication, length calculation, and normalization.
+
+\begin{DoxyNote}{Note}
+The copy constructor is defined with an empty body, which does not initialize members and may lead to undefined behavior. It is recommended to use {\ttfamily = default} or properly implement it (e.\+g., {\ttfamily \doxylink{structs21_1_1Vec3f}{Vec3f}(const \doxylink{structs21_1_1Vec3f}{Vec3f}\& other) \+: x(other.\+x), y(other.\+y), z(other.\+z) \{\}}). 
+\end{DoxyNote}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structs21_1_1Vec3f_a5454daa61b8febec4e2497f6ce2e7ef0}\label{structs21_1_1Vec3f_a5454daa61b8febec4e2497f6ce2e7ef0} 
+\index{s21::Vec3f@{s21::Vec3f}!Vec3f@{Vec3f}}
+\index{Vec3f@{Vec3f}!s21::Vec3f@{s21::Vec3f}}
+\doxysubsubsection{\texorpdfstring{Vec3f()}{Vec3f()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily s21\+::\+Vec3f\+::\+Vec3f (\begin{DoxyParamCaption}\item[{float}]{x,  }\item[{float}]{y,  }\item[{float}]{z }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor with specific x, y, and z values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The x-\/component. \\
+\hline
+{\em y} & The y-\/component. \\
+\hline
+{\em z} & The z-\/component. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{structs21_1_1Vec3f_af9be4292219ce12c74f79e04c180786f}\label{structs21_1_1Vec3f_af9be4292219ce12c74f79e04c180786f} 
+\index{s21::Vec3f@{s21::Vec3f}!Vec3f@{Vec3f}}
+\index{Vec3f@{Vec3f}!s21::Vec3f@{s21::Vec3f}}
+\doxysubsubsection{\texorpdfstring{Vec3f()}{Vec3f()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily s21\+::\+Vec3f\+::\+Vec3f (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+
+
+Copy constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & The vector to copy from. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This implementation is empty, leaving members uninitialized, which is likely a bug. Consider using {\ttfamily = default} or proper initialization. 
+\end{DoxyNote}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{structs21_1_1Vec3f_a42b9e6a6533f63b5d1c2aaf395069329}\label{structs21_1_1Vec3f_a42b9e6a6533f63b5d1c2aaf395069329} 
+\index{s21::Vec3f@{s21::Vec3f}!length@{length}}
+\index{length@{length}!s21::Vec3f@{s21::Vec3f}}
+\doxysubsubsection{\texorpdfstring{length()}{length()}}
+{\footnotesize\ttfamily float s21\+::\+Vec3f\+::length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Calculate the Euclidean length of the vector. 
+
+\begin{DoxyReturn}{Returns}
+The length of the vector as a float. 
+\end{DoxyReturn}
+\Hypertarget{structs21_1_1Vec3f_a972f12ed04085a0fd5c90dde2467b09c}\label{structs21_1_1Vec3f_a972f12ed04085a0fd5c90dde2467b09c} 
+\index{s21::Vec3f@{s21::Vec3f}!normalize@{normalize}}
+\index{normalize@{normalize}!s21::Vec3f@{s21::Vec3f}}
+\doxysubsubsection{\texorpdfstring{normalize()}{normalize()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} s21\+::\+Vec3f\+::normalize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Normalize the vector to unit length. 
+
+\begin{DoxyReturn}{Returns}
+A new \doxylink{structs21_1_1Vec3f}{Vec3f} with the same direction but length 1. If the vector\textquotesingle{}s length is zero, returns the original vector. 
+\end{DoxyReturn}
+\Hypertarget{structs21_1_1Vec3f_a6aa478dd575ac74aaad21f1e0d618b13}\label{structs21_1_1Vec3f_a6aa478dd575ac74aaad21f1e0d618b13} 
+\index{s21::Vec3f@{s21::Vec3f}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!s21::Vec3f@{s21::Vec3f}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} s21\+::\+Vec3f\+::operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}\item[{float}]{scalar }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Multiply this vector by a scalar. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scalar} & The scalar value to multiply by. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{structs21_1_1Vec3f}{Vec3f} representing this vector scaled by the scalar. 
+\end{DoxyReturn}
+\Hypertarget{structs21_1_1Vec3f_a968765cbbf159c604b4144e8a7567162}\label{structs21_1_1Vec3f_a968765cbbf159c604b4144e8a7567162} 
+\index{s21::Vec3f@{s21::Vec3f}!operator+@{operator+}}
+\index{operator+@{operator+}!s21::Vec3f@{s21::Vec3f}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} s21\+::\+Vec3f\+::operator+ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Add another \doxylink{structs21_1_1Vec3f}{Vec3f} to this vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & The vector to add. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{structs21_1_1Vec3f}{Vec3f} representing the sum of this vector and the other. 
+\end{DoxyReturn}
+\Hypertarget{structs21_1_1Vec3f_a34d243dc48e8b6bb0b6de2f24ef13f83}\label{structs21_1_1Vec3f_a34d243dc48e8b6bb0b6de2f24ef13f83} 
+\index{s21::Vec3f@{s21::Vec3f}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!s21::Vec3f@{s21::Vec3f}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} s21\+::\+Vec3f\+::operator-\/ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structs21_1_1Vec3f}{Vec3f}} \&}]{other }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Subtract another \doxylink{structs21_1_1Vec3f}{Vec3f} from this vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & The vector to subtract. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{structs21_1_1Vec3f}{Vec3f} representing the difference between this vector and the other. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+model/data\+\_\+structures.\+h\end{DoxyCompactItemize}

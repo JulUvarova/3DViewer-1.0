@@ -1,0 +1,104 @@
+\doxysection{s21\+::Transform\+Matrix\+Builder Class Reference}
+\hypertarget{classs21_1_1TransformMatrixBuilder}{}\label{classs21_1_1TransformMatrixBuilder}\index{s21::TransformMatrixBuilder@{s21::TransformMatrixBuilder}}
+
+
+A utility class for creating 4x4 transformation matrices.  
+
+
+
+
+{\ttfamily \#include $<$transform\+\_\+matrix\+\_\+builder.\+h$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{namespaces21_a1d0125a255b5964c982d817044aeb454}{Mat4f}} \mbox{\hyperlink{classs21_1_1TransformMatrixBuilder_a7fc1ceed4ab5c3dcc8afbbc157e5683e}{Create\+Rotation\+Matrix}} (float x\+\_\+rot, float y\+\_\+rot, float z\+\_\+rot)
+\begin{DoxyCompactList}\small\item\em Creates a 4x4 rotation matrix for combined rotations around the X, Y, and Z axes. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{namespaces21_a1d0125a255b5964c982d817044aeb454}{Mat4f}} \mbox{\hyperlink{classs21_1_1TransformMatrixBuilder_a0095132ffa56e693c507161b6fd3b65f}{Create\+Move\+Matrix}} (float x\+\_\+tr, float y\+\_\+tr, float z\+\_\+tr)
+\begin{DoxyCompactList}\small\item\em Creates a 4x4 translation matrix. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{namespaces21_a1d0125a255b5964c982d817044aeb454}{Mat4f}} \mbox{\hyperlink{classs21_1_1TransformMatrixBuilder_ac8a34c17da291cda2eb46379d226cee8}{Create\+Scale\+Matrix}} (float x\+\_\+scale, float y\+\_\+scale, float z\+\_\+scale)
+\begin{DoxyCompactList}\small\item\em Creates a 4x4 scaling matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A utility class for creating 4x4 transformation matrices. 
+
+This class provides static methods to generate 4x4 matrices for rotation, translation, and scaling transformations in 3D space. It is designed as a static utility class and cannot be instantiated.
+
+\begin{DoxyNote}{Note}
+All methods are static, and the constructor is private to prevent instantiation. 
+\end{DoxyNote}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classs21_1_1TransformMatrixBuilder_a0095132ffa56e693c507161b6fd3b65f}\label{classs21_1_1TransformMatrixBuilder_a0095132ffa56e693c507161b6fd3b65f} 
+\index{s21::TransformMatrixBuilder@{s21::TransformMatrixBuilder}!CreateMoveMatrix@{CreateMoveMatrix}}
+\index{CreateMoveMatrix@{CreateMoveMatrix}!s21::TransformMatrixBuilder@{s21::TransformMatrixBuilder}}
+\doxysubsubsection{\texorpdfstring{CreateMoveMatrix()}{CreateMoveMatrix()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespaces21_a1d0125a255b5964c982d817044aeb454}{Mat4f}} s21\+::\+Transform\+Matrix\+Builder\+::\+Create\+Move\+Matrix (\begin{DoxyParamCaption}\item[{float}]{x\+\_\+tr,  }\item[{float}]{y\+\_\+tr,  }\item[{float}]{z\+\_\+tr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Creates a 4x4 translation matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+tr} & Translation along the X-\/axis. \\
+\hline
+{\em y\+\_\+tr} & Translation along the Y-\/axis. \\
+\hline
+{\em z\+\_\+tr} & Translation along the Z-\/axis. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Mat4f representing the translation matrix.
+\end{DoxyReturn}
+This method constructs a 4x4 matrix that translates points in 3D space by the specified amounts along the X, Y, and Z axes. \Hypertarget{classs21_1_1TransformMatrixBuilder_a7fc1ceed4ab5c3dcc8afbbc157e5683e}\label{classs21_1_1TransformMatrixBuilder_a7fc1ceed4ab5c3dcc8afbbc157e5683e} 
+\index{s21::TransformMatrixBuilder@{s21::TransformMatrixBuilder}!CreateRotationMatrix@{CreateRotationMatrix}}
+\index{CreateRotationMatrix@{CreateRotationMatrix}!s21::TransformMatrixBuilder@{s21::TransformMatrixBuilder}}
+\doxysubsubsection{\texorpdfstring{CreateRotationMatrix()}{CreateRotationMatrix()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespaces21_a1d0125a255b5964c982d817044aeb454}{Mat4f}} s21\+::\+Transform\+Matrix\+Builder\+::\+Create\+Rotation\+Matrix (\begin{DoxyParamCaption}\item[{float}]{x\+\_\+rot,  }\item[{float}]{y\+\_\+rot,  }\item[{float}]{z\+\_\+rot }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Creates a 4x4 rotation matrix for combined rotations around the X, Y, and Z axes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+rot} & Rotation angle around the X-\/axis in radians. \\
+\hline
+{\em y\+\_\+rot} & Rotation angle around the Y-\/axis in radians. \\
+\hline
+{\em z\+\_\+rot} & Rotation angle around the Z-\/axis in radians. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Mat4f representing the combined rotation matrix (Rz \texorpdfstring{$\ast$}{*} Ry \texorpdfstring{$\ast$}{*} Rx).
+\end{DoxyReturn}
+This method constructs individual rotation matrices for each axis (X, Y, Z) and multiplies them in the order Z-\/\+Y-\/X to produce a single combined rotation matrix. The angles are expected in radians. \Hypertarget{classs21_1_1TransformMatrixBuilder_ac8a34c17da291cda2eb46379d226cee8}\label{classs21_1_1TransformMatrixBuilder_ac8a34c17da291cda2eb46379d226cee8} 
+\index{s21::TransformMatrixBuilder@{s21::TransformMatrixBuilder}!CreateScaleMatrix@{CreateScaleMatrix}}
+\index{CreateScaleMatrix@{CreateScaleMatrix}!s21::TransformMatrixBuilder@{s21::TransformMatrixBuilder}}
+\doxysubsubsection{\texorpdfstring{CreateScaleMatrix()}{CreateScaleMatrix()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespaces21_a1d0125a255b5964c982d817044aeb454}{Mat4f}} s21\+::\+Transform\+Matrix\+Builder\+::\+Create\+Scale\+Matrix (\begin{DoxyParamCaption}\item[{float}]{x\+\_\+scale,  }\item[{float}]{y\+\_\+scale,  }\item[{float}]{z\+\_\+scale }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Creates a 4x4 scaling matrix. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+scale} & Scaling factor along the X-\/axis. \\
+\hline
+{\em y\+\_\+scale} & Scaling factor along the Y-\/axis. \\
+\hline
+{\em z\+\_\+scale} & Scaling factor along the Z-\/axis. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Mat4f representing the scaling matrix.
+\end{DoxyReturn}
+This method constructs a 4x4 matrix that scales points in 3D space by the specified factors along the X, Y, and Z axes. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+model/math/transform\+\_\+matrix\+\_\+builder.\+h\end{DoxyCompactItemize}

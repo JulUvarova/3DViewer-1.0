@@ -1,0 +1,338 @@
+\doxysection{s21\+::Facade Class Reference}
+\hypertarget{classs21_1_1Facade}{}\label{classs21_1_1Facade}\index{s21::Facade@{s21::Facade}}
+
+
+Singleton class that provides a unified interface for scene management.  
+
+
+
+
+{\ttfamily \#include $<$facade.\+h$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classs21_1_1Facade_a0a7bfac09ab0caa146168e9ba05f349a}{Scene\+Update\+Callback}} = std\+::function$<$ void(const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}} $>$ \&)$>$
+\begin{DoxyCompactList}\small\item\em Callback function type for scene updates. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classs21_1_1Facade_a8c9921ae13617871155b4bd1170519e9}\label{classs21_1_1Facade_a8c9921ae13617871155b4bd1170519e9} 
+{\bfseries Facade} (const \mbox{\hyperlink{classs21_1_1Facade}{Facade}} \&other)=delete
+\item 
+\Hypertarget{classs21_1_1Facade_a16b69ecfc835abcec98f0ce993578775}\label{classs21_1_1Facade_a16b69ecfc835abcec98f0ce993578775} 
+{\bfseries Facade} (\mbox{\hyperlink{classs21_1_1Facade}{Facade}} \&\&other)=delete
+\item 
+\Hypertarget{classs21_1_1Facade_ab4a50c39602dee75e1964df9f7d1f476}\label{classs21_1_1Facade_ab4a50c39602dee75e1964df9f7d1f476} 
+void {\bfseries operator=} (const \mbox{\hyperlink{classs21_1_1Facade}{Facade}} \&other)=delete
+\item 
+\mbox{\hyperlink{classs21_1_1Facade_a1ad072e39ade1964d752430a60a2b57e}{\texorpdfstring{$\sim$}{\string~}\+Facade}} ()=default
+\begin{DoxyCompactList}\small\item\em Default destructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a9966bbf88fd44b3138e4039a0959608f}{Set\+Scene\+Update\+Callback}} (\mbox{\hyperlink{classs21_1_1Facade_a0a7bfac09ab0caa146168e9ba05f349a}{Scene\+Update\+Callback}} callback)
+\begin{DoxyCompactList}\small\item\em Sets the callback function to be invoked when the scene data updates. \end{DoxyCompactList}\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}} $>$ \mbox{\hyperlink{classs21_1_1Facade_a842d609fc6816204a4d047f9a63701ca}{Load\+Scene}} (const char \texorpdfstring{$\ast$}{*}path)
+\begin{DoxyCompactList}\small\item\em Loads a scene from the specified file path. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a779d555f2591b049a3d0a5aaf85a9093}{reset\+Scene\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Resets the scene\textquotesingle{}s transformation parameters to their default values. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_ad4885cc523ef9df71a85aab3aeed7c6d}{Scale}} (const float value)
+\begin{DoxyCompactList}\small\item\em Scales the scene uniformly along all axes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a410f4f31ef1c1346a83670df387fa2be}{ScaleX}} (const float value)
+\begin{DoxyCompactList}\small\item\em Scales the scene along the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_aa012abe3e732d58ffa5705fb9082eb42}{ScaleY}} (const float value)
+\begin{DoxyCompactList}\small\item\em Scales the scene along the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a28954bd22dbde96dad1bec97c36908fc}{ScaleZ}} (const float value)
+\begin{DoxyCompactList}\small\item\em Scales the scene along the Z-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a1b180da864a4672ff6501eaac3223ab9}{MoveX}} (const float value)
+\begin{DoxyCompactList}\small\item\em Moves the scene along the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a939874901f8ebb9aeedf99470243f452}{MoveY}} (const float value)
+\begin{DoxyCompactList}\small\item\em Moves the scene along the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a0f2a62d48b3f72dd95d298c492074aaf}{MoveZ}} (const float value)
+\begin{DoxyCompactList}\small\item\em Moves the scene along the Z-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_ac6d4a2d26ab7a1fb8f386349ffeed08e}{RotateX}} (const float value)
+\begin{DoxyCompactList}\small\item\em Rotates the scene around the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a163194131d046faea4d9749035a3b70a}{RotateY}} (const float value)
+\begin{DoxyCompactList}\small\item\em Rotates the scene around the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Facade_a6660137e4ae5a5ece2188f8f97b9c874}{RotateZ}} (const float value)
+\begin{DoxyCompactList}\small\item\em Rotates the scene around the Z-\/axis. \end{DoxyCompactList}\item 
+std\+::tuple$<$ float, float, float, float, float, float, float, float, float $>$ \mbox{\hyperlink{classs21_1_1Facade_a8be966e60ca21e014803bf3474c5a5ba}{Get\+Scene\+Parameters}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the current transformation parameters of the scene. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classs21_1_1Facade}{Facade}} $>$ \mbox{\hyperlink{classs21_1_1Facade_a1657d862f1ac879f2c3dfa3b28aec3ea}{Get\+Instance}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the singleton instance of the \doxylink{classs21_1_1Facade}{Facade} class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Singleton class that provides a unified interface for scene management. 
+
+The \doxylink{classs21_1_1Facade}{Facade} class serves as a central point of interaction between the user and the underlying components responsible for file reading, scene data management, and transformation parameters. It employs the singleton pattern to ensure that only one instance exists throughout the application\textquotesingle{}s lifetime.
+
+\begin{DoxyNote}{Note}
+This class is non-\/copyable and non-\/movable to enforce the singleton design. 
+\end{DoxyNote}
+
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classs21_1_1Facade_a0a7bfac09ab0caa146168e9ba05f349a}\label{classs21_1_1Facade_a0a7bfac09ab0caa146168e9ba05f349a} 
+\index{s21::Facade@{s21::Facade}!SceneUpdateCallback@{SceneUpdateCallback}}
+\index{SceneUpdateCallback@{SceneUpdateCallback}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{SceneUpdateCallback}{SceneUpdateCallback}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classs21_1_1Facade_a0a7bfac09ab0caa146168e9ba05f349a}{s21\+::\+Facade\+::\+Scene\+Update\+Callback}}}
+
+
+
+Callback function type for scene updates. 
+
+This callback is invoked whenever the scene data is updated, passing a shared pointer to the updated scene data. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classs21_1_1Facade_a1ad072e39ade1964d752430a60a2b57e}\label{classs21_1_1Facade_a1ad072e39ade1964d752430a60a2b57e} 
+\index{s21::Facade@{s21::Facade}!````~Facade@{\texorpdfstring{$\sim$}{\string~}Facade}}
+\index{````~Facade@{\texorpdfstring{$\sim$}{\string~}Facade}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Facade()}{\string~Facade()}}
+{\footnotesize\ttfamily s21\+::\+Facade\+::\texorpdfstring{$\sim$}{\string~}\+Facade (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+Default destructor. 
+
+No special cleanup is performed as resource management is handled by smart pointers. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classs21_1_1Facade_a1657d862f1ac879f2c3dfa3b28aec3ea}\label{classs21_1_1Facade_a1657d862f1ac879f2c3dfa3b28aec3ea} 
+\index{s21::Facade@{s21::Facade}!GetInstance@{GetInstance}}
+\index{GetInstance@{GetInstance}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{GetInstance()}{GetInstance()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classs21_1_1Facade}{Facade}} $>$ s21\+::\+Facade\+::\+Get\+Instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Retrieves the singleton instance of the \doxylink{classs21_1_1Facade}{Facade} class. 
+
+\begin{DoxyReturn}{Returns}
+A shared pointer to the singleton \doxylink{classs21_1_1Facade}{Facade} instance.
+\end{DoxyReturn}
+This method provides access to the single instance of the \doxylink{classs21_1_1Facade}{Facade}, creating it on the first call. \Hypertarget{classs21_1_1Facade_a8be966e60ca21e014803bf3474c5a5ba}\label{classs21_1_1Facade_a8be966e60ca21e014803bf3474c5a5ba} 
+\index{s21::Facade@{s21::Facade}!GetSceneParameters@{GetSceneParameters}}
+\index{GetSceneParameters@{GetSceneParameters}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{GetSceneParameters()}{GetSceneParameters()}}
+{\footnotesize\ttfamily std\+::tuple$<$ float, float, float, float, float, float, float, float, float $>$ s21\+::\+Facade\+::\+Get\+Scene\+Parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves the current transformation parameters of the scene. 
+
+\begin{DoxyReturn}{Returns}
+A tuple containing the transformation parameters in the following order\+:
+\begin{DoxyItemize}
+\item Scale X
+\item Scale Y
+\item Scale Z
+\item Rotation X (in degrees)
+\item Rotation Y (in degrees)
+\item Rotation Z (in degrees)
+\item Translation X
+\item Translation Y
+\item Translation Z
+\end{DoxyItemize}
+\end{DoxyReturn}
+Provides access to the current state of the scene\textquotesingle{}s transformations. \Hypertarget{classs21_1_1Facade_a842d609fc6816204a4d047f9a63701ca}\label{classs21_1_1Facade_a842d609fc6816204a4d047f9a63701ca} 
+\index{s21::Facade@{s21::Facade}!LoadScene@{LoadScene}}
+\index{LoadScene@{LoadScene}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{LoadScene()}{LoadScene()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}} $>$ s21\+::\+Facade\+::\+Load\+Scene (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{path }\end{DoxyParamCaption})}
+
+
+
+Loads a scene from the specified file path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & The file path to the scene file (e.\+g., an OBJ file). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A shared pointer to the loaded scene data.
+\end{DoxyReturn}
+This method utilizes the \doxylink{classs21_1_1FileReader}{File\+Reader} to parse the file and the \doxylink{classs21_1_1Scene}{Scene} class to process the data into a format suitable for rendering. \Hypertarget{classs21_1_1Facade_a1b180da864a4672ff6501eaac3223ab9}\label{classs21_1_1Facade_a1b180da864a4672ff6501eaac3223ab9} 
+\index{s21::Facade@{s21::Facade}!MoveX@{MoveX}}
+\index{MoveX@{MoveX}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{MoveX()}{MoveX()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+MoveX (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Moves the scene along the X-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The translation value along the X-\/axis.\\
+\hline
+\end{DoxyParams}
+Adjusts the X-\/axis translation parameter and updates the scene\textquotesingle{}s position. \Hypertarget{classs21_1_1Facade_a939874901f8ebb9aeedf99470243f452}\label{classs21_1_1Facade_a939874901f8ebb9aeedf99470243f452} 
+\index{s21::Facade@{s21::Facade}!MoveY@{MoveY}}
+\index{MoveY@{MoveY}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{MoveY()}{MoveY()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+MoveY (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Moves the scene along the Y-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The translation value along the Y-\/axis.\\
+\hline
+\end{DoxyParams}
+Adjusts the Y-\/axis translation parameter and updates the scene\textquotesingle{}s position. \Hypertarget{classs21_1_1Facade_a0f2a62d48b3f72dd95d298c492074aaf}\label{classs21_1_1Facade_a0f2a62d48b3f72dd95d298c492074aaf} 
+\index{s21::Facade@{s21::Facade}!MoveZ@{MoveZ}}
+\index{MoveZ@{MoveZ}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{MoveZ()}{MoveZ()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+MoveZ (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Moves the scene along the Z-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The translation value along the Z-\/axis.\\
+\hline
+\end{DoxyParams}
+Adjusts the Z-\/axis translation parameter and updates the scene\textquotesingle{}s position. \Hypertarget{classs21_1_1Facade_a779d555f2591b049a3d0a5aaf85a9093}\label{classs21_1_1Facade_a779d555f2591b049a3d0a5aaf85a9093} 
+\index{s21::Facade@{s21::Facade}!resetScenePosition@{resetScenePosition}}
+\index{resetScenePosition@{resetScenePosition}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{resetScenePosition()}{resetScenePosition()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::reset\+Scene\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Resets the scene\textquotesingle{}s transformation parameters to their default values. 
+
+This method resets the scale, rotation, and translation parameters, effectively returning the scene to its initial position and orientation. \Hypertarget{classs21_1_1Facade_ac6d4a2d26ab7a1fb8f386349ffeed08e}\label{classs21_1_1Facade_ac6d4a2d26ab7a1fb8f386349ffeed08e} 
+\index{s21::Facade@{s21::Facade}!RotateX@{RotateX}}
+\index{RotateX@{RotateX}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{RotateX()}{RotateX()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+RotateX (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Rotates the scene around the X-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The rotation angle in degrees around the X-\/axis.\\
+\hline
+\end{DoxyParams}
+Adjusts the X-\/axis rotation parameter and applies the transformation to the scene. \Hypertarget{classs21_1_1Facade_a163194131d046faea4d9749035a3b70a}\label{classs21_1_1Facade_a163194131d046faea4d9749035a3b70a} 
+\index{s21::Facade@{s21::Facade}!RotateY@{RotateY}}
+\index{RotateY@{RotateY}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{RotateY()}{RotateY()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+RotateY (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Rotates the scene around the Y-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The rotation angle in degrees around the Y-\/axis.\\
+\hline
+\end{DoxyParams}
+Adjusts the Y-\/axis rotation parameter and applies the transformation to the scene. \Hypertarget{classs21_1_1Facade_a6660137e4ae5a5ece2188f8f97b9c874}\label{classs21_1_1Facade_a6660137e4ae5a5ece2188f8f97b9c874} 
+\index{s21::Facade@{s21::Facade}!RotateZ@{RotateZ}}
+\index{RotateZ@{RotateZ}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{RotateZ()}{RotateZ()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+RotateZ (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Rotates the scene around the Z-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The rotation angle in degrees around the Z-\/axis.\\
+\hline
+\end{DoxyParams}
+Adjusts the Z-\/axis rotation parameter and applies the transformation to the scene. \Hypertarget{classs21_1_1Facade_ad4885cc523ef9df71a85aab3aeed7c6d}\label{classs21_1_1Facade_ad4885cc523ef9df71a85aab3aeed7c6d} 
+\index{s21::Facade@{s21::Facade}!Scale@{Scale}}
+\index{Scale@{Scale}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{Scale()}{Scale()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+Scale (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Scales the scene uniformly along all axes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The scaling factor to apply.\\
+\hline
+\end{DoxyParams}
+Adjusts the scene\textquotesingle{}s scale uniformly and applies the transformation. \Hypertarget{classs21_1_1Facade_a410f4f31ef1c1346a83670df387fa2be}\label{classs21_1_1Facade_a410f4f31ef1c1346a83670df387fa2be} 
+\index{s21::Facade@{s21::Facade}!ScaleX@{ScaleX}}
+\index{ScaleX@{ScaleX}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{ScaleX()}{ScaleX()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+ScaleX (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Scales the scene along the X-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The scaling factor to apply along the X-\/axis.\\
+\hline
+\end{DoxyParams}
+Modifies the X-\/axis scale parameter and updates the scene accordingly. \Hypertarget{classs21_1_1Facade_aa012abe3e732d58ffa5705fb9082eb42}\label{classs21_1_1Facade_aa012abe3e732d58ffa5705fb9082eb42} 
+\index{s21::Facade@{s21::Facade}!ScaleY@{ScaleY}}
+\index{ScaleY@{ScaleY}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{ScaleY()}{ScaleY()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+ScaleY (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Scales the scene along the Y-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The scaling factor to apply along the Y-\/axis.\\
+\hline
+\end{DoxyParams}
+Modifies the Y-\/axis scale parameter and updates the scene accordingly. \Hypertarget{classs21_1_1Facade_a28954bd22dbde96dad1bec97c36908fc}\label{classs21_1_1Facade_a28954bd22dbde96dad1bec97c36908fc} 
+\index{s21::Facade@{s21::Facade}!ScaleZ@{ScaleZ}}
+\index{ScaleZ@{ScaleZ}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{ScaleZ()}{ScaleZ()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+ScaleZ (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})}
+
+
+
+Scales the scene along the Z-\/axis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The scaling factor to apply along the Z-\/axis.\\
+\hline
+\end{DoxyParams}
+Modifies the Z-\/axis scale parameter and updates the scene accordingly. \Hypertarget{classs21_1_1Facade_a9966bbf88fd44b3138e4039a0959608f}\label{classs21_1_1Facade_a9966bbf88fd44b3138e4039a0959608f} 
+\index{s21::Facade@{s21::Facade}!SetSceneUpdateCallback@{SetSceneUpdateCallback}}
+\index{SetSceneUpdateCallback@{SetSceneUpdateCallback}!s21::Facade@{s21::Facade}}
+\doxysubsubsection{\texorpdfstring{SetSceneUpdateCallback()}{SetSceneUpdateCallback()}}
+{\footnotesize\ttfamily void s21\+::\+Facade\+::\+Set\+Scene\+Update\+Callback (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classs21_1_1Facade_a0a7bfac09ab0caa146168e9ba05f349a}{Scene\+Update\+Callback}}}]{callback }\end{DoxyParamCaption})}
+
+
+
+Sets the callback function to be invoked when the scene data updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & The callback function to set.\\
+\hline
+\end{DoxyParams}
+The provided callback will be called whenever the scene is modified, passing the updated scene data. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+model/facade.\+h\item 
+model/facade.\+cc\end{DoxyCompactItemize}

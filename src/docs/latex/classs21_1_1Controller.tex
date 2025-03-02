@@ -1,0 +1,301 @@
+\doxysection{s21\+::Controller Class Reference}
+\hypertarget{classs21_1_1Controller}{}\label{classs21_1_1Controller}\index{s21::Controller@{s21::Controller}}
+
+
+The \doxylink{classs21_1_1Controller}{Controller} class provides an interface for manipulating and updating a 3D scene.  
+
+
+
+
+{\ttfamily \#include $<$controller.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classs21_1_1Controller_a248b1b9810547cdab92e267da0e85023}\label{classs21_1_1Controller_a248b1b9810547cdab92e267da0e85023} 
+{\bfseries Controller} (const \mbox{\hyperlink{classs21_1_1Controller}{Controller}} \&other)=delete
+\begin{DoxyCompactList}\small\item\em Deleted copy constructor to enforce singleton behavior. \end{DoxyCompactList}\item 
+\Hypertarget{classs21_1_1Controller_a8d74a99fda4c6c196575aae4b141d3b3}\label{classs21_1_1Controller_a8d74a99fda4c6c196575aae4b141d3b3} 
+{\bfseries Controller} (\mbox{\hyperlink{classs21_1_1Controller}{Controller}} \&\&other)=delete
+\begin{DoxyCompactList}\small\item\em Deleted move constructor to enforce singleton behavior. \end{DoxyCompactList}\item 
+\Hypertarget{classs21_1_1Controller_a2a44e8e8acb631f1b0069efbd9584189}\label{classs21_1_1Controller_a2a44e8e8acb631f1b0069efbd9584189} 
+void {\bfseries operator=} (const \mbox{\hyperlink{classs21_1_1Controller}{Controller}} \&other)=delete
+\begin{DoxyCompactList}\small\item\em Deleted copy assignment operator to enforce singleton behavior. \end{DoxyCompactList}\item 
+\Hypertarget{classs21_1_1Controller_a616a18e6d6b31ad62b4b18916f567416}\label{classs21_1_1Controller_a616a18e6d6b31ad62b4b18916f567416} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Controller} ()=default
+\begin{DoxyCompactList}\small\item\em Default destructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_a10d2ef2b22c292fa95d8cb9f49a64dd2}{Set\+Scene\+Update\+Callback}} (std\+::function$<$ void(const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}} $>$ \&)$>$ callback)
+\begin{DoxyCompactList}\small\item\em Sets the callback function to be invoked on scene updates. \end{DoxyCompactList}\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}} $>$ \mbox{\hyperlink{classs21_1_1Controller_a81fb6842cb051de3f0a4274639f380c1}{Load\+Scene}} (const char \texorpdfstring{$\ast$}{*}filename)
+\begin{DoxyCompactList}\small\item\em Loads a scene from a specified file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_a1f17c296e2f35ffd15695e1a5b7eacca}{Reset\+Scene}} ()
+\begin{DoxyCompactList}\small\item\em Resets the scene to its default position. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_a5f0f2133b7a4e4d059fe9d5817c89227}{Set\+ScaleX}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the scaling factor along the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_a8fda6c52994f5c28aefec19a4ce8b33e}{Set\+ScaleY}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the scaling factor along the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_ae40e2369da7f42d2b3cf69d016b6e5df}{Set\+ScaleZ}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the scaling factor along the Z-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_a369d2039b4a6abec612856f8cceab8a2}{Set\+LocationX}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the translation offset along the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_ac5d264a09261d6e1513f94882f2e47c8}{Set\+LocationY}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the translation offset along the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_ad674bb253f33a1f68435cc4c2cf40ca8}{Set\+LocationZ}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the translation offset along the Z-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_a398229d63be24993b8896e4efa841b61}{Set\+RotationX}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the rotation angle around the X-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_a5c838fed80c6969b7fefc512357804df}{Set\+RotationY}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the rotation angle around the Y-\/axis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classs21_1_1Controller_ab2b22dc127cc35f3f2272ed90f444391}{Set\+RotationZ}} (const int value)
+\begin{DoxyCompactList}\small\item\em Sets the rotation angle around the Z-\/axis. \end{DoxyCompactList}\item 
+std\+::tuple$<$ float, float, float, float, float, float, float, float, float $>$ \mbox{\hyperlink{classs21_1_1Controller_a5790fef3009cbdc14d4091d57a2f8a95}{Get\+Scene\+Parameters}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the current scene parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classs21_1_1Controller}{Controller}} $>$ \mbox{\hyperlink{classs21_1_1Controller_ad50fd61dc1530519ea82584dbc36b3e8}{Get\+Instance}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the singleton instance of the \doxylink{classs21_1_1Controller}{Controller}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \doxylink{classs21_1_1Controller}{Controller} class provides an interface for manipulating and updating a 3D scene. 
+
+The \doxylink{classs21_1_1Controller}{Controller} acts as a singleton facade that connects the user interface with the underlying 3D scene operations. It allows for loading scenes, applying transformations such as scaling, translation, and rotation, and setting update callbacks for when the scene changes. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classs21_1_1Controller_ad50fd61dc1530519ea82584dbc36b3e8}\label{classs21_1_1Controller_ad50fd61dc1530519ea82584dbc36b3e8} 
+\index{s21::Controller@{s21::Controller}!GetInstance@{GetInstance}}
+\index{GetInstance@{GetInstance}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{GetInstance()}{GetInstance()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classs21_1_1Controller}{Controller}} $>$ s21\+::\+Controller\+::\+Get\+Instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Retrieves the singleton instance of the \doxylink{classs21_1_1Controller}{Controller}. 
+
+This static method provides access to the unique \doxylink{classs21_1_1Controller}{Controller} instance, creating it upon the first call.
+
+\begin{DoxyReturn}{Returns}
+std\+::shared\+\_\+ptr$<$\+Controller$>$ A shared pointer to the singleton instance. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1Controller_a5790fef3009cbdc14d4091d57a2f8a95}\label{classs21_1_1Controller_a5790fef3009cbdc14d4091d57a2f8a95} 
+\index{s21::Controller@{s21::Controller}!GetSceneParameters@{GetSceneParameters}}
+\index{GetSceneParameters@{GetSceneParameters}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{GetSceneParameters()}{GetSceneParameters()}}
+{\footnotesize\ttfamily std\+::tuple$<$ float, float, float, float, float, float, float, float, float $>$ s21\+::\+Controller\+::\+Get\+Scene\+Parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves the current scene parameters. 
+
+This function returns a tuple containing various parameters of the scene, including scaling, rotation, and translation values.
+
+\begin{DoxyReturn}{Returns}
+std\+::tuple\texorpdfstring{$<$}{<}float, float, float, float, float, float, float, float, float\texorpdfstring{$>$}{>} A tuple of scene parameters. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1Controller_a81fb6842cb051de3f0a4274639f380c1}\label{classs21_1_1Controller_a81fb6842cb051de3f0a4274639f380c1} 
+\index{s21::Controller@{s21::Controller}!LoadScene@{LoadScene}}
+\index{LoadScene@{LoadScene}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{LoadScene()}{LoadScene()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}} $>$ s21\+::\+Controller\+::\+Load\+Scene (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{filename }\end{DoxyParamCaption})}
+
+
+
+Loads a scene from a specified file. 
+
+This function delegates the scene loading process to the \doxylink{classs21_1_1Facade}{Facade}, which handles file parsing and scene creation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & The file path of the scene to load. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::shared\+\_\+ptr$<$\+Draw\+Scene\+Data$>$ A shared pointer to the loaded scene data. 
+\end{DoxyReturn}
+\Hypertarget{classs21_1_1Controller_a1f17c296e2f35ffd15695e1a5b7eacca}\label{classs21_1_1Controller_a1f17c296e2f35ffd15695e1a5b7eacca} 
+\index{s21::Controller@{s21::Controller}!ResetScene@{ResetScene}}
+\index{ResetScene@{ResetScene}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{ResetScene()}{ResetScene()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Reset\+Scene (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Resets the scene to its default position. 
+
+This function calls the \doxylink{classs21_1_1Facade}{Facade} to reinitialize the scene\textquotesingle{}s position to a default state. \Hypertarget{classs21_1_1Controller_a369d2039b4a6abec612856f8cceab8a2}\label{classs21_1_1Controller_a369d2039b4a6abec612856f8cceab8a2} 
+\index{s21::Controller@{s21::Controller}!SetLocationX@{SetLocationX}}
+\index{SetLocationX@{SetLocationX}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetLocationX()}{SetLocationX()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+LocationX (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the translation offset along the X-\/axis. 
+
+The provided value is adjusted by an internal move correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw translation value for the X-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_ac5d264a09261d6e1513f94882f2e47c8}\label{classs21_1_1Controller_ac5d264a09261d6e1513f94882f2e47c8} 
+\index{s21::Controller@{s21::Controller}!SetLocationY@{SetLocationY}}
+\index{SetLocationY@{SetLocationY}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetLocationY()}{SetLocationY()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+LocationY (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the translation offset along the Y-\/axis. 
+
+The provided value is adjusted by an internal move correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw translation value for the Y-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_ad674bb253f33a1f68435cc4c2cf40ca8}\label{classs21_1_1Controller_ad674bb253f33a1f68435cc4c2cf40ca8} 
+\index{s21::Controller@{s21::Controller}!SetLocationZ@{SetLocationZ}}
+\index{SetLocationZ@{SetLocationZ}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetLocationZ()}{SetLocationZ()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+LocationZ (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the translation offset along the Z-\/axis. 
+
+The provided value is adjusted by an internal move correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw translation value for the Z-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_a398229d63be24993b8896e4efa841b61}\label{classs21_1_1Controller_a398229d63be24993b8896e4efa841b61} 
+\index{s21::Controller@{s21::Controller}!SetRotationX@{SetRotationX}}
+\index{SetRotationX@{SetRotationX}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetRotationX()}{SetRotationX()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+RotationX (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the rotation angle around the X-\/axis. 
+
+The provided value is adjusted by an internal rotation correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw rotation angle for the X-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_a5c838fed80c6969b7fefc512357804df}\label{classs21_1_1Controller_a5c838fed80c6969b7fefc512357804df} 
+\index{s21::Controller@{s21::Controller}!SetRotationY@{SetRotationY}}
+\index{SetRotationY@{SetRotationY}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetRotationY()}{SetRotationY()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+RotationY (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the rotation angle around the Y-\/axis. 
+
+The provided value is adjusted by an internal rotation correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw rotation angle for the Y-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_ab2b22dc127cc35f3f2272ed90f444391}\label{classs21_1_1Controller_ab2b22dc127cc35f3f2272ed90f444391} 
+\index{s21::Controller@{s21::Controller}!SetRotationZ@{SetRotationZ}}
+\index{SetRotationZ@{SetRotationZ}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetRotationZ()}{SetRotationZ()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+RotationZ (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the rotation angle around the Z-\/axis. 
+
+The provided value is adjusted by an internal rotation correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw rotation angle for the Z-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_a5f0f2133b7a4e4d059fe9d5817c89227}\label{classs21_1_1Controller_a5f0f2133b7a4e4d059fe9d5817c89227} 
+\index{s21::Controller@{s21::Controller}!SetScaleX@{SetScaleX}}
+\index{SetScaleX@{SetScaleX}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetScaleX()}{SetScaleX()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+ScaleX (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the scaling factor along the X-\/axis. 
+
+The provided value is adjusted by an internal scale correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw scaling factor for the X-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_a8fda6c52994f5c28aefec19a4ce8b33e}\label{classs21_1_1Controller_a8fda6c52994f5c28aefec19a4ce8b33e} 
+\index{s21::Controller@{s21::Controller}!SetScaleY@{SetScaleY}}
+\index{SetScaleY@{SetScaleY}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetScaleY()}{SetScaleY()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+ScaleY (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the scaling factor along the Y-\/axis. 
+
+The provided value is adjusted by an internal scale correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw scaling factor for the Y-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_ae40e2369da7f42d2b3cf69d016b6e5df}\label{classs21_1_1Controller_ae40e2369da7f42d2b3cf69d016b6e5df} 
+\index{s21::Controller@{s21::Controller}!SetScaleZ@{SetScaleZ}}
+\index{SetScaleZ@{SetScaleZ}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetScaleZ()}{SetScaleZ()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+ScaleZ (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})}
+
+
+
+Sets the scaling factor along the Z-\/axis. 
+
+The provided value is adjusted by an internal scale correction factor before applying.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The raw scaling factor for the Z-\/axis. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classs21_1_1Controller_a10d2ef2b22c292fa95d8cb9f49a64dd2}\label{classs21_1_1Controller_a10d2ef2b22c292fa95d8cb9f49a64dd2} 
+\index{s21::Controller@{s21::Controller}!SetSceneUpdateCallback@{SetSceneUpdateCallback}}
+\index{SetSceneUpdateCallback@{SetSceneUpdateCallback}!s21::Controller@{s21::Controller}}
+\doxysubsubsection{\texorpdfstring{SetSceneUpdateCallback()}{SetSceneUpdateCallback()}}
+{\footnotesize\ttfamily void s21\+::\+Controller\+::\+Set\+Scene\+Update\+Callback (\begin{DoxyParamCaption}\item[{std\+::function$<$ void(const std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}} $>$ \&)$>$}]{callback }\end{DoxyParamCaption})}
+
+
+
+Sets the callback function to be invoked on scene updates. 
+
+The provided callback is used to notify listeners when the scene is updated and needs to be redrawn.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & A function taking a shared pointer to \doxylink{namespaces21_structs21_1_1DrawSceneData}{Draw\+Scene\+Data}. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+controller/controller.\+h\item 
+controller/controller.\+cc\end{DoxyCompactItemize}

@@ -1,0 +1,135 @@
+\doxysection{main\+\_\+window.\+h}
+\hypertarget{main__window_8h_source}{}\label{main__window_8h_source}\index{view/main\_window.h@{view/main\_window.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <QDockWidget>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QGroupBox>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <QImage>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <QLayout>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <QMainWindow>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QMenuBar>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QMessageBox>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <QRadioButton>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QSettings>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QStatusBar>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QTimer>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}background\_box.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}control\_window.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}controller.h"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}elem\_box.h"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}gif/gif.h"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}info\_window.h"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}sliders\_box.h"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}user\_setting.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}viewport3D.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{enum\ class}\ TransformType\ \{}
+\DoxyCodeLine{00032\ \ \ LocationX,\ \ }
+\DoxyCodeLine{00033\ \ \ LocationY,\ \ }
+\DoxyCodeLine{00034\ \ \ LocationZ,\ \ }
+\DoxyCodeLine{00035\ \ \ RotationX,\ \ }
+\DoxyCodeLine{00036\ \ \ RotationY,\ \ }
+\DoxyCodeLine{00037\ \ \ RotationZ,\ \ }
+\DoxyCodeLine{00038\ \ \ Scale\ \ \ \ \ \ \ }
+\DoxyCodeLine{00039\ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classMainWindow}{MainWindow}}\ :\ \textcolor{keyword}{public}\ QMainWindow\ \{}
+\DoxyCodeLine{00050\ \ \ Q\_OBJECT}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00059\ \ \ \mbox{\hyperlink{classMainWindow}{MainWindow}}(std::shared\_ptr<s21::Controller>\ controller\_,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \textcolor{keyword}{public}\ Q\_SLOTS:}
+\DoxyCodeLine{00069\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a6bb1d78262ec80761b485e9c19a61dad}{slotTransform}}(TransformType\ type,\ \textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00076\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a81cfa783e2f78924c8e00656d641bd95}{slotVerticesType}}(\textcolor{keyword}{const}\ QString\ \&text);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00083\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a9efb57069877099d9ac39fd03773e617}{slotVerticesSize}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00090\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a79fcd83877323211b688ad1939eb9378}{slotVerticesColor}}(\textcolor{keyword}{const}\ QColor\ \&color);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_afd1e075fd063936ac6e23f5f65be2326}{slotEdgesType}}(\textcolor{keyword}{const}\ QString\ \&text);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00104\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a14c8e390db410e2936532e53321eead4}{slotEdgesSize}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00111\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a79481808173c6214601ee0579319c625}{slotEdgesColor}}(\textcolor{keyword}{const}\ QColor\ \&color);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00118\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a133ac84daab46946c2062f552d371cb5}{slotBackgroundColor}}(\textcolor{keyword}{const}\ QColor\ \&color);}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00126\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_aad75236c74a5c340c3e18749a9b5eb4f}{resizeEvent}}(QResizeEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00133\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a1eb64c97dd4b744e0bbfbc0d5285e7ac}{moveEvent}}(QMoveEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00140\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMainWindow_a05fb9d72c044aa3bb7d187b994704e2f}{closeEvent}}(QCloseEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00143\ \ \ \textcolor{comment}{//\ UI\ elements}}
+\DoxyCodeLine{00144\ \ \ QDockWidget\ *toolsDock\_;\ \ }
+\DoxyCodeLine{00145\ \ \ QLabel\ *filenameInfo\_;\ \ \ \ }
+\DoxyCodeLine{00146\ \ \ \mbox{\hyperlink{classSlidersBox}{SlidersBox}}\ *locationSlidersBox\_,\ *rotateSlidersBox\_,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ *scaleSlidersBox\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00148\ \ \ \mbox{\hyperlink{classElemBox}{ElemBox}}\ *verticesBox\_,\ *edgesBox\_;\ \ }
+\DoxyCodeLine{00149\ \ \ \mbox{\hyperlink{classBackgroundBox}{BackgroundBox}}\ *backgroundBox\_;\ \ \ \ \ \ }
+\DoxyCodeLine{00150\ \ \ QMenuBar\ *menuBar\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00151\ \ \ \mbox{\hyperlink{classControlWindow}{ControlWindow}}\ *controlWindow\_;\ \ \ \ \ \ }
+\DoxyCodeLine{00152\ \ \ \mbox{\hyperlink{classViewport3D}{Viewport3D}}\ *renderWindow\_;\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00153\ \ \ QPushButton\ *resetCoordsButton\_,\ *resetElemsButton\_,\ *saveElemsButton\_,}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ *restoreElemsButton\_,\ *sceneInfoButton\_;\ \ }
+\DoxyCodeLine{00155\ \ \ QRadioButton\ *perspectiveProj\_,}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ *parallelProj\_;\ \ }
+\DoxyCodeLine{00157\ \ \ \mbox{\hyperlink{classInfoWindow}{InfoWindow}}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ *sceneInfoWindow\_;\ \ }
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \textcolor{comment}{//\ Controller}}
+\DoxyCodeLine{00161\ \ \ std::shared\_ptr<s21::Controller>}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ controller\_;\ \ }
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \textcolor{comment}{//\ User\ GUI\ settings}}
+\DoxyCodeLine{00165\ \ \ std::shared\_ptr<UserSetting>}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ userSetting\_;\ \ }
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \textcolor{comment}{//\ For\ saving}}
+\DoxyCodeLine{00169\ \ \ std::vector<QPixmap>}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ screens\_;\ \ \ \ \ \ \ }
+\DoxyCodeLine{00171\ \ \ QString\ filename\_;\ \ }
+\DoxyCodeLine{00172\ \ \ QTimer\ *timer\_;\ \ \ \ \ }
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00177\ \ \ \textcolor{keywordtype}{void}\ SetupUI();}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00182\ \ \ \textcolor{keywordtype}{void}\ CreateDockWidgets();}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00187\ \ \ \textcolor{keywordtype}{void}\ SaveUserSettings();}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00192\ \ \ \textcolor{keywordtype}{void}\ ResetUserSettings();}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00197\ \ \ \textcolor{keywordtype}{void}\ RestoreUserSettings();}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00204\ \ \ \textcolor{keywordtype}{void}\ LoadScene(QString\ \&fname);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00211\ \ \ \textcolor{keywordtype}{void}\ SaveImage(QString\ \&fname);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00218\ \ \ \textcolor{keywordtype}{void}\ SaveCustomGif(QString\ \&fname);}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00225\ \ \ \textcolor{keywordtype}{void}\ SaveCycledGif(QString\ \&fname);}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00230\ \ \ \textcolor{keywordtype}{void}\ SetVisualParameters();}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00235\ \ \ \textcolor{keywordtype}{void}\ ResetCoords();}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00240\ \ \ \textcolor{keywordtype}{void}\ CreateStatusBar();}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00245\ \ \ \textcolor{keywordtype}{void}\ GrabScene();}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00250\ \ \ \textcolor{keywordtype}{void}\ CreateGifFile();}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00255\ \ \ \textcolor{keywordtype}{void}\ MoveInfoWindow();}
+\DoxyCodeLine{00256\ \};}
+
+\end{DoxyCode}

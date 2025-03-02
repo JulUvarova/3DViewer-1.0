@@ -1,0 +1,96 @@
+\doxysection{Slider Class Reference}
+\hypertarget{classSlider}{}\label{classSlider}\index{Slider@{Slider}}
+
+
+A custom slider class that emits a signal on double-\/click.  
+
+
+
+
+{\ttfamily \#include $<$sliders\+\_\+box.\+h$>$}
+
+
+
+Inheritance diagram for Slider\+:
+% FIG 0
+
+
+Collaboration diagram for Slider\+:
+% FIG 1
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classSlider_a89c9f757e2e80aa9f40c9c27d66e8933}{double\+Clicked}} (\mbox{\hyperlink{classSlider}{Slider}} \texorpdfstring{$\ast$}{*}slider)
+\begin{DoxyCompactList}\small\item\em Signal emitted when the slider is double-\/clicked. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classSlider_aac21b9a8a36571dbf6f37036f2ad79a1}{Slider}} (QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classSlider}{Slider} class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classSlider_a84bab32f98ebf73b0039c3cd62d1c27b}{mouse\+Double\+Click\+Event}} (QMouse\+Event \texorpdfstring{$\ast$}{*}event) override
+\begin{DoxyCompactList}\small\item\em Handles the mouse double-\/click event. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A custom slider class that emits a signal on double-\/click. 
+
+This class extends QSlider to emit a signal when the slider is double-\/clicked. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classSlider_aac21b9a8a36571dbf6f37036f2ad79a1}\label{classSlider_aac21b9a8a36571dbf6f37036f2ad79a1} 
+\index{Slider@{Slider}!Slider@{Slider}}
+\index{Slider@{Slider}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{Slider()}{Slider()}}
+{\footnotesize\ttfamily Slider\+::\+Slider (\begin{DoxyParamCaption}\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructor for the \doxylink{classSlider}{Slider} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & Pointer to the parent widget (default is nullptr). \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classSlider_a89c9f757e2e80aa9f40c9c27d66e8933}\label{classSlider_a89c9f757e2e80aa9f40c9c27d66e8933} 
+\index{Slider@{Slider}!doubleClicked@{doubleClicked}}
+\index{doubleClicked@{doubleClicked}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{doubleClicked}{doubleClicked}}
+{\footnotesize\ttfamily void Slider\+::double\+Clicked (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classSlider}{Slider}} \texorpdfstring{$\ast$}{*}}]{slider }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Signal emitted when the slider is double-\/clicked. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em slider} & Pointer to the slider that was double-\/clicked. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classSlider_a84bab32f98ebf73b0039c3cd62d1c27b}\label{classSlider_a84bab32f98ebf73b0039c3cd62d1c27b} 
+\index{Slider@{Slider}!mouseDoubleClickEvent@{mouseDoubleClickEvent}}
+\index{mouseDoubleClickEvent@{mouseDoubleClickEvent}!Slider@{Slider}}
+\doxysubsubsection{\texorpdfstring{mouseDoubleClickEvent()}{mouseDoubleClickEvent()}}
+{\footnotesize\ttfamily void Slider\+::mouse\+Double\+Click\+Event (\begin{DoxyParamCaption}\item[{QMouse\+Event \texorpdfstring{$\ast$}{*}}]{event }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [protected]}}
+
+
+
+Handles the mouse double-\/click event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & The mouse event. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+view/sliders\+\_\+box.\+h\item 
+view/sliders\+\_\+box.\+cc\end{DoxyCompactItemize}

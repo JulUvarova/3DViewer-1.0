@@ -1,0 +1,57 @@
+\doxysection{elem\+\_\+box.\+h}
+\hypertarget{elem__box_8h_source}{}\label{elem__box_8h_source}\index{view/elem\_box.h@{view/elem\_box.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <QColor>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QColorDialog>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <QComboBox>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <QGroupBox>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QLayout>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QPushButton>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <QSpinBox>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structSetting}{Setting}}\ \{}
+\DoxyCodeLine{00021\ \ \ QString\ \mbox{\hyperlink{structSetting_a7c65f4ff7cbe4d6c971c476b2ac7251a}{type}};\ \ }
+\DoxyCodeLine{00022\ \ \ QColor\ \mbox{\hyperlink{structSetting_af59c1373f9ba5aa03de0d033a1eab590}{color}};\ \ }
+\DoxyCodeLine{00023\ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{structSetting_ab32862511734b0ca9f79acf89e455d20}{size}};\ \ \ \ \ \ }
+\DoxyCodeLine{00024\ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classElemBox}{ElemBox}}\ :\ \textcolor{keyword}{public}\ QWidget\ \{}
+\DoxyCodeLine{00034\ \ \ Q\_OBJECT}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00045\ \ \ \mbox{\hyperlink{classElemBox}{ElemBox}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ QStringList\ \&lst,\ \mbox{\hyperlink{structSetting}{Setting}}\ \&setting,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00053\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classElemBox_afeb1ee8e6bf8bfdc9da1ca6454463ec8}{SetSetting}}(\mbox{\hyperlink{structSetting}{Setting}}\ \&setting);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ Q\_SIGNALS:}
+\DoxyCodeLine{00061\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classElemBox_ac4d6e98d9ff299b9c02be007d559b3ab}{signalChangeType}}(\textcolor{keyword}{const}\ QString\ \&text);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00068\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classElemBox_a525a2279ca54bbea768d91bc3f4a9afd}{signalChangeSize}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ size);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00075\ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classElemBox_aa31c346623a699e52d67d71cfdb74275}{signalChangeColor}}(\textcolor{keyword}{const}\ QColor\ \&color);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00078\ \ \ QLabel\ *typeLabel\_;\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00079\ \ \ QLabel\ *sizeLabel\_;\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00080\ \ \ QLabel\ *colorLabel\_;\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00081\ \ \ QSpinBox\ *size\_;\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00082\ \ \ QPushButton\ *colorButton\_;\ \ }
+\DoxyCodeLine{00083\ \ \ QComboBox\ *type\_;\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00090\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ TypeChange(\textcolor{keyword}{const}\ QString\ \&text)\ \{\ Q\_EMIT\ \mbox{\hyperlink{classElemBox_ac4d6e98d9ff299b9c02be007d559b3ab}{signalChangeType}}(text);\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00097\ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ SizeChange(\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ value)\ \{\ Q\_EMIT\ \mbox{\hyperlink{classElemBox_a525a2279ca54bbea768d91bc3f4a9afd}{signalChangeSize}}(value);\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{keywordtype}{void}\ ColorChange();}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00108\ \ \ \textcolor{keywordtype}{void}\ SetColorButton(\textcolor{keyword}{const}\ QColor\ \&color);}
+\DoxyCodeLine{00109\ \};}
+
+\end{DoxyCode}
