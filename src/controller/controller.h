@@ -39,10 +39,7 @@ class Controller {
    * @return std::shared_ptr<Controller> A shared pointer to the singleton
    * instance.
    */
-  static std::shared_ptr<Controller> GetInstance() {
-    static auto instance = std::shared_ptr<Controller>(new Controller);
-    return instance;
-  }
+  static std::shared_ptr<Controller> GetInstance();
 
   /**
    * @brief Sets the callback function to be invoked on scene updates.
@@ -52,10 +49,8 @@ class Controller {
    *
    * @param callback A function taking a shared pointer to DrawSceneData.
    */
-  inline void SetSceneUpdateCallback(
-      std::function<void(const std::shared_ptr<DrawSceneData> &)> callback) {
-    sceneUpdateCallback_ = callback;
-  }
+  void SetSceneUpdateCallback(
+      std::function<void(const std::shared_ptr<DrawSceneData> &)> callback);
 
   /**
    * @brief Loads a scene from a specified file.
@@ -67,9 +62,7 @@ class Controller {
    * @return std::shared_ptr<DrawSceneData> A shared pointer to the loaded scene
    * data.
    */
-  inline std::shared_ptr<DrawSceneData> LoadScene(const char *filename) {
-    return facade_->LoadScene(filename);
-  }
+  std::shared_ptr<DrawSceneData> LoadScene(const char *filename);
 
   /**
    * @brief Resets the scene to its default position.
@@ -77,7 +70,7 @@ class Controller {
    * This function calls the Facade to reinitialize the scene's position to a
    * default state.
    */
-  inline void ResetScene() { facade_->resetScenePosition(); }
+  void ResetScene();
 
   /**
    * @brief Sets the scaling factor along the X-axis.
@@ -87,9 +80,7 @@ class Controller {
    *
    * @param value The raw scaling factor for the X-axis.
    */
-  inline void SetScaleX(const int value) {
-    facade_->Scale(value / kScaleCorrection);
-  }
+  void SetScaleX(const int value);
 
   /**
    * @brief Sets the scaling factor along the Y-axis.
@@ -99,9 +90,7 @@ class Controller {
    *
    * @param value The raw scaling factor for the Y-axis.
    */
-  inline void SetScaleY(const int value) {
-    facade_->Scale(value / kScaleCorrection);
-  }
+  void SetScaleY(const int value);
 
   /**
    * @brief Sets the scaling factor along the Z-axis.
@@ -111,9 +100,7 @@ class Controller {
    *
    * @param value The raw scaling factor for the Z-axis.
    */
-  inline void SetScaleZ(const int value) {
-    facade_->Scale(value / kScaleCorrection);
-  }
+  void SetScaleZ(const int value);
 
   /**
    * @brief Sets the translation offset along the X-axis.
@@ -123,9 +110,7 @@ class Controller {
    *
    * @param value The raw translation value for the X-axis.
    */
-  inline void SetLocationX(const int value) {
-    facade_->MoveX(value / kMoveCorrection);
-  }
+  void SetLocationX(const int value);
 
   /**
    * @brief Sets the translation offset along the Y-axis.
@@ -135,9 +120,7 @@ class Controller {
    *
    * @param value The raw translation value for the Y-axis.
    */
-  inline void SetLocationY(const int value) {
-    facade_->MoveY(value / kMoveCorrection);
-  }
+  void SetLocationY(const int value);
 
   /**
    * @brief Sets the translation offset along the Z-axis.
@@ -147,9 +130,7 @@ class Controller {
    *
    * @param value The raw translation value for the Z-axis.
    */
-  inline void SetLocationZ(const int value) {
-    facade_->MoveZ(value / kMoveCorrection);
-  }
+  void SetLocationZ(const int value);
 
   /**
    * @brief Sets the rotation angle around the X-axis.
@@ -159,9 +140,7 @@ class Controller {
    *
    * @param value The raw rotation angle for the X-axis.
    */
-  inline void SetRotationX(const int value) {
-    facade_->RotateX(value / kRotationCorrection);
-  }
+  void SetRotationX(const int value);
 
   /**
    * @brief Sets the rotation angle around the Y-axis.
@@ -171,9 +150,7 @@ class Controller {
    *
    * @param value The raw rotation angle for the Y-axis.
    */
-  inline void SetRotationY(const int value) {
-    facade_->RotateY(value / kRotationCorrection);
-  }
+  void SetRotationY(const int value);
 
   /**
    * @brief Sets the rotation angle around the Z-axis.
@@ -183,9 +160,7 @@ class Controller {
    *
    * @param value The raw rotation angle for the Z-axis.
    */
-  inline void SetRotationZ(const int value) {
-    facade_->RotateZ(value / kRotationCorrection);
-  }
+  void SetRotationZ(const int value);
 
   /**
    * @brief Retrieves the current scene parameters.
@@ -196,11 +171,8 @@ class Controller {
    * @return std::tuple<float, float, float, float, float, float, float, float,
    * float> A tuple of scene parameters.
    */
-  inline std::tuple<float, float, float, float, float, float, float, float,
-                    float>
-  GetSceneParameters() {
-    return facade_->GetSceneParameters();
-  }
+  std::tuple<float, float, float, float, float, float, float, float, float>
+  GetSceneParameters();
 
  private:
   /// Pointer to the Facade that handles the low-level operations for the 3D

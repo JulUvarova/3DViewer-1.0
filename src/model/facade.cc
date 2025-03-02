@@ -1,12 +1,13 @@
 #include "facade.h"
 
-s21::Facade::Facade()
+namespace s21 {
+Facade::Facade()
     : fileReader_(std::make_unique<FileReader>()),
       sceneParam_(std::make_unique<SceneParameters>()) {}
 
-std::shared_ptr<s21::DrawSceneData> s21::Facade::LoadScene(const char *path) {
+std::shared_ptr<DrawSceneData> Facade::LoadScene(const char *path) {
   scene_.reset();
-  scene_ = std::make_unique<s21::Scene>();
+  scene_ = std::make_unique<Scene>();
   auto sceneData = scene_->LoadSceneMeshData(fileReader_->ReadFile(path));
 
   // Store the initial scene data
@@ -17,14 +18,22 @@ std::shared_ptr<s21::DrawSceneData> s21::Facade::LoadScene(const char *path) {
   return sceneData;
 }
 
-void s21::Facade::resetScenePosition() {
+std::shared_ptr<Facade> Facade::GetInstance() {
+  static auto instance = std::shared_ptr<Facade>(new Facade);
+  return instance;
+}
+
+void Facade::SetSceneUpdateCallback(SceneUpdateCallback callback) {
+  sceneUpdateCallback_ = callback;
+}
+void Facade::resetScenePosition() {
   if (!scene_) return;
 
   sceneParam_ = std::make_unique<SceneParameters>();
   TransformScene();
 }
 
-void s21::Facade::Scale(const float value) {
+void Facade::Scale(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetScaleX(value);
@@ -33,63 +42,63 @@ void s21::Facade::Scale(const float value) {
   TransformScene();
 }
 
-void s21::Facade::ScaleX(const float value) {
+void Facade::ScaleX(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetScaleX(value);
   TransformScene();
 }
 
-void s21::Facade::ScaleY(const float value) {
+void Facade::ScaleY(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetScaleY(value);
   TransformScene();
 }
 
-void s21::Facade::ScaleZ(const float value) {
+void Facade::ScaleZ(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetScaleZ(value);
   TransformScene();
 }
 
-void s21::Facade::MoveX(const float value) {
+void Facade::MoveX(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetLocationX(value);
   TransformScene();
 }
 
-void s21::Facade::MoveY(const float value) {
+void Facade::MoveY(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetLocationY(value);
   TransformScene();
 }
 
-void s21::Facade::MoveZ(const float value) {
+void Facade::MoveZ(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetLocationZ(value);
   TransformScene();
 }
 
-void s21::Facade::RotateX(const float value) {
+void Facade::RotateX(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetRotationX(value);
   TransformScene();
 }
 
-void s21::Facade::RotateY(const float value) {
+void Facade::RotateY(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetRotationY(value);
   TransformScene();
 }
 
-void s21::Facade::RotateZ(const float value) {
+void Facade::RotateZ(const float value) {
   if (!scene_) return;
 
   sceneParam_->SetRotationZ(value);
@@ -97,7 +106,7 @@ void s21::Facade::RotateZ(const float value) {
 }
 
 std::tuple<float, float, float, float, float, float, float, float, float>
-s21::Facade::GetSceneParameters() {
+Facade::GetSceneParameters() {
   if (!scene_) return std::make_tuple(0, 0, 0, 0, 0, 0, 0, 0, 0);
   return std::make_tuple(
       sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
@@ -107,21 +116,10 @@ s21::Facade::GetSceneParameters() {
       sceneParam_->GetScaleZ());
 }
 
-void s21::Facade::TransformScene() {
-  // Mat4f move_mat = TransformMatrixBuilder::CreateMoveMatrix(
-  //     sceneParam_->GetLocationX(), sceneParam_->GetLocationY(),
-  //     sceneParam_->GetLocationZ());
-  // Mat4f rotate_mat = TransformMatrixBuilder::CreateRotationMatrix(
-  //     sceneParam_->GetRotationX(), sceneParam_->GetRotationY(),
-  //     sceneParam_->GetRotationZ());
-  // Mat4f scale_mat = TransformMatrixBuilder::CreateScaleMatrix(
-  //     sceneParam_->GetScaleX(), sceneParam_->GetScaleY(),
-  //     sceneParam_->GetScaleZ());
-  // Mat4f transform_mat = scale_mat * move_mat * rotate_mat;
-  // scene_->TransformSceneMeshData(transform_mat);
-
+void Facade::TransformScene() {
   // Notify about the update if callback is set
   if (sceneUpdateCallback_ && currentSceneData_) {
     sceneUpdateCallback_(currentSceneData_);
   }
 }
+}  // namespace s21

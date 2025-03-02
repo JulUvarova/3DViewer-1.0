@@ -48,10 +48,7 @@ class Facade {
    * This method provides access to the single instance of the Facade, creating
    * it on the first call.
    */
-  static std::shared_ptr<Facade> GetInstance() {
-    static auto instance = std::shared_ptr<Facade>(new Facade);
-    return instance;
-  }
+  static std::shared_ptr<Facade> GetInstance();
 
   /**
    * @brief Default destructor.
@@ -69,9 +66,7 @@ class Facade {
    * The provided callback will be called whenever the scene is modified,
    * passing the updated scene data.
    */
-  inline void SetSceneUpdateCallback(SceneUpdateCallback callback) {
-    sceneUpdateCallback_ = callback;
-  }
+  void SetSceneUpdateCallback(SceneUpdateCallback callback);
 
   /**
    * @brief Loads a scene from the specified file path.
