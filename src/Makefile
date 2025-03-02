@@ -31,7 +31,6 @@ all:
 	cd $(BUILD_DIR) && \
 	cmake ../../src && \
 	make 
-	# valgrind -q -s --leak-check=full --trace-children=yes --track-origins=yes  --log-file=./VALGRIND ./build/3DViewer
 	./$(BUILD_DIR)/3DViewer
 
 

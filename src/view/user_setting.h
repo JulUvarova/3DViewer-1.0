@@ -38,18 +38,18 @@ class UserSetting {
   void ReadRenderSettings();
 
   /**
-   * @brief Removes the render settings from the file.
+   * @brief Reset the render settings from the file.
    *
-   * This method deletes the render settings group from the settings file.
+   * This method reset all settings to base value.
    */
-  void RemoveRenderSettings();
+  void ResetRenderSettings();
 
   /**
    * @brief Checks if the current projection is parallel.
    *
    * @return True if the projection is parallel, false otherwise.
    */
-  inline bool IsParallelProjectrion() const { return isParallelProjection_; }
+  inline bool IsParallelProjection() const { return isParallelProjection_; }
 
   /**
    * @brief Sets the projection type.

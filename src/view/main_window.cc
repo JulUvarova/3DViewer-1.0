@@ -208,7 +208,7 @@ void MainWindow::SetupUI() {
   resize(1280, 720);
 
   // Central 3D viewport
-  QGridLayout *mainLayout = new QGridLayout(this);
+  QGridLayout *mainLayout = new QGridLayout();
   mainLayout->setContentsMargins(0, 0, 0, 0);
   renderWindow_ = new Viewport3D(userSetting_, this);
   controlWindow_ = new ControlWindow(this);
@@ -271,7 +271,8 @@ void MainWindow::CreateDockWidgets() {
   projLayout->addWidget(perspectiveProj_);
   projLayout->addWidget(parallelProj_);
   projBox->setLayout(projLayout);
-  parallelProj_->setChecked(true);
+  (userSetting_->IsParallelProjection()) ? parallelProj_->setChecked(true)
+                                         : perspectiveProj_->setChecked(true);
 
   // Create verticesBox
   QStringList verticesLst;
@@ -464,16 +465,15 @@ void MainWindow::CreateGifFile() {
 }
 
 void MainWindow::ResetUserSettings() {
-  userSetting_->RemoveRenderSettings();
-  userSetting_->ReadRenderSettings();
+  userSetting_->ResetRenderSettings();
   SetVisualParameters();
-  renderWindow_->update();
+  renderWindow_->Repaint();
 }
 
 void MainWindow::RestoreUserSettings() {
   userSetting_->ReadRenderSettings();
   SetVisualParameters();
-  renderWindow_->update();
+  renderWindow_->Repaint();
 }
 
 void MainWindow::SaveUserSettings() { userSetting_->SaveRenderSettings(); }
@@ -495,4 +495,7 @@ void MainWindow::SetVisualParameters() {
   verticesBox_->SetSetting(verticesSetting);
 
   backgroundBox_->SetColorButton(userSetting_->GetBackgroundColor());
+
+  (userSetting_->IsParallelProjection()) ? parallelProj_->setChecked(true)
+                                         : perspectiveProj_->setChecked(true);
 }

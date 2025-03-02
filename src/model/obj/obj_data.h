@@ -209,14 +209,14 @@ class OBJData {
    * @param sv The string view to parse.
    * @return The parsed float value.
    */
-  inline float ParseFloat(std::string_view sv);
+  float ParseFloat(std::string_view sv);
 
   /**
    * @brief Trims whitespace from the beginning and end of a string view.
    * @param sv The string view to trim.
    * @return A trimmed string view.
    */
-  inline std::string_view TrimView(std::string_view sv);
+  std::string_view TrimView(std::string_view sv);
 
   /**
    * @brief Tokenizes a line into words, ignoring comments and trimming
@@ -224,6 +224,6 @@ class OBJData {
    * @param line The line to tokenize.
    * @return A vector of string views representing the tokens.
    */
-  inline std::vector<std::string_view> Tokenize(std::string_view line);
+  std::vector<std::string_view> Tokenize(std::string_view line);
 };
 }  // namespace s21

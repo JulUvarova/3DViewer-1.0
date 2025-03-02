@@ -122,7 +122,7 @@ void OBJData::ProcessLine(std::string_view line) {
   }
 }
 
-inline void OBJData::ParseVertex(const std::vector<std::string_view>& tokens) {
+void OBJData::ParseVertex(const std::vector<std::string_view>& tokens) {
   if (tokens.size() < 4) {
     return;
   }
@@ -131,7 +131,7 @@ inline void OBJData::ParseVertex(const std::vector<std::string_view>& tokens) {
                         ParseFloat(tokens[3]));
 }
 
-inline void OBJData::ParseNormal(const std::vector<std::string_view>& tokens) {
+void OBJData::ParseNormal(const std::vector<std::string_view>& tokens) {
   if (tokens.size() < 4) {
     return;
   }
@@ -241,7 +241,7 @@ int OBJData::ParseIndex(const std::string_view& part, size_t current_count) {
   return idx;
 }
 
-inline float OBJData::ParseFloat(std::string_view sv) {
+float OBJData::ParseFloat(std::string_view sv) {
   float value;
   auto result = std::from_chars(sv.data(), sv.data() + sv.size(), value);
   if (result.ec != std::errc()) throw MeshLoadException("Invalid file format");
@@ -249,7 +249,7 @@ inline float OBJData::ParseFloat(std::string_view sv) {
 }
 
 // Returns a string view, avoiding allocation.
-inline std::string_view OBJData::TrimView(std::string_view sv) {
+std::string_view OBJData::TrimView(std::string_view sv) {
   const char* whitespace = " \t";
   size_t start = sv.find_first_not_of(whitespace);
   if (start == std::string_view::npos) {
@@ -259,7 +259,7 @@ inline std::string_view OBJData::TrimView(std::string_view sv) {
   return sv.substr(start, end - start + 1);
 }
 
-inline std::vector<std::string_view> OBJData::Tokenize(std::string_view line) {
+std::vector<std::string_view> OBJData::Tokenize(std::string_view line) {
   std::vector<std::string_view> tokens;
   tokens.reserve(6);
   size_t start = 0, end = 0;

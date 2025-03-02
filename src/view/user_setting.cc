@@ -44,7 +44,16 @@ void UserSetting::ReadRenderSettings() {
   settings.endGroup();
 }
 
-void UserSetting::RemoveRenderSettings() {
-  QSettings settings(fileMemory_, QSettings::NativeFormat);
-  settings.remove("render");
+void UserSetting::ResetRenderSettings() {
+  verticesType_ = "circle";
+  verticesColor_ = QColor(Qt::white);
+  verticesSize_ = 5;
+
+  edgesType_ = "solid";
+  edgesColor_ = QColor(Qt::white);
+  edgesSize_ = 5;
+
+  backgroundColor_ = QColor(Qt::black);
+
+  isParallelProjection_ = true;
 }

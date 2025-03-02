@@ -280,7 +280,7 @@ void Viewport3D::UpdateProjectionMatrix() {
   float aspect = static_cast<float>(width()) /
                  (isGifRatio_ ? (width() * 3 / 4) : height());
 
-  if (renderSetting_->IsParallelProjectrion()) {
+  if (renderSetting_->IsParallelProjection()) {
     // Orthographic projection parameters
     float size = 1.0f;
     projectionMatrix_.ortho(-size * aspect, size * aspect, -size, size, 1.0f,
