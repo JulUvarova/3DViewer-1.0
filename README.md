@@ -124,22 +124,15 @@
   make check
   ```
 
-* dvi - открытие страницы readme проекта
+* dvi - генерирует документацию проекта
   ```
   make dvi
   ```
 
-* dist - архивирование кода библиотек бекенда
+* dist - архивирование кода программы
   ```
   make dist
   ```
-  
-* Для генерации документации воспользуйтесь следующими командами
-  ```
-  doxygen brick_game/tetris/doxygen_config
-  doxygen brick_game/snake/doxygen_config
-  ```
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
