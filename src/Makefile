@@ -84,7 +84,7 @@ uninstall:
 #########################################
 .PHONY: dist clean_dist
 dist: clean_dist
-	cd ../ && mkdir -p ${DIST_DIR}
+	cd ../ && mkdir -p ${DIST_DIR}/src
 	cd ../ && cp -rf src/controller ${DIST_DIR}/src/controller
 	cd ../ && cp -rf src/include ${DIST_DIR}/src/include
 	cd ../ && cp -rf src/model ${DIST_DIR}/src/model
